@@ -1,8 +1,16 @@
-%ul
-  %li Subscribe
-%ul
-  %li Search
-%ul
-  %li About
-%ul
-  %li Tags
+.sidebar-item.right
+  %ul
+    %li Subscribe
+.sidebar-item.right
+  %ul
+    %li Search
+.sidebar-item.right
+  %ul
+    %li 
+      %h2 The author
+    %li
+      = image_tag(gravatar_url(Blog.email))
+    %li= "#{Blog.author} #{Blog.bio}"
+.sidebar-item.right
+  %ul
+    %li Tags

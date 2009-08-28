@@ -1,0 +1,7 @@
+#cse{ :style => 'width: 100%;' } Loading
+= javascript_include_tag('http://www.google.com/jsapi')
+:javascript
+   google.load('search', '1');
+   google.setOnLoadCallback(function(){
+      new google.search.CustomSearchControl('012231626374413157710:ndex-iojqj4').draw('cse');
+   }, true);
