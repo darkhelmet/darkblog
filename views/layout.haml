@@ -1,0 +1,17 @@
+!!!
+%html{ :xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en' }
+  %head
+    = partial(:head)
+  %body
+    = partial(:panel)
+    .spacer
+    #main-content.container_12.showgrid
+      #content.grid_12
+        = partial(:header)
+        #posts-container.grid_10.alpha
+          -#- if home?
+          = yield
+        #right-sidebar.grid_2.omega.sidebar.right
+          = partial(:right_sidebar)
+        .clear
+    = partial(:footer)

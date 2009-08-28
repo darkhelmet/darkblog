@@ -1,0 +1,22 @@
+%title= title
+%link{ :rel => 'index', :title => Blog.title, :href => Blog.index }
+%meta{ :name => 'description', :content => Blog.tagline }
+- if @keywords
+  %meta{ :name => 'keywords', :content => @keywords }
+- if @canonical
+  %link{ :rel => 'canonical', :href => @canonical }
+
+%link{ :rel => 'alternate', :type => 'application/rss+xml', :title => "#{Blog.title} RSS Feed", :href => "#{Blog.index}feed" }
+
+= stylesheet_link_tag('darkblog')
+= stylesheet_link_tag('panel')
+= stylesheet_link_tag('jquery.lightbox')
+= javascript_include_tag('http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js')
+= javascript_include_tag('panel')
+= javascript_include_tag('jquery.lightbox')
+= javascript_include_tag('jquery.darkhax')
+
+:javascript
+  if (top.location != self.location) {
+    top.location = self.location.href;
+  }

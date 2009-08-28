@@ -1,0 +1,12 @@
+- if @posts && 0 < @posts.size
+  - @posts.each do |post|
+    = partial(:post, :locals => { :post => post })
+  = partial(:pagination)
+- else
+  #404-sidebar.grid_2.alpha.right
+    %p
+      <!-- take up space -->
+  #404-content.grid_8.omega.content
+    .border
+      %h2.center 404 Not Found
+      %p.center Sorry, but you are looking for something that isn't here.

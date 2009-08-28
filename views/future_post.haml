@@ -1,0 +1,14 @@
+<?php $future_post = new WP_Query(); $future_post->query("showposts=1&post_status=future&orderby=date&order=ASC"); ?>
+<?php while ($future_post->have_posts()) : $future_post->the_post(); ?>
+  <div id='post-<?php the_ID(); ?>-sidebar' class='grid_2 alpha leftbar right'>
+    <p style='margin-bottom: 20px;'><!-- take up space --></p>
+  </div>
+  <div id='post-<?php the_ID(); ?>-content' class='grid_8 omega content'>
+    <div class='border'>
+      <div <?php post_class() ?> id='post-<?php the_ID(); ?>'>
+        <h2 class='post-title'>Up and coming: <?php the_title(); ?></h2>
+      </div>
+      <hr />
+    </div>
+  </div>
+<?php endwhile; ?>
