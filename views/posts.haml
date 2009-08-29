@@ -1,7 +1,8 @@
 - if @posts && 0 < @posts.size
   - @posts.each do |post|
     = partial(:post, :locals => { :post => post })
-  = partial(:pagination)
+  - unless request.xhr?
+    = partial(:pagination)
 - else
   #404-sidebar.grid_2.alpha.right
     %p

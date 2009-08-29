@@ -16,18 +16,22 @@ require 'will_paginate/view_helpers/link_renderer'
 %w(acts_as_taggable tag tag_list tagging tags_helper).each { |lib| require lib }
 require 'ostruct'
 require 'RedCloth'
+require 'aws/s3'
 require 'sinatra/authorization'
-require 'models'
+require 'ruby-debug'
+
+ActiveRecord::Base.logger = Logger.new('db.log')
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
 protected
   
   def url(page)
-    url = request.url
-    if 1 == page
-      '/'
+    path = @template.request.path
+    case path
+    when /tags?|category/
+      1 == page ? "/#{path.split('/')[1,2].join('/')}" : "/#{path.split('/')[1,2].join('/')}/page/#{page}"
     else
-      "/page/#{page}"
+      1 == page ? '/' : "/page/#{page}"
     end
   end
 end
@@ -44,8 +48,20 @@ configure do
                         :github => ENV['BLOG_GITHUB'] || 'darkhelmet',
                         :twitter => ENV['BLOG_TWITTER'] || 'darkhelmetlive',
                         :delicious => ENV['BLOG_DELICIOUS'] || 'darkhelmetlive',
+                        :s3_access => ENV['BLOG_S3_ACCESS_KEY'] || 'secret',
+                        :s3_secret => ENV['BLOG_S3_SECRET_KEY'] || 'secret',
+                        :s3_bucket => ENV['BLOG_S3_BUCKET'] || 's3.blog.darkhax.com',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10)
 end
+
+before do 
+  params.symbolize_keys!
+  params.each do |k,v|
+    v.symbolize_keys!
+  end
+end
+
+require 'models'
 
 helpers do
   include Sinatra::Authorization
@@ -88,7 +104,7 @@ helpers do
   end
   
   def tag_link(tag)
-    partial("%a{ :href => '/tags/#{tag}', :rel => 'tag' } tag")
+    partial("%a{ :href => '/tag/#{tag}', :rel => 'tag' } #{tag}")
   end
   
   def tag_links(post)
@@ -96,22 +112,48 @@ helpers do
   end
   
   def post_class(post)
-    post.tag_list.map { |tag| "tag-#{tag}" } | ['post', "post-#{post.id}", "category-#{post.category}"]
+    (post.tag_list.map { |tag| "tag-#{tag}" } | ['post', "post-#{post.id}", "category-#{post.category}"]).join(' ')
   end
   
   def post_permalink(post)
-    "/#{post.published_on.strftime('%y/%m/%d')}/#{post.slug}"
+    "/#{post.published_on.strftime('%Y/%m/%d')}/#{post.slug}"
+  end
+  
+  def category_link(cat)
+    partial("%a{ :href => '/category/#{cat}' } #{cat.capitalize}")
   end
 end
 
 # main index
 get '/' do
-  @posts = Post.paginate(:page => 1, :per_page => Blog.per_page)
+  @posts = Post.published.paginate(:page => 1, :per_page => Blog.per_page)
+  haml(:posts)
+end
+
+# pagination
+get %r|/page/(\d+)| do |page|
+  @posts = Post.published.paginate(:page => page.to_i, :per_page => Blog.per_page)
+  haml(:posts)
+end
+
+# category index
+get '/category/:category' do |category|
+  @posts = Post.published.category(category).paginate(:page => 1, :per_page => Blog.per_page)
+  haml(:posts)
+end
+
+get %r|/category/(\w)/page/(\d+)| do |category,page|
+  @posts = Post.published.category(category).paginate(:page => page.to_i, :per_page => Blog.per_page)
   haml(:posts)
 end
 
 # rss feed
 get '/feed' do
+  'TODO: feed'
+end
+
+get %r|/sitemap.xml(.gz)?| do |gzip|
+  'TODO: sitemap'
 end
 
 get '/google-search' do
@@ -124,17 +166,41 @@ end
   end
 end
 
-# pagination
-get %r|/page/(\d+)| do |page|
-  "Found page #{page}"
-end
-
 # permalinks
-get %r|/(\d{4})/(\d{2})/(\d{2})/(\w+)| do |year,month,day,slug|
-  "Got permalink #{year} #{month} #{day} #{slug}"
+get %r|/(\d{4})/(\d{2})/(\d{2})/(.*)| do |year,month,day,slug|
+  @posts = Post.published.perma(Date.new(year.to_i, month.to_i, day.to_i), slug).paginate(:page => 1, :per_page => 1)
+  request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
 # tags
-get '/tags/:tags' do |tags|
-  "Got tags #{tags.gsub(' ', ', ')}"
+get '/tags?/:tags' do |tags|
+  @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => 1, :per_page => Blog.per_page)
+  haml(:posts)
+end
+
+get %r|/tags?/([\w+]+)/page/(\d+)| do |tags,page|
+  @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  haml(:posts)
+end
+
+post '/posts' do
+  params[:post][:published] = 'true' == params[:post][:published] ? true : false
+  post = Post.create(params[:post])
+  post.to_json(:except => [:created_at,:updated_at], :methods => :tag_list)
+end
+
+put '/posts' do
+  Post.find(params[:post][:id]).update_attributes(params[:post])
+end
+
+post '/uploads' do
+  upload = params[:upload][:data]
+  AWS::S3::Base.establish_connection!(:access_key_id => Blog.s3_access, :secret_access_key => Blog.s3_secret)
+  date = Date.today
+  obj = AWS::S3::S3Object.store("/uploads/#{date.strftime('%Y/%m')}/#{upload[:filename]}",
+                          upload[:tempfile],
+                          Blog.s3_bucket,
+                          :content_type => upload[:type],
+                          :access => :public_read)
+  "#{obj.response.code} #{obj.response.message}\n"
 end

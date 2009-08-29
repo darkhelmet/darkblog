@@ -1,27 +1,27 @@
 class Post < ActiveRecord::Base
-  belongs_to :redirection, :class_name => 'Post'
   validates_presence_of :title
   validates_presence_of :category
   
   acts_as_taggable
   
-  default_scope(:order => 'published_on DESC', :published => false)
+  default_scope(:order => 'published_on DESC', :include => :tags)
   named_scope(:published, :conditions => { :published => true })
+  named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
+  named_scope(:perma, lambda { |date,slug| { :limit => 1, :conditions => { :published_on => (date.beginning_of_day..date.end_of_day), :slug => slug } } })
   
   before_save do |record|
     record.slug = record.title.parameterize
     record.published_on  = Time.now unless record.published_on?
   end
   
-  def body_html
-    RedCloth.new(body.gsub("\r\n\r\n","\r\n<br />\r\n")).to_html
+  def category=(cat)
+    write_attribute(:category, cat.downcase)
   end
   
-  def matches_url(year,month,day)
-    created_at.year == year && created_at.month == month && created_at.day
+  def body_html
+    RedCloth.new(body).to_html
   end
 end
-
 
 env = ENV.has_key?('RACK_ENV') ? ENV['RACK_ENV'].to_sym : :development
 CONFIG_FILE = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))

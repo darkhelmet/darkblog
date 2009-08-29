@@ -8,22 +8,8 @@ $.fn.setupRemoteInline = function() {
                         url:this.href,
                         type:'GET',
                         success:function(data) {
-                                var e = $(data).find('#posts-container').children();
-                                var existing = link.closest('.content').prev();
-                                var sidebar = $(e[0]);
-                                sidebar.hide();
-                                sidebar.addClass('new-elem');
-                                $(existing).before(sidebar);
-                                var con = $(e[1]);
-                                con.addClass('new-elem');
-                                // clean out disqus
-                                con.find('.inline-comment-container').remove();
-                                // need to do this to make chrome happy...weird
-                                con.find('script').empty().remove();
-                                // clean out sociable
-                                con.find('.sociable').remove();
-                                con.hide();
-                                $(existing).before(con);
+                                d = $(data).addClass('new-elem').css('display','none');
+                                $(link.closest('.content').prev()).before(d);
                                 $('.new-elem').slideDown('slow', function() {
                                         $(this).removeClass('new-elem');
                                     });

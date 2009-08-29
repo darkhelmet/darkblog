@@ -1,7 +1,7 @@
 %div.grid_2.leftbar.right.alpha{ :id => "post-#{post.id}-sidebar" }
   %h1.date= post.published_on.strftime('%m.%d.%y')
   %p.time= post.published_on.strftime('%I:%M %p %Z')
-  %p.category= "Posted in #{post.category.capitalize}"
+  %p.category= "Posted in #{category_link(post.category)}"
   %p.tags= tag_links(post)
 %div.grid_8.omega.content{ :id => "post-#{post.id}-content" }
   .border

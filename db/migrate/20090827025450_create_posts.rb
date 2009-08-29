@@ -7,14 +7,12 @@ class CreatePosts < ActiveRecord::Migration
       t.text :body
       t.boolean :published, :default => false
       t.datetime :published_on
-      t.integer :redirection_id
       
       t.timestamps
     end
     
     add_index :posts, :slug
     add_index :posts, :category
-    add_index :posts, :redirection_id
   end
 
   def self.down
