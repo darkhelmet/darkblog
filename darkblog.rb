@@ -87,12 +87,12 @@ helpers do
     partial("%img{ :src => '#{link}', :alt => '#{alt}' }")
   end
   
-  def title
-    @title || Blog.title
-  end
-  
-  def title=(t)
-    @title = "#{Blog.title} | #{t}"
+  def title(t = nil)
+    if t.nil?
+      @title || Blog.title
+    else
+      @title = "#{Blog.title} | #{t}"
+    end
   end
   
   def fb_url
@@ -134,17 +134,20 @@ end
 # pagination
 get %r|/page/(\d+)| do |page|
   @posts = Post.published.paginate(:page => page.to_i, :per_page => Blog.per_page)
+  title("Page #{page}")
   haml(:posts)
 end
 
 # category index
 get '/category/:category' do |category|
   @posts = Post.published.category(category).paginate(:page => 1, :per_page => Blog.per_page)
+  title(category)
   haml(:posts)
 end
 
 get %r|/category/(\w)/page/(\d+)| do |category,page|
   @posts = Post.published.category(category).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  title("#{category} page #{page}")
   haml(:posts)
 end
 
@@ -163,6 +166,7 @@ end
 
 %w(about contact disclaimer).each do |page|
   get "/#{page}" do
+    title(page.capitalize)
     haml(:page, :locals => { :page => page.intern })
   end
 end
@@ -170,17 +174,20 @@ end
 # permalinks
 get %r|/(\d{4})/(\d{2})/(\d{2})/(.*)| do |year,month,day,slug|
   @posts = Post.published.perma(Date.new(year.to_i, month.to_i, day.to_i), slug).paginate(:page => 1, :per_page => 1)
+  title(@posts.first.title)
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
 # tags
 get '/tags?/:tags' do |tags|
   @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => 1, :per_page => Blog.per_page)
+  title(tags)
   haml(:posts)
 end
 
 get %r|/tags?/([\w+]+)/page/(\d+)| do |tags,page|
   @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  title("#{tags} page #{page}")
   haml(:posts)
 end
 
