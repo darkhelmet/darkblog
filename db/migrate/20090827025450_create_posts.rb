@@ -7,6 +7,7 @@ class CreatePosts < ActiveRecord::Migration
       t.text :body
       t.boolean :published, :default => false
       t.datetime :published_on
+      t.string :cached_tag_list
       
       t.timestamps
     end
