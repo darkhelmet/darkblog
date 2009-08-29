@@ -7,6 +7,7 @@ $: << File.expand_path(File.join('.', 'lib'))
 require 'rubygems'
 require 'sinatra'
 require 'haml'
+require 'builder'
 require 'activerecord'
 require 'activesupport'
 require 'will_paginate'
@@ -122,6 +123,10 @@ helpers do
     "/#{post.published_on.strftime('%Y/%m/%d')}/#{post.slug}"
   end
   
+  def post_permaurl(post)
+    Blog.index + post_permalink(post).split('/').reject(&:blank?).join('/')
+  end
+  
   def category_link(cat)
     partial("%a{ :href => '/category/#{cat}' } #{cat.capitalize}")
   end
@@ -197,7 +202,10 @@ end
 
 # rss feed
 get '/feed' do
-  'TODO: feed'
+  redirect(fb_url, 301) unless request.env['HTTP_USER_AGENT'] =~ /feedburner/i
+  @posts = Post.published.all(:limit => 10)
+  content_type('application/rss+xml', :charset => 'utf-8')
+  builder(:feed)
 end
 
 get %r|^/sitemap.xml(.gz)?$| do |gzip|
