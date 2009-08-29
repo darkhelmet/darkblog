@@ -30,6 +30,8 @@ protected
     case path
     when /tags?|category/
       1 == page ? "/#{path.split('/')[1,2].join('/')}" : "/#{path.split('/')[1,2].join('/')}/page/#{page}"
+    when /\/(\d{4})\/(\d{2})/
+      1 == page ? "/#{$1}/#{$2}" : "/#{$1}/#{$2}/page/#{page}"
     else
       1 == page ? '/' : "/page/#{page}"
     end
@@ -122,6 +124,31 @@ helpers do
   def category_link(cat)
     partial("%a{ :href => '/category/#{cat}' } #{cat.capitalize}")
   end
+  
+  def next_month(year,month)
+    if 12 == month
+      year += 1
+      month = 1
+      return year,month
+    else
+      return year,month + 1
+    end
+  end
+  
+  def monthly_archive_links
+    newest = Post.published.first
+    oldest = Post.published.last
+    year = oldest.published_on.year
+    month = oldest.published_on.month
+    
+    links = Array.new
+    while year <= newest.published_on.year && month <= newest.published_on.month
+      date = Date.new(year,month,1)
+      links << partial("%a{ :href => '/#{date.strftime('%Y/%m')}' } #{date.strftime('%B %Y')}")
+      year, month = next_month(year,month)
+    end
+    links
+  end
 end
 
 # main index
@@ -132,9 +159,25 @@ get '/' do
 end
 
 # pagination
-get %r|/page/(\d+)| do |page|
+get %r|^/page/(\d+)$| do |page|
   @posts = Post.published.paginate(:page => page.to_i, :per_page => Blog.per_page)
   title("Page #{page}")
+  haml(:posts)
+end
+
+# monthly archive
+get %r|^/(\d{4})/(\d{2})$| do |year,month|
+  date = Date.new(year.to_i, month.to_i, 1)
+  @posts = Post.published.monthly(date).paginate(:page => 1, :per_page => Blog.per_page)
+  title(date.strftime('%B %Y'))
+  haml(:posts)
+end
+
+# monthly archive with pagination
+get %r|^/(\d{4})/(\d{2})/page/(\d+)$| do |year,month,page|
+  date = Date.new(year.to_i, month.to_i, 1)
+  @posts = Post.published.monthly(date).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  title("#{date.strftime('%B %Y')} page #{page}")
   haml(:posts)
 end
 
@@ -145,7 +188,7 @@ get '/category/:category' do |category|
   haml(:posts)
 end
 
-get %r|/category/(\w)/page/(\d+)| do |category,page|
+get %r|^/category/(\w)/page/(\d+)$| do |category,page|
   @posts = Post.published.category(category).paginate(:page => page.to_i, :per_page => Blog.per_page)
   title("#{category} page #{page}")
   haml(:posts)
@@ -156,7 +199,7 @@ get '/feed' do
   'TODO: feed'
 end
 
-get %r|/sitemap.xml(.gz)?| do |gzip|
+get %r|^/sitemap.xml(.gz)?$| do |gzip|
   'TODO: sitemap'
 end
 
@@ -172,7 +215,7 @@ end
 end
 
 # permalinks
-get %r|/(\d{4})/(\d{2})/(\d{2})/(.*)| do |year,month,day,slug|
+get %r|^/(\d{4})/(\d{2})/(\d{2})/(.*)$| do |year,month,day,slug|
   @posts = Post.published.perma(Date.new(year.to_i, month.to_i, day.to_i), slug).paginate(:page => 1, :per_page => 1)
   title(@posts.first.title)
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
@@ -185,7 +228,7 @@ get '/tags?/:tags' do |tags|
   haml(:posts)
 end
 
-get %r|/tags?/([\w+]+)/page/(\d+)| do |tags,page|
+get %r|^/tags?/([\w+]+)/page/(\d+)$| do |tags,page|
   @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => page.to_i, :per_page => Blog.per_page)
   title("#{tags} page #{page}")
   haml(:posts)

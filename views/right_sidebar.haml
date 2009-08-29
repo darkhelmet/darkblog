@@ -14,3 +14,9 @@
 .sidebar-item.right
   %ul
     %li Tags
+.sidebar-item.right
+  %ul
+    %li
+      %h2 Archives
+    - monthly_archive_links.reverse_each do |l|
+      %li= l

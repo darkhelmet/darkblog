@@ -9,6 +9,7 @@ class Post < ActiveRecord::Base
   named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
   named_scope(:perma, lambda { |date,slug| { :limit => 1, :conditions => { :published_on => (date.beginning_of_day..date.end_of_day), :slug => slug } } })
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now] } })
+  named_scope(:monthly, lambda { |date| { :conditions => { :published_on => date.beginning_of_month.beginning_of_day..date.end_of_month.end_of_day } } })
   
   before_save do |record|
     record.slug = record.title.parameterize
