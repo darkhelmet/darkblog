@@ -1,6 +1,8 @@
 .sidebar-item.right
-  %ul
-    %li Subscribe
+  %h3
+    %a{ :href => '/feed' }
+      = partial("%img{ :src => '/images/rss.png', :style => 'vertical-align: middle;' }")
+    %a{ :href => '/feed' } Subscribe
 .sidebar-item.right
   %ul
     %li Search
