@@ -61,6 +61,7 @@ before do
   params.each do |k,v|
     v.symbolize_keys!
   end
+  @tags = Post.tag_counts
 end
 
 require 'models'
