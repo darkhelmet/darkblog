@@ -1,3 +1,5 @@
+- if @future_post
+  = partial(:future_post, :locals => { :post => @future_post })
 - if @posts && 0 < @posts.size
   - @posts.each do |post|
     = partial(:post, :locals => { :post => post })

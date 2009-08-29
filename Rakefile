@@ -18,7 +18,7 @@ end
 namespace :wp do
   task :migrate do
     require '../wp_ar/wp_ar.rb'
-    WpBlogPost.all(:conditions => { :post_type => 'post', :post_status => 'publish' }).reverse_each do |post|
+    WpBlogPost.all(:conditions => { :post_type => 'post', :post_status => ['publish','future'] }).reverse_each do |post|
       Post.create(:title => post.post_title,
                   :published => true,
                   :published_on => post.post_date,

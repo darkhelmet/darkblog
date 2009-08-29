@@ -127,6 +127,7 @@ end
 # main index
 get '/' do
   @posts = Post.published.paginate(:page => 1, :per_page => Blog.per_page)
+  @future_post = Post.future.last
   haml(:posts)
 end
 
