@@ -37,6 +37,7 @@ class Cache < ActiveRecord::Base
           Cache.put(key,value)
           value
         rescue Exception => e
+          p e.message
           item.nil? ? nil : item.value
         end
       else

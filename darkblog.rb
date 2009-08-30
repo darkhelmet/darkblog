@@ -257,7 +257,9 @@ get '/feed' do
 end
 
 get %r|^/sitemap.xml(.gz)?$| do |gzip|
-  'TODO: sitemap'
+  @posts = Post.published
+  content_type('application/xml', :charset => 'utf-8')
+  builder(:sitemap)
 end
 
 get '/google-search' do
