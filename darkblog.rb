@@ -19,12 +19,13 @@ require 'ostruct'
 require 'RedCloth'
 require 'crack'
 require 'restclient'
-require 'twitter'
 require 'www/delicious'
 require 'feedzirra'
+require 'twitter'
 require 'sinatra/authorization'
 require 'rack/contrib/etag'
 require 'rack/contrib/static_cache'
+require 'messagepub'
 
 if development?
   require 'ruby-debug'
@@ -63,12 +64,20 @@ configure do
                         :delicious_user => ENV['BLOG_DELICIOUS_USER'] || 'darkhelmetlive',
                         :delicious_password => ENV['BLOG_DELICIOUS_PASSWORD'] || 'secret',
                         :reader_id => ENV['BLOG_READER_ID'] || '13098793136980097600',
+                        :messagepub_key => ENV['BLOG_MESSAGEPUB_KEY'] || '',
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10)
 end
 
-not_found do
-  haml(:not_found)
+configure :production do
+  not_found do
+    not_found_notification
+    haml(:not_found)
+  end
+  
+  error do
+    error_notification
+  end
 end
 
 before do
@@ -229,6 +238,29 @@ helpers do
     else
       @disqus_part = part
     end
+  end
+  
+  def not_found_notification
+    c = MessagePub::Client.new(Blog.messagepub_key)
+    n = MessagePub::Notification.new(:subject => "[#{Blog.title}] 404 Not Found",
+                                     :body => "Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}")
+    n.add_recipient(MessagePub::Recipient.new(:position => 1, :channel => 'email', :address => Blog.email))
+    c.create!(n)
+  rescue
+  end
+  
+  def error_notification
+    c = MessagePub::Client.new(Blog.messagepub_key)
+    n = MessagePub::Notification.new(:subject => "[#{Blog.title}] 500 Internal Server Error",
+                                     :body => <<-EOS
+Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}
+
+#{env['sinatra.error'].message}
+EOS
+)
+    n.add_recipient(MessagePub::Recipient.new(:position => 1, :channel => 'email', :address => Blog.email))
+    c.create!(n)
+  rescue
   end
 end
 
