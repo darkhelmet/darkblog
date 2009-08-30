@@ -241,6 +241,7 @@ helpers do
   end
   
   def not_found_notification
+    return if Blog.messagepub_key.nil?
     c = MessagePub::Client.new(Blog.messagepub_key)
     n = MessagePub::Notification.new(:subject => "[#{Blog.title}] 404 Not Found",
                                      :body => "Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}")
@@ -250,6 +251,7 @@ helpers do
   end
   
   def error_notification
+    return if Blog.messagepub_key.nil?
     c = MessagePub::Client.new(Blog.messagepub_key)
     n = MessagePub::Notification.new(:subject => "[#{Blog.title}] 500 Internal Server Error",
                                      :body => <<-EOS
