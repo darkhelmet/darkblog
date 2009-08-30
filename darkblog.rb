@@ -290,7 +290,7 @@ get %r|^/category/(\w)/page/(\d+)$| do |category,page|
 end
 
 # rss feed
-get '/feed' do
+get %r|^/feed.*| do
   redirect(fb_url, 301) unless request.env['HTTP_USER_AGENT'] =~ /feedburner/i
   @posts = Post.published.all(:limit => 10)
   content_type('application/rss+xml', :charset => 'utf-8')
