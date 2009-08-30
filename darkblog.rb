@@ -24,7 +24,6 @@ require 'twitter'
 require 'www/delicious'
 require 'feedzirra'
 require 'sinatra/authorization'
-require 'ruby-debug'
 
 ActiveRecord::Base.logger = Logger.new('db.log')
 
