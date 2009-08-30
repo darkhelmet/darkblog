@@ -23,6 +23,7 @@ require 'twitter'
 require 'www/delicious'
 require 'feedzirra'
 require 'sinatra/authorization'
+require 'rack/contrib'
 
 ActiveRecord::Base.logger = Logger.new('db.log') if 'development' == ENV['RACK_ENV']
 
@@ -232,7 +233,6 @@ helpers do
 end
 
 use Rack::ETag
-use Rack::StaticCache
 
 # main index
 get '/' do
