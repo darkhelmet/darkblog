@@ -17,7 +17,6 @@ require 'will_paginate/view_helpers/link_renderer'
 %w(acts_as_taggable tag tag_list tagging tags_helper).each { |lib| require lib }
 require 'ostruct'
 require 'RedCloth'
-require 'aws/s3'
 require 'crack'
 require 'restclient'
 require 'twitter'
@@ -60,9 +59,6 @@ configure do
                         :delicious_password => ENV['BLOG_DELICIOUS_PASSWORD'] || 'secret',
                         :reader_id => ENV['BLOG_READER_ID'] || '13098793136980097600',
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
-                        :s3_access => ENV['BLOG_S3_ACCESS_KEY'] || 'secret',
-                        :s3_secret => ENV['BLOG_S3_SECRET_KEY'] || 'secret',
-                        :s3_bucket => ENV['BLOG_S3_BUCKET'] || 's3.blog.darkhax.com',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10)
 end
 
@@ -72,8 +68,9 @@ end
 
 before do
   if env['HTTP_HOST'] != Blog.host
-    http = 443 == env['SERVER_PORT'].to_i ? 'https://' : 'http://'
-    redirect(http + Blog.host + env['REQUEST_PATH'], 301)
+    if 443 != env['SERVER_PORT'].to_i
+      redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
+    end
   end
   params.symbolize_keys!
   params.each do |k,v|
@@ -355,17 +352,4 @@ put '/posts' do
   end
   post.update_attributes(params[:post])
   post.to_json(:except => [:created_at,:updated_at], :methods => :tag_list)
-end
-
-post '/uploads' do
-  require_administrative_privileges
-  upload = params[:upload][:data]
-  AWS::S3::Base.establish_connection!(:access_key_id => Blog.s3_access, :secret_access_key => Blog.s3_secret)
-  date = Date.today
-  obj = AWS::S3::S3Object.store("/uploads/#{date.strftime('%Y/%m')}/#{upload[:filename]}",
-                          upload[:tempfile],
-                          Blog.s3_bucket,
-                          :content_type => upload[:type],
-                          :access => :public_read)
-  "#{obj.response.code} #{obj.response.message}\n"
 end
