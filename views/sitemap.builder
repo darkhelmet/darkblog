@@ -1,5 +1,5 @@
 xml.instruct!
-xml.instruct!('xml-stylesheet', :type => 'text/xsl', :href => "http://localhost:9393/sitemap.xsl")
+xml.instruct!('xml-stylesheet', :type => 'text/xsl', :href => "#{Blog.index}sitemap.xsl")
 xml.urlset('xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd', 'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
   xml.url do
     xml.loc(Blog.index)
