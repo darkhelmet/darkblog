@@ -26,11 +26,10 @@ require 'sinatra/authorization'
 require 'rack/contrib'
 require 'rack/contrib/static_cache'
 
-if 'development' == ENV['RACK_ENV']
+if development?
   require 'ruby-debug'
+  ActiveRecord::Base.logger = Logger.new('db.log')
 end
-
-ActiveRecord::Base.logger = Logger.new('db.log') if 'development' == ENV['RACK_ENV']
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
 protected
@@ -73,7 +72,7 @@ not_found do
 end
 
 before do
-  if 'production' == ENV['RACK_ENV']
+  if production?
     if env['HTTP_HOST'] != Blog.host
       redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
     end
@@ -180,22 +179,18 @@ helpers do
   
   def setup_top_panel
     @repos = Cache.get('github', 1.day) do
-      p 'GETTING REPOSITORIES'
       Crack::JSON.parse(RestClient.get("http://github.com/api/v1/json/#{Blog.github}"))['user']['repositories'].reject { |r| r['fork'] }.sort { |l,r| l['name'] <=> r['name'] }
     end
     
     @tweets = Cache.get('twitter', 10.minutes) do
-      p 'GETTING TWITTER'
       Twitter::Search.new.from(Blog.twitter).to_a[0,6]
     end
     
-    @bookmarks = Cache.get('delicious', 1.hour) do 
-      p 'GETTING DELICIOUS'
+    @bookmarks = Cache.get('delicious', 1.hour) do
       WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,6]
     end
     
     @shared_items = Cache.get('reader', 6.hours) do
-      p 'GETTING SHARED ITEMS'
       Feedzirra::Feed.fetch_and_parse("http://www.google.com/reader/public/atom/user/#{Blog.reader_id}/state/com.google/broadcast").entries[0,6]
     end
   end
