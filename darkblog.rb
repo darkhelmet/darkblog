@@ -24,6 +24,7 @@ require 'www/delicious'
 require 'feedzirra'
 require 'sinatra/authorization'
 require 'rack/contrib'
+require 'rack/contrib/static_cache'
 
 ActiveRecord::Base.logger = Logger.new('db.log') if 'development' == ENV['RACK_ENV']
 
@@ -233,6 +234,7 @@ helpers do
 end
 
 use Rack::ETag
+use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico'], :versioning => false, :root => 'public'
 
 # main index
 get '/' do
