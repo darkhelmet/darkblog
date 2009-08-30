@@ -23,7 +23,7 @@ require 'twitter'
 require 'www/delicious'
 require 'feedzirra'
 require 'sinatra/authorization'
-require 'rack/contrib'
+require 'rack/contrib/etag'
 require 'rack/contrib/static_cache'
 
 if development?
