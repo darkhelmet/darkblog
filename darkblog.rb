@@ -66,6 +66,10 @@ configure do
                         :per_page => ENV['BLOG_PER_PAGE'] || 10)
 end
 
+not_found do
+  haml(:not_found)
+end
+
 before do
   if env['HTTP_HOST'] != Blog.host
     http = 443 == env['SERVER_PORT'].to_i ? 'https://' : 'http://'
