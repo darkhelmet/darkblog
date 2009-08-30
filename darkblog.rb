@@ -48,7 +48,9 @@ configure do
   Blog = OpenStruct.new(:title => ENV['BLOG_TITLE'] || 'verbose logging',
                         :tagline => ENV['BLOG_TAGLINE'] || 'programming, software development, and code',
                         :index => ENV['BLOG_INDEX'] || 'http://blog.darkhax.com/',
+                        :host => ENV['BLOG_HOST'] || 'blog.darkhax.com',
                         :email => ENV['BLOG_EMAIL'] || 'darkhelmet@darkhelmetlive.com',
+                        :username => ENV['BLOG_USERNAME'] || 'darkhelmet',
                         :author => ENV['BLOG_AUTHOR'] || 'Daniel Huckstep',
                         :bio => ENV['BLOG_BIO'] || 'is a software engineer (EIT) in Edmonton, Alberta, Canada',
                         :feedburner => ENV['BLOG_FEEDBURNER'] || 'VerboseLogging',
@@ -64,7 +66,11 @@ configure do
                         :per_page => ENV['BLOG_PER_PAGE'] || 10)
 end
 
-before do 
+before do
+  if env['HTTP_HOST'] != Blog.host
+    http = 443 == env['SERVER_PORT'].to_i ? 'https://' : 'http://'
+    redirect(http + Blog.host + env['REQUEST_PATH'], 301)
+  end
   params.symbolize_keys!
   params.each do |k,v|
     v.symbolize_keys!
@@ -132,7 +138,7 @@ helpers do
   end
   
   def post_permaurl(post)
-    Blog.index + post_permalink(post).split('/').reject(&:blank?).join('/')
+    Blog.index + post_permalink(post)[1..-1]
   end
   
   def category_link(cat)
@@ -151,6 +157,7 @@ helpers do
   
   def monthly_archive_links
     newest = Post.published.first
+    return Array.new if newest.nil?
     oldest = Post.published.last
     year = oldest.published_on.year
     month = oldest.published_on.month
@@ -286,6 +293,13 @@ end
 # permalinks
 get %r|^/(\d{4})/(\d{2})/(\d{2})/(.*)$| do |year,month,day,slug|
   @posts = Post.published.perma(Date.new(year.to_i, month.to_i, day.to_i), slug).paginate(:page => 1, :per_page => 1)
+  if @posts.empty?
+    r = Redirection.first(:conditions => { :old_permalink => "/#{year}/#{month}/#{day}/#{slug}" })
+    unless r.nil?
+      redirect(post_permaurl(r.post), 301)
+      return
+    end
+  end
   title(@posts.first.title)
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
@@ -304,16 +318,24 @@ get %r|^/tags?/([\w+]+)/page/(\d+)$| do |tags,page|
 end
 
 post '/posts' do
+  require_administrative_privileges
   params[:post][:published] = 'true' == params[:post][:published] ? true : false
   post = Post.create(params[:post])
   post.to_json(:except => [:created_at,:updated_at], :methods => :tag_list)
 end
 
 put '/posts' do
-  Post.find(params[:post][:id]).update_attributes(params[:post])
+  require_administrative_privileges
+  post = Post.find(params[:post][:id])
+  if params[:post].has_key?(:title) && params[:post][:title].parameterize != post.slug
+    Redirection.create(:post => post, :old_permalink => post_permalink(post))
+  end
+  post.update_attributes(params[:post])
+  post.to_json(:except => [:created_at,:updated_at], :methods => :tag_list)
 end
 
 post '/uploads' do
+  require_administrative_privileges
   upload = params[:upload][:data]
   AWS::S3::Base.establish_connection!(:access_key_id => Blog.s3_access, :secret_access_key => Blog.s3_secret)
   date = Date.today

@@ -1,4 +1,6 @@
 class Post < ActiveRecord::Base
+  has_many :redirections
+  
   validates_presence_of :title
   validates_presence_of :category
   
@@ -59,6 +61,10 @@ class Cache < ActiveRecord::Base
       item.destroy
     end
   end
+end
+
+class Redirection < ActiveRecord::Base
+  belongs_to :post
 end
 
 env = ENV.has_key?('RACK_ENV') ? ENV['RACK_ENV'].to_sym : :development

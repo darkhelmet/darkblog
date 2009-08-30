@@ -18,7 +18,7 @@ module Sinatra
     end
                                                         
     def authorize(username, password)
-      false
+      Blog.username == username && Blog.password == password
     end
                                                                      
     def require_administrative_privileges
