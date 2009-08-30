@@ -26,7 +26,7 @@
           %h2 What I'm Hacking
           - if @repos
             %ul
-              - @repos.select { |r| rand < 0.4 }.each do |r|
+              - @repos.select { |r| rand < 0.5 }.each do |r|
                 %li= repo(r)
               %li= github_link
   .tab
