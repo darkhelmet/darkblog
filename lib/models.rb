@@ -54,6 +54,7 @@ class Cache < ActiveRecord::Base
     c = Cache.find_or_create_by_key(key)
     c.value = value
     c.save
+    c.touch
   end
   
   def self.purge(key)

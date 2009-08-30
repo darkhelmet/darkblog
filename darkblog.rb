@@ -68,9 +68,7 @@ end
 
 before do
   if env['HTTP_HOST'] != Blog.host
-    if 443 != env['SERVER_PORT'].to_i
-      redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
-    end
+    redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
   end
   params.symbolize_keys!
   params.each do |k,v|
