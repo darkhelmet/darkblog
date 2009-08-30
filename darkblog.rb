@@ -237,6 +237,7 @@ end
 # main index
 get '/' do
   @posts = Post.published.paginate(:page => 1, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   @future_post = Post.future.last
   haml(:posts)
 end
@@ -244,6 +245,7 @@ end
 # pagination
 get %r|^/page/(\d+)$| do |page|
   @posts = Post.published.paginate(:page => page.to_i, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   title("Page #{page}")
   haml(:posts)
 end
@@ -252,6 +254,7 @@ end
 get %r|^/(\d{4})/(\d{2})$| do |year,month|
   date = Date.new(year.to_i, month.to_i, 1)
   @posts = Post.published.monthly(date).paginate(:page => 1, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   title(date.strftime('%B %Y'))
   haml(:posts)
 end
@@ -260,6 +263,7 @@ end
 get %r|^/(\d{4})/(\d{2})/page/(\d+)$| do |year,month,page|
   date = Date.new(year.to_i, month.to_i, 1)
   @posts = Post.published.monthly(date).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   title("#{date.strftime('%B %Y')} page #{page}")
   haml(:posts)
 end
@@ -267,12 +271,14 @@ end
 # category index
 get '/category/:category' do |category|
   @posts = Post.published.category(category).paginate(:page => 1, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   title(category)
   haml(:posts)
 end
 
 get %r|^/category/(\w)/page/(\d+)$| do |category,page|
   @posts = Post.published.category(category).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   title("#{category} page #{page}")
   haml(:posts)
 end
@@ -307,7 +313,9 @@ get %r|^/(\d{4})/(\d{2})/(\d{2})/(.*)$| do |year,month,day,slug|
   @posts = Post.published.perma(Date.new(year.to_i, month.to_i, day.to_i), slug).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => "/#{year}/#{month}/#{day}/#{slug}" })
-    unless r.nil?
+    if r.nil?
+      throw(:halt, [404, 'Not Found'])
+    else
       redirect(post_permaurl(r.post), 301)
       return
     end
@@ -320,12 +328,14 @@ end
 # tags
 get '/tags?/:tags' do |tags|
   @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => 1, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   title(tags)
   haml(:posts)
 end
 
 get %r|^/tags?/([\w+]+)/page/(\d+)$| do |tags,page|
   @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  throw(:halt, [404, 'Not Found']) if @posts.empty?
   title("#{tags} page #{page}")
   haml(:posts)
 end
