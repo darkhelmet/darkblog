@@ -67,8 +67,10 @@ not_found do
 end
 
 before do
-  if env['HTTP_HOST'] != Blog.host
-    redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
+  if 'production' == env['RACK_ENV']
+    if env['HTTP_HOST'] != Blog.host
+      redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
+    end
   end
   params.symbolize_keys!
   params.each do |k,v|
