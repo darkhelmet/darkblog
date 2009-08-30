@@ -18,7 +18,8 @@ require 'will_paginate/view_helpers/link_renderer'
 require 'ostruct'
 require 'RedCloth'
 require 'aws/s3'
-require 'octopi'
+require 'crack'
+require 'restclient'
 require 'twitter'
 require 'www/delicious'
 require 'feedzirra'
@@ -164,9 +165,10 @@ helpers do
   end
   
   def setup_top_panel
-    # @repos = Cache.get('github', 1.day) do
-    #       Octopi::User.find(Blog.github).repositories
-    #     end
+    @repos = Cache.get('github', 1.day) do
+      p 'GETTING REPOSITORIES'
+      Crack::JSON.parse(RestClient.get("http://github.com/api/v1/json/#{Blog.github}"))['user']['repositories'].reject { |r| r['fork'] }.sort { |l,r| l['name'] <=> r['name'] }
+    end
     
     @tweets = Cache.get('twitter', 10.minutes) do
       p 'GETTING TWITTER'
@@ -202,6 +204,14 @@ helpers do
   
   def reader(s)
     partial("%a{ :href => '#{s.links.first}' } #{s.title}")
+  end
+  
+  def repo(r)
+    partial("%a{ :href => '#{r['url']}' } #{r['name']}")
+  end
+  
+  def github_link
+    partial("%a{ :href => 'https://github.com/#{Blog.github}' } Fork me on Github")
   end
 end
 
