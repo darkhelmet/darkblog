@@ -231,6 +231,9 @@ helpers do
   end
 end
 
+use Rack::ETag
+use Rack::StaticCache
+
 # main index
 get '/' do
   @posts = Post.published.paginate(:page => 1, :per_page => Blog.per_page)
