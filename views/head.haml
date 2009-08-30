@@ -20,3 +20,7 @@
   if (top.location != self.location) {
     top.location = self.location.href;
   }
+
+- if 'development' == ENV['RACK_ENV']
+  :javascript
+    var disqus_developer = 1;

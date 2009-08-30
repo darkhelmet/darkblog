@@ -17,8 +17,22 @@
     = partial(:footer)
     - if 'production' == ENV['RACK_ENV']
       :javascript
-        $(document).ready(function(){
-          var c = $('#top-sidebar-container')
-          c.find('div:first-child').addClass('alpha');
-          c.find('div:last-child').addClass('omega');
-        });
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+        try {
+        var pageTracker = _gat._getTracker("UA-2062105-4");
+        pageTracker._trackPageview();
+        } catch(err) {}
+    :javascript
+      (function() {
+      	var links = document.getElementsByTagName('a');
+      	var query = '?';
+      	for(var i = 0; i < links.length; i++) {
+      	if(links[i].href.indexOf('#disqus_thread') >= 0) {
+      		query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+      	}
+      	}
+      	document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/verboselogging/get_num_replies.js' + query + '"></' + 'script>');
+      })();

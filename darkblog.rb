@@ -59,6 +59,7 @@ configure do
                         :delicious_user => ENV['BLOG_DELICIOUS_USER'] || 'darkhelmetlive',
                         :delicious_password => ENV['BLOG_DELICIOUS_PASSWORD'] || 'secret',
                         :reader_id => ENV['BLOG_READER_ID'] || '13098793136980097600',
+                        :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
                         :s3_access => ENV['BLOG_S3_ACCESS_KEY'] || 'secret',
                         :s3_secret => ENV['BLOG_S3_SECRET_KEY'] || 'secret',
                         :s3_bucket => ENV['BLOG_S3_BUCKET'] || 's3.blog.darkhax.com',
@@ -219,6 +220,14 @@ helpers do
   def github_link
     partial("%a{ :href => 'https://github.com/#{Blog.github}' } Fork me on Github")
   end
+  
+  def disqus_part(part = nil)
+    if part.nil?
+      @disqus_part || 'disqus_index'
+    else
+      @disqus_part = part
+    end
+  end
 end
 
 # main index
@@ -300,6 +309,7 @@ get %r|^/(\d{4})/(\d{2})/(\d{2})/(.*)$| do |year,month,day,slug|
     end
   end
   title(@posts.first.title)
+  disqus_part('disqus_single')
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
