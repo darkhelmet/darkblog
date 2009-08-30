@@ -25,7 +25,7 @@ require 'www/delicious'
 require 'feedzirra'
 require 'sinatra/authorization'
 
-ActiveRecord::Base.logger = Logger.new('db.log')
+ActiveRecord::Base.logger = Logger.new('db.log') if 'development' == ENV['RACK_ENV']
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
 protected
