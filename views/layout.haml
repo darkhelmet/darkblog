@@ -15,3 +15,10 @@
         .clear
       .clear
     = partial(:footer)
+    - if 'production' == ENV['RACK_ENV']
+      :javascript
+        $(document).ready(function(){
+          var c = $('#top-sidebar-container')
+          c.find('div:first-child').addClass('alpha');
+          c.find('div:last-child').addClass('omega');
+        });
