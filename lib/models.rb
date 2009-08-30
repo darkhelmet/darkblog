@@ -67,7 +67,7 @@ class Redirection < ActiveRecord::Base
   belongs_to :post
 end
 
-env = ENV.has_key?('RACK_ENV') ? ENV['RACK_ENV'].to_sym : 'development'
+env = ENV.has_key?('RACK_ENV') ? ENV['RACK_ENV'] : 'development'
 CONFIG_FILE = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))
 CONFIG = YAML.load_file(CONFIG_FILE)
 ActiveRecord::Base.establish_connection(CONFIG[env])
