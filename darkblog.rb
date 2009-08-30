@@ -26,7 +26,7 @@ require 'sinatra/authorization'
 require 'rack/contrib'
 require 'rack/contrib/static_cache'
 
-if ENV['RACK_ENV']
+if 'development' == ENV['RACK_ENV']
   require 'ruby-debug'
 end
 
