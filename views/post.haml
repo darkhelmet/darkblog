@@ -9,4 +9,5 @@
       %h2.post-title
         %a{ :href => post_permalink(post), :rel => 'bookmark', :title => "Permanent Link to #{post.title}" }= post.title
       .entry= post.body_html
-      = partial(disqus_part.intern, :locals => { :post => post })
+      - unless request.xhr?
+        = partial(disqus_part.intern, :locals => { :post => post })

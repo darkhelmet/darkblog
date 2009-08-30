@@ -26,6 +26,10 @@ require 'sinatra/authorization'
 require 'rack/contrib'
 require 'rack/contrib/static_cache'
 
+if ENV['RACK_ENV']
+  require 'ruby-debug'
+end
+
 ActiveRecord::Base.logger = Logger.new('db.log') if 'development' == ENV['RACK_ENV']
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
@@ -69,7 +73,7 @@ not_found do
 end
 
 before do
-  if 'production' == env['RACK_ENV']
+  if 'production' == ENV['RACK_ENV']
     if env['HTTP_HOST'] != Blog.host
       redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
     end
