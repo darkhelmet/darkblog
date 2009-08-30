@@ -2,6 +2,28 @@
   #panel
     .container_12
       #toppanel-extras.grid_12
+        .grid_3.left.alpha
+          %h2 What I'm Keeping
+          - if @bookmarks
+            %ul
+              - @bookmarks.each do |b|
+                %li= delicious(b)
+              %li= delicious_link
+        .grid_3.left
+          %h2 What I'm Reading
+          - if @shared_items
+            %ul
+              - @shared_items.each do |s|
+                %li= reader(s)
+        .grid_3.left
+          %h2 What I'm Doing
+          - if @tweets
+            %ul
+              - @tweets.each do |t|
+                %li= tweet(t)
+              %li= twitter_link
+        .grid_3.left.omega
+          %h2 What I'm Hacking
   .tab
     %ul.login
       %li.left

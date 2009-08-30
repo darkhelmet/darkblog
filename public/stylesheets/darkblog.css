@@ -43,7 +43,7 @@ hr.end { margin-bottom: 5px; }
 #top-title h1 { margin-bottom: 0px; }
 .date { margin-top: 10px; text-decoration: underline; }
 .leftbar * { margin-bottom: 0px; }
-#top-sidebar-container ul { list-style-type: square; }
+#toppanel-extras ul { list-style-type: square; }
 ul#nav-menu { list-style-image: none; list-style-position: outside; list-style-type: none; margin-top: 0px; margin-bottom: 0px; border: solid #252625 5px; }
 ul#nav-menu li { display: inline; margin-left: 10px; margin-right: 10px; }
 ul#nav-menu li a { color: #a69b03; }
@@ -56,6 +56,7 @@ blockquote { background-color: #252625; color: #a69b03; margin: 0px auto; paddin
 #main-content { padding-bottom: 35px; }
 body > #main-content { height: auto; min-height: 100%; }
 img.alignright { float: right; margin-left: 5px; }
+img.pimg { width: 100%; }
 .tag1 { font-size: 10px; }
 .tag2 { font-size: 12px; }
 .tag3 { font-size: 16px; }

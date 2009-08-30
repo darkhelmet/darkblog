@@ -18,6 +18,10 @@ require 'will_paginate/view_helpers/link_renderer'
 require 'ostruct'
 require 'RedCloth'
 require 'aws/s3'
+require 'octopi'
+require 'twitter'
+require 'www/delicious'
+require 'feedzirra'
 require 'sinatra/authorization'
 require 'ruby-debug'
 
@@ -50,7 +54,9 @@ configure do
                         :password => ENV['BLOG_PASSWORD'] || 'password',
                         :github => ENV['BLOG_GITHUB'] || 'darkhelmet',
                         :twitter => ENV['BLOG_TWITTER'] || 'darkhelmetlive',
-                        :delicious => ENV['BLOG_DELICIOUS'] || 'darkhelmetlive',
+                        :delicious_user => ENV['BLOG_DELICIOUS_USER'] || 'darkhelmetlive',
+                        :delicious_password => ENV['BLOG_DELICIOUS_PASSWORD'] || 'secret',
+                        :reader_id => ENV['BLOG_READER_ID'] || '13098793136980097600',
                         :s3_access => ENV['BLOG_S3_ACCESS_KEY'] || 'secret',
                         :s3_secret => ENV['BLOG_S3_SECRET_KEY'] || 'secret',
                         :s3_bucket => ENV['BLOG_S3_BUCKET'] || 's3.blog.darkhax.com',
@@ -63,6 +69,7 @@ before do
     v.symbolize_keys!
   end
   @tags = Post.tag_counts
+  setup_top_panel
 end
 
 require 'models'
@@ -154,6 +161,47 @@ helpers do
       year, month = next_month(year,month)
     end
     links
+  end
+  
+  def setup_top_panel
+    # @repos = Cache.get('github', 1.day) do
+    #       Octopi::User.find(Blog.github).repositories
+    #     end
+    
+    @tweets = Cache.get('twitter', 10.minutes) do
+      p 'GETTING TWITTER'
+      Twitter::Search.new.from(Blog.twitter).to_a[0,6]
+    end
+    
+    @bookmarks = Cache.get('delicious', 1.hour) do 
+      p 'GETTING DELICIOUS'
+      WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,6]
+    end
+    
+    @shared_items = Cache.get('reader', 6.hours) do
+      p 'GETTING SHARED ITEMS'
+      Feedzirra::Feed.fetch_and_parse("http://www.google.com/reader/public/atom/user/#{Blog.reader_id}/state/com.google/broadcast").entries[0,6]
+    end
+  end
+  
+  def tweet(t)
+    t.text
+  end
+  
+  def twitter_link
+    partial("%a{ :href => 'http://twitter.com/#{Blog.twitter}'} Follow me on twitter")
+  end
+  
+  def delicious(b)
+    partial("%a{ :href => '#{b.url.to_s}' } #{b.title}")
+  end
+  
+  def delicious_link
+    partial("I'm\n%a{ :href => 'http://delicious.com/#{Blog.delicious_user}' } #{Blog.delicious_user}\non Delicious.\n<br />\n%a{ :href => 'http://delicious.com/network?add=#{Blog.delicious_user}'} Add me to your network")
+  end
+  
+  def reader(s)
+    partial("%a{ :href => '#{s.links.first}' } #{s.title}")
   end
 end
 
