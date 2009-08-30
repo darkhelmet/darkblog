@@ -23,8 +23,9 @@ require 'www/delicious'
 require 'feedzirra'
 require 'twitter'
 require 'sinatra/authorization'
-require 'rack/contrib/etag'
-require 'rack/contrib/static_cache'
+require 'rack/etag'
+require 'rack/static_cache'
+# require 'rack/remove_slash'
 require 'messagepub'
 
 if development?
@@ -120,12 +121,19 @@ helpers do
     partial("%img{ :src => '#{link}', :alt => '#{alt}' }")
   end
   
-  def title(t = nil)
+  def title(t = nil, page = 1)
     if t.nil?
       @title || Blog.title
     else
       @title = "#{Blog.title} | #{t}"
+      if 1 < page
+        @title += " Page #{page}"
+      end
     end
+  end
+  
+  def canonical(c = nil)
+    @canonical ||= c
   end
   
   def fb_url
@@ -266,55 +274,39 @@ EOS
   end
 end
 
-use Rack::ETag
 use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico'], :versioning => false, :root => 'public'
+# use Rack::RemoveSlash
+use Rack::ETag
 
-# main index
-get '/' do
-  @posts = Post.published.paginate(:page => 1, :per_page => Blog.per_page)
+# main index with pagination
+get %r|^/(?:page/(\d+))?$| do |page|
+  page ||= '1'
+  page = page.to_i
+  @posts = Post.published.paginate(:page => page, :per_page => Blog.per_page)
   throw(:halt, [404, 'Not Found']) if @posts.empty?
-  @future_post = Post.future.last
-  haml(:posts)
-end
-
-# pagination
-get %r|^/page/(\d+)$| do |page|
-  @posts = Post.published.paginate(:page => page.to_i, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
-  title("Page #{page}")
-  haml(:posts)
-end
-
-# monthly archive
-get %r|^/(\d{4})/(\d{2})$| do |year,month|
-  date = Date.new(year.to_i, month.to_i, 1)
-  @posts = Post.published.monthly(date).paginate(:page => 1, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
-  title(date.strftime('%B %Y'))
+  @future_post = Post.future.last if 1 == page
+  title("Page #{page}") if 1 < page
   haml(:posts)
 end
 
 # monthly archive with pagination
-get %r|^/(\d{4})/(\d{2})/page/(\d+)$| do |year,month,page|
+get %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$| do |year,month,page|
+  page ||= '1'
+  page = page.to_i
   date = Date.new(year.to_i, month.to_i, 1)
-  @posts = Post.published.monthly(date).paginate(:page => page.to_i, :per_page => Blog.per_page)
+  @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   throw(:halt, [404, 'Not Found']) if @posts.empty?
-  title("#{date.strftime('%B %Y')} page #{page}")
+  title(date.strftime('%B %Y'), page)
   haml(:posts)
 end
 
-# category index
-get '/category/:category' do |category|
-  @posts = Post.published.category(category).paginate(:page => 1, :per_page => Blog.per_page)
+# category index with pagination
+get %r|^/category/(\w+)(?:/page/(\d+))?$| do |category,page|
+  page ||= '1'
+  page = page.to_i
+  @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
   throw(:halt, [404, 'Not Found']) if @posts.empty?
-  title(category)
-  haml(:posts)
-end
-
-get %r|^/category/(\w)/page/(\d+)$| do |category,page|
-  @posts = Post.published.category(category).paginate(:page => page.to_i, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
-  title("#{category} page #{page}")
+  title(category.capitalize, page)
   haml(:posts)
 end
 
@@ -344,7 +336,7 @@ end
 end
 
 # permalinks
-get %r|^/(\d{4})/(\d{2})/(\d{2})/(.*)$| do |year,month,day,slug|
+get %r|^/(\d{4})/(\d{2})/(\d{2})/([\w\-]+)$| do |year,month,day,slug|
   @posts = Post.published.perma(Date.new(year.to_i, month.to_i, day.to_i), slug).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => "/#{year}/#{month}/#{day}/#{slug}" })
@@ -360,18 +352,13 @@ get %r|^/(\d{4})/(\d{2})/(\d{2})/(.*)$| do |year,month,day,slug|
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
-# tags
-get '/tags?/:tags' do |tags|
-  @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => 1, :per_page => Blog.per_page)
+# tags with pagination
+get %r|^/tag/(\w+)(?:/page/(\d+))?$| do |tag,page| 
+  page ||= '1'
+  page = page.to_i
+  @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
   throw(:halt, [404, 'Not Found']) if @posts.empty?
-  title(tags)
-  haml(:posts)
-end
-
-get %r|^/tags?/([\w+]+)/page/(\d+)$| do |tags,page|
-  @posts = Post.published.find_tagged_with(tags.gsub(' ',','), :match_all => true).paginate(:page => page.to_i, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
-  title("#{tags} page #{page}")
+  title(tag, page)
   haml(:posts)
 end
 
