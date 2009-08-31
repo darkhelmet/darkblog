@@ -159,12 +159,8 @@ helpers do
     (post.tag_list.map { |tag| "tag-#{tag}" } | ['post', "post-#{post.id}", "category-#{post.category}"]).join(' ')
   end
   
-  def post_permalink(post)
-    "/#{post.published_on_local.strftime('%Y/%m/%d')}/#{post.slug}"
-  end
-  
   def post_permaurl(post)
-    Blog.index + post_permalink(post)[1..-1]
+    Blog.index + post.permalink[1..-1]
   end
   
   def category_link(cat)
@@ -342,15 +338,14 @@ end
 end
 
 # permalinks
-get %r|^/(\d{4})/(\d{2})/(\d{2})/([\w\-]+)$| do |year,month,day,slug|
-  date = DateTime.strptime("#{year}-#{month}-#{day} #{Blog.tz_display}", '%F %Z')
-  @posts = Post.published.perma(date, slug).paginate(:page => 1, :per_page => 1)
+get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)$| do |permalink|
+  @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
-    r = Redirection.first(:conditions => { :old_permalink => "/#{year}/#{month}/#{day}/#{slug}" })
+    r = Redirection.first(:conditions => { :old_permalink => permalink })
     if r.nil?
       throw(:halt, [404, 'Not Found'])
     else
-      redirect(post_permaurl(r.post), 301)
+      redirect(r.post.permalink, 301)
       return
     end
   end
@@ -379,8 +374,8 @@ end
 put '/posts' do
   require_administrative_privileges
   post = Post.find(params[:post][:id])
-  if params[:post].has_key?(:title) && params[:post][:title].parameterize != post.slug
-    Redirection.create(:post => post, :old_permalink => post_permalink(post))
+  if params[:post].has_key?(:title) && post.title.parameterize != params[:post][:title].parameterize
+    Redirection.create(:post => post, :old_permalink => post.permalink)
   end
   post.update_attributes(params[:post])
   post.to_json(:except => [:created_at,:updated_at], :methods => :tag_list)

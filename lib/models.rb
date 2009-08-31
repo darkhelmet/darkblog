@@ -9,13 +9,13 @@ class Post < ActiveRecord::Base
   default_scope(:order => 'published_on DESC', :include => :tags)
   named_scope(:published, lambda { { :conditions => ['published = ? AND published_on < ?', true, Time.now.utc] } })
   named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
-  named_scope(:perma, lambda { |date,slug| { :limit => 1, :conditions => { :published_on => (date.utc.beginning_of_day..date.utc.end_of_day), :slug => slug } } })
+  named_scope(:perma, lambda { |perma| { :limit => 1, :conditions => { :permalink => perma } } })
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now.utc] } })
   named_scope(:monthly, lambda { |date| { :conditions => { :published_on => date.utc.beginning_of_month.beginning_of_day..date.utc.end_of_month.end_of_day } } })
   
   before_save do |record|
-    record.slug = record.title.parameterize
     record.published_on  = Time.now.utc unless record.published_on?
+    record.permalink = "/#{record.published_on_local.strftime('%Y/%m/%d')}/#{record.title.parameterize}"
   end
   
   def category=(cat)
