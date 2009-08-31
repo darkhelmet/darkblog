@@ -27,6 +27,7 @@ require 'rack/etag'
 require 'rack/static_cache'
 require 'rack/remove_slash'
 require 'messagepub'
+require 'tzinfo'
 
 if development?
   require 'ruby-debug'
@@ -39,7 +40,7 @@ protected
   def url(page)
     path = @template.request.path
     case path
-    when /tags?|category/
+    when /tag|category/
       1 == page ? "/#{path.split('/')[1,2].join('/')}" : "/#{path.split('/')[1,2].join('/')}/page/#{page}"
     when /\/(\d{4})\/(\d{2})/
       1 == page ? "/#{$1}/#{$2}" : "/#{$1}/#{$2}/page/#{page}"
@@ -67,7 +68,9 @@ configure do
                         :reader_id => ENV['BLOG_READER_ID'] || '13098793136980097600',
                         :messagepub_key => ENV['BLOG_MESSAGEPUB_KEY'] || '',
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
-                        :per_page => ENV['BLOG_PER_PAGE'] || 10)
+                        :per_page => ENV['BLOG_PER_PAGE'] || 10,
+                        :tz => TZInfo::Timezone.get('MST7MDT'),
+                        :tz_display => 'MDT')
 end
 
 configure :production do
@@ -157,7 +160,7 @@ helpers do
   end
   
   def post_permalink(post)
-    "/#{post.published_on.strftime('%Y/%m/%d')}/#{post.slug}"
+    "/#{post.published_on_local.strftime('%Y/%m/%d')}/#{post.slug}"
   end
   
   def post_permaurl(post)
@@ -182,11 +185,11 @@ helpers do
     newest = Post.published.first
     return Array.new if newest.nil?
     oldest = Post.published.last
-    year = oldest.published_on.year
-    month = oldest.published_on.month
+    year = oldest.published_on_local.year
+    month = oldest.published_on_local.month
     
     links = Array.new
-    while year <= newest.published_on.year && month <= newest.published_on.month
+    while year <= newest.published_on_local.year && month <= newest.published_on_local.month
       date = Date.new(year,month,1)
       links << partial("%a{ :href => '/#{date.strftime('%Y/%m')}' } #{date.strftime('%B %Y')}")
       year, month = next_month(year,month)
@@ -293,7 +296,7 @@ end
 get %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$| do |year,month,page|
   page ||= '1'
   page = page.to_i
-  date = Date.new(year.to_i, month.to_i, 1)
+  date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z').utc
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   throw(:halt, [404, 'Not Found']) if @posts.empty?
   title(date.strftime('%B %Y'), page)
@@ -337,7 +340,8 @@ end
 
 # permalinks
 get %r|^/(\d{4})/(\d{2})/(\d{2})/([\w\-]+)$| do |year,month,day,slug|
-  @posts = Post.published.perma(Date.new(year.to_i, month.to_i, day.to_i), slug).paginate(:page => 1, :per_page => 1)
+  date = DateTime.strptime("#{year}-#{month}-#{day} #{Blog.tz_display}", '%F %Z')
+  @posts = Post.published.perma(date, slug).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => "/#{year}/#{month}/#{day}/#{slug}" })
     if r.nil?

@@ -5,3 +5,4 @@ jnunemaker-twitter --source gems.github.com
 www-delicious
 pauldix-feedzirra --source gems.github.com
 rest-client
+tzinfo
