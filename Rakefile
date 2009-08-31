@@ -22,7 +22,7 @@ namespace :wp do
     WpBlogPost.all(:conditions => { :post_type => 'post', :post_status => ['publish','future'] }).reverse_each do |post|
       Post.create(:title => post.post_title,
                   :published => true,
-                  :published_on => post.post_date.utc,
+                  :published_on => (post.post_date + 1.hour).utc,
                   :category => post.term_taxonomies.select { |tt| tt.taxonomy == 'category' }.map { |t| t.term.name }.first,
                   :body => post.post_content, :tag_list => post.tags.map(&:name))
     end
