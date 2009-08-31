@@ -25,7 +25,7 @@ require 'twitter'
 require 'sinatra/authorization'
 require 'rack/etag'
 require 'rack/static_cache'
-# require 'rack/remove_slash'
+require 'rack/remove_slash'
 require 'messagepub'
 
 if development?
@@ -275,7 +275,7 @@ EOS
 end
 
 use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico'], :versioning => false, :root => 'public'
-# use Rack::RemoveSlash
+use Rack::RemoveSlash
 use Rack::ETag
 
 # main index with pagination
