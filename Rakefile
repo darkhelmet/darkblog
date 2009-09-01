@@ -15,6 +15,12 @@ namespace :db do
   end
 end
 
+namespace :cache do
+  task :purge do
+    Cache.purge(nil)
+  end
+end
+
 namespace :wp do
   task :migrate do
     require '../wp_ar/wp_ar.rb'

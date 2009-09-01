@@ -14,7 +14,11 @@ require 'will_paginate'
 require 'will_paginate/finders/active_record'
 require 'will_paginate/view_helpers/base'
 require 'will_paginate/view_helpers/link_renderer'
-%w(acts_as_taggable tag tag_list tagging tags_helper).each { |lib| require lib }
+require 'acts_as_taggable'
+require 'tag'
+require 'tag_list'
+require 'tagging'
+require 'tags_helper'
 require 'ostruct'
 require 'RedCloth'
 require 'crack'
@@ -79,9 +83,7 @@ configure :production do
     haml(:not_found)
   end
   
-  error do
-    error_notification
-  end
+  error { error_notification }
 end
 
 before do
@@ -89,11 +91,15 @@ before do
     if env['HTTP_HOST'] != Blog.host
       redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
     end
+    
+    expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
   end
+  
   params.symbolize_keys!
   params.each do |k,v|
     v.symbolize_keys!
   end
+  
   @tags = Post.tag_counts
   setup_top_panel
 end
@@ -137,6 +143,10 @@ helpers do
   
   def canonical(c = nil)
     @canonical ||= c
+  end
+  
+  def keywords(k = nil)
+    @keywords ||= k
   end
   
   def fb_url
@@ -195,19 +205,27 @@ helpers do
   
   def setup_top_panel
     @repos = Cache.get('github', 1.day) do
-      Crack::JSON.parse(RestClient.get("http://github.com/api/v1/json/#{Blog.github}"))['user']['repositories'].reject { |r| r['fork'] }.sort { |l,r| l['name'] <=> r['name'] }
+      resp = RestClient.get("http://github.com/api/v1/json/#{Blog.github}")
+      Crack::JSON.parse(resp)['user']['repositories'].reject do
+        |r| r['fork']
+      end.sort do
+        |l,r| l['name'] <=> r['name']
+      end.select do
+        |r| rand < 0.5
+      end
     end
     
     @tweets = Cache.get('twitter', 10.minutes) do
       Twitter::Search.new.from(Blog.twitter).to_a[0,6]
     end
     
-    @bookmarks = Cache.get('delicious', 1.hour) do
+    @bookmarks = Cache.get('delicious', 30.minutes) do
       WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,6]
     end
     
     @shared_items = Cache.get('reader', 6.hours) do
-      Feedzirra::Feed.fetch_and_parse("http://www.google.com/reader/public/atom/user/#{Blog.reader_id}/state/com.google/broadcast").entries[0,6]
+      url = "http://www.google.com/reader/public/atom/user/#{Blog.reader_id}/state/com.google/broadcast"
+      Feedzirra::Feed.fetch_and_parse(url).entries[0,6]
     end
   end
   
@@ -272,7 +290,8 @@ EOS
   rescue
   end
   
-  def expires(time)
+  def expires_in(time)
+    headers['Cache-Control'] = "public, max-age=#{time}"
   end
 end
 

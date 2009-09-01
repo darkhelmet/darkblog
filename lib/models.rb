@@ -62,7 +62,8 @@ class Cache < ActiveRecord::Base
   end
   
   def self.purge(key)
-    if item = Cache.first(:conditions => { :key => key })
+    items = key.nil? ? Cache.all : Cache.all(:conditions => { :key => key })
+    items.each do |item|
       item.destroy
     end
   end
