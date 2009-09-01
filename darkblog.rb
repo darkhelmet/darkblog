@@ -99,7 +99,7 @@ before do
     run_later do
       Post.published.untwittered.all.each do |post|
         begin
-          resp = RestClient.get('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
+          resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
           resp = Crack::JSON.parse(resp)
           if resp['status']['code'] =~ /2\d\d/
             short_url = resp['url']
