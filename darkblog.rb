@@ -374,7 +374,7 @@ get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)$| do |permalink|
 end
 
 # tags with pagination
-get %r|^/tag/([\w\-]+)(?:/page/(\d+))?$| do |tag,page| 
+get %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$| do |tag,page| 
   page ||= '1'
   page = page.to_i
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
