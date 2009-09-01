@@ -32,6 +32,7 @@ require 'rack/static_cache'
 require 'rack/remove_slash'
 require 'messagepub'
 require 'tzinfo'
+require 'run_later'
 
 if development?
   require 'ruby-debug'
