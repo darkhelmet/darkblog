@@ -68,6 +68,7 @@ configure do
                         :password => ENV['BLOG_PASSWORD'] || 'password',
                         :github => ENV['BLOG_GITHUB'] || 'darkhelmet',
                         :twitter => ENV['BLOG_TWITTER'] || 'darkhelmetlive',
+                        :twitter_password => ENV['BLOG_TWITTER_PASSWORD'] || '',
                         :delicious_user => ENV['BLOG_DELICIOUS_USER'] || 'darkhelmetlive',
                         :delicious_password => ENV['BLOG_DELICIOUS_PASSWORD'] || 'secret',
                         :reader_id => ENV['BLOG_READER_ID'] || '13098793136980097600',
@@ -94,6 +95,30 @@ before do
     end
     
     expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+    
+    run_later do
+      Post.published.untwittered.all.each do |post|
+        begin
+          resp = RestClient.get('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
+          resp = Crack::JSON.parse(resp)
+          if resp['status']['code'] =~ /2\d\d/
+            short_url = resp['url']
+            httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
+            client = Twitter::Base.new(httpauth)
+            client.update("#{Blog.title}: #{post.title}: #{short_url}")
+          else
+            notify('[verbose logging] Error tr.iming', resp['status']['message'])
+          end
+        rescue Exception => e
+          body = <<-EOS
+Error announcing '#{post.title}' on Twitter
+
+#{e.message}
+EOS
+          notify("[verbose logging] Error posting to Twitter")
+        end
+      end
+    end
   end
   
   params.symbolize_keys!
@@ -266,29 +291,26 @@ helpers do
     end
   end
   
-  def not_found_notification
+  def notify(subject, body)
     return if Blog.messagepub_key.nil?
     c = MessagePub::Client.new(Blog.messagepub_key)
-    n = MessagePub::Notification.new(:subject => "[#{Blog.title}] 404 Not Found",
-                                     :body => "Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}")
+    n = MessagePub::Notification.new(:subject => subject, :body => body)
     n.add_recipient(MessagePub::Recipient.new(:position => 1, :channel => 'email', :address => Blog.email))
     c.create!(n)
-  rescue
+  rescue Exception => e
+  end
+  
+  def not_found_notification
+    notify("[#{Blog.title}] 404 Not Found", "Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}")
   end
   
   def error_notification
-    return if Blog.messagepub_key.nil?
-    c = MessagePub::Client.new(Blog.messagepub_key)
-    n = MessagePub::Notification.new(:subject => "[#{Blog.title}] 500 Internal Server Error",
-                                     :body => <<-EOS
+    body = <<-EOS
 Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}
 
 #{env['sinatra.error'].message}
 EOS
-)
-    n.add_recipient(MessagePub::Recipient.new(:position => 1, :channel => 'email', :address => Blog.email))
-    c.create!(n)
-  rescue
+    notify("[#{Blog.title}] 500 Internal Server Error", body)
   end
   
   def expires_in(time)
