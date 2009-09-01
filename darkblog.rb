@@ -310,6 +310,8 @@ helpers do
 Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}
 
 #{env['sinatra.error'].message}
+
+#{env}
 EOS
     notify("[#{Blog.title}] 500 Internal Server Error", body)
   end
