@@ -106,6 +106,7 @@ before do
             httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
             client = Twitter::Base.new(httpauth)
             client.update("#{Blog.title}: #{post.title}: #{short_url}")
+            post.update_attributes(:twittered => true)
           else
             notify('[verbose logging] Error tr.iming', resp['status']['message'])
           end
