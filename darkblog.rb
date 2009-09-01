@@ -95,6 +95,31 @@ before do
     end
     
     expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+    
+    run_later do
+      Post.published.untwittered.all.each do |post|
+        begin
+          resp = RestClient.get('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
+          resp = Crack::JSON.parse(resp)
+          if resp['status']['code'] =~ /2\d\d/
+            short_url = resp['url']
+            httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
+            client = Twitter::Base.new(httpauth)
+            client.update("#{Blog.title}: #{post.title}: #{short_url}")
+            post.update_attributes(:twittered => true)
+          else
+            notify('[verbose logging] Error tr.iming', resp['status']['message'])
+          end
+        rescue Exception => e
+          body = <<-EOS
+Error announcing '#{post.title}' on Twitter
+
+#{e.message}
+EOS
+          notify("[verbose logging] Error posting to Twitter")
+        end
+      end
+    end
   end
   
   params.symbolize_keys!
@@ -300,31 +325,6 @@ use Rack::ETag
 
 # main index with pagination
 get %r|^/(?:page/(\d+))?$| do |page|
-  run_later do
-    Post.published.untwittered.all.each do |post|
-      begin
-        resp = RestClient.get('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
-        resp = Crack::JSON.parse(resp)
-        if resp['status']['code'] =~ /2\d\d/
-          short_url = resp['url']
-          httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
-          client = Twitter::Base.new(httpauth)
-          client.update("#{Blog.title}: #{post.title}: #{short_url}")
-          post.update_attributes(:twittered => true)
-        else
-          notify('[verbose logging] Error tr.iming', resp['status']['message'])
-        end
-      rescue Exception => e
-        body = <<-EOS
-Error announcing '#{post.title}' on Twitter
-
-#{e.message}
-EOS
-        notify("[verbose logging] Error posting to Twitter")
-      end
-    end
-  end
-  
   page ||= '1'
   page = page.to_i
   @posts = Post.published.paginate(:page => page, :per_page => Blog.per_page)
