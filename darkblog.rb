@@ -108,7 +108,7 @@ before do
             client.update("#{Blog.title}: #{post.title} #{short_url}")
             post.update_attributes(:twittered => true)
           else
-            notify('[verbose logging] Error tr.iming', resp['status']['message'])
+            notify('[verbose logging] Error with tr.im', resp['status']['message'])
           end
         rescue Exception => e
           body = <<-EOS
@@ -116,7 +116,7 @@ Error announcing '#{post.title}' on Twitter
 
 #{e.message}
 EOS
-          notify("[verbose logging] Error posting to Twitter")
+          notify("[verbose logging] Error posting to Twitter", body)
         end
       end
     end
@@ -124,7 +124,7 @@ EOS
   
   params.symbolize_keys!
   params.each do |k,v|
-    v.symbolize_keys!
+    v.symbolize_keys! if v.is_a?(Hash)
   end
   
   @tags = Post.tag_counts
