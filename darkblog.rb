@@ -311,7 +311,7 @@ Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}
 
 #{env['sinatra.error'].message}
 
-#{env}
+#{env.to_a.sort{ |a,b| a.first <=> b.first }.map{ |k,v| "%-25s%p" % [k+':', v] }.join("\n  ")}
 EOS
     notify("[#{Blog.title}] 500 Internal Server Error", body)
   end
