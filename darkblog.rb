@@ -76,7 +76,7 @@ configure do
                         :messagepub_key => ENV['BLOG_MESSAGEPUB_KEY'] || '',
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10,
-                        :tz => TZInfo::Timezone.get('MST7MDT'),
+                        :tz => TZInfo::Timezone.get('America/Edmonton'),
                         :tz_display => 'MDT')
 end
 
