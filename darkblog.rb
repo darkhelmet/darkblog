@@ -1,4 +1,4 @@
-#!/Users/darkhelmet/local/ruby/bin/ruby
+#!/usr/bin/env ruby
 
 $KCODE = 'u'
 
