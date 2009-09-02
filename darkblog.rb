@@ -409,19 +409,51 @@ get %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$| do |tag,page|
   haml(:posts)
 end
 
-post '/posts' do
+# edit post
+get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/edit$| do |permalink|
   require_administrative_privileges
-  params[:post][:published] = 'true' == params[:post][:published] ? true : false
-  post = Post.create(params[:post])
-  post.to_json(:except => [:created_at,:updated_at], :methods => :tag_list)
+  @post = Post.perma(permalink).first
+  title("Editing '#{@post.title}'")
+  haml(:edit_post, :layout => :admin)
 end
 
+# preview post
+get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/preview$| do |permalink|
+  require_administrative_privileges
+  @posts = Post.perma(permalink).paginate(:page => 1, :per_page => Blog.per_page)
+  title(@posts.first.title)
+  disqus_part('disqus_single')
+  haml(:posts)
+end
+
+# new post
+get '/posts' do
+  require_administrative_privileges
+  @post = Post.new
+  title('New Post')
+  haml(:edit_post, :layout => :admin)
+end
+
+# create new post
+post '/posts' do
+  require_administrative_privileges
+  published = params[:post][:published]
+  params[:post][:published] = (published.nil? || 'false' == published) ? false : true
+  post = Post.create(params[:post])
+  headers['Content-Type'] = 'application/xml'
+  post.to_xml(:except => [:created_at,:updated_at], :methods => :tag_list)
+end
+
+# update existing post
 put '/posts' do
   require_administrative_privileges
+  published = params[:post][:published]
+  params[:post][:published] = (published.nil? || 'false' == published) ? false : true
   post = Post.find(params[:post][:id])
   if params[:post].has_key?(:title) && post.title.parameterize != params[:post][:title].parameterize
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
   post.update_attributes(params[:post])
-  post.to_json(:except => [:created_at,:updated_at], :methods => :tag_list)
+  headers['Content-Type'] = 'application/xml'
+  post.to_xml(:except => [:created_at,:updated_at], :methods => :tag_list)
 end

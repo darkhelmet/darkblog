@@ -62,3 +62,6 @@ img.pimg { width: 100%; }
 .tag3 { font-size: 16px; }
 .tag4 { font-size: 20px; }
 .tag5 { font-size: 24px; }
+.post-form { margin: 0 auto; width: 600px; }
+.post-form input { width: 600px; }
+.post-form textarea { width: 600px; height: 400px; }
