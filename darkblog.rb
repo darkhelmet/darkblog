@@ -61,6 +61,7 @@ configure do
                         :index => ENV['BLOG_INDEX'] || 'http://blog.darkhax.com/',
                         :host => ENV['BLOG_HOST'] || 'blog.darkhax.com',
                         :email => ENV['BLOG_EMAIL'] || 'darkhelmet@darkhelmetlive.com',
+                        :notify_email => ENV['BLOG_NOTIFY_EMAIL'] || '',
                         :username => ENV['BLOG_USERNAME'] || 'darkhelmet',
                         :author => ENV['BLOG_AUTHOR'] || 'Daniel Huckstep',
                         :bio => ENV['BLOG_BIO'] || 'is a software engineer (EIT) in Edmonton, Alberta, Canada',
@@ -296,7 +297,7 @@ helpers do
     return if Blog.messagepub_key.nil?
     c = MessagePub::Client.new(Blog.messagepub_key)
     n = MessagePub::Notification.new(:subject => subject, :body => body)
-    n.add_recipient(MessagePub::Recipient.new(:position => 1, :channel => 'email', :address => Blog.email))
+    n.add_recipient(MessagePub::Recipient.new(:position => 1, :channel => 'email', :address => Blog.notify_email))
     c.create!(n)
   rescue Exception => e
   end
