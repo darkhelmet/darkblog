@@ -27,6 +27,7 @@ require 'www/delicious'
 require 'feedzirra'
 require 'twitter'
 require 'sinatra/authorization'
+require 'sinatra/named_routes'
 require 'rack/etag'
 require 'rack/static_cache'
 require 'rack/remove_slash'
@@ -78,6 +79,11 @@ configure do
                         :per_page => ENV['BLOG_PER_PAGE'] || 10,
                         :tz => TZInfo::Timezone.get('America/Edmonton'),
                         :tz_display => 'MDT')
+end
+
+not_found do
+  not_found_notification
+  haml(:not_found)
 end
 
 configure :production do
@@ -167,10 +173,6 @@ helpers do
         @title += " Page #{page}"
       end
     end
-  end
-  
-  def canonical(c = nil)
-    @canonical ||= c
   end
   
   def keywords(k = nil)
@@ -303,7 +305,9 @@ helpers do
   end
   
   def not_found_notification
-    notify("[#{Blog.title}] 404 Not Found", "Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}")
+    if named_routes.values.any? { |path| path.match(env['REQUEST_PATH']) }
+      notify("[#{Blog.title}] 404 Not Found", "Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}")
+    end
   end
   
   def error_notification
@@ -326,40 +330,52 @@ use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favic
 use Rack::RemoveSlash
 use Rack::ETag
 
+named_routes[:index] = %r|^/(?:page/(\d+))?$|
+named_routes[:monthly] = %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|
+named_routes[:category] = %r|^/category/(\w+)(?:/page/(\d+))?$|
+named_routes[:feed] = %r|^/feed.*|
+named_routes[:google] = '/google-search'
+named_routes[:permalink] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)$|
+named_routes[:tag] = %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$|
+named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/edit$|
+named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/preview$|
+named_routes[:posts] = '/posts'
+
 # main index with pagination
-get %r|^/(?:page/(\d+))?$| do |page|
+# get %r|^/(?:page/(\d+))?$| do |page|
+named_route(:get, :index) do |page|
   page ||= '1'
   page = page.to_i
   @posts = Post.published.paginate(:page => page, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
+  not_found('Not Found') if @posts.empty?
   @future_post = Post.future.last if 1 == page
   title("Page #{page}") if 1 < page
   haml(:posts)
 end
 
 # monthly archive with pagination
-get %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$| do |year,month,page|
+named_route(:get, :monthly) do |year,month,page|
   page ||= '1'
   page = page.to_i
   date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z').utc
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
+  not_found if @posts.empty?
   title(date.strftime('%B %Y'), page)
   haml(:posts)
 end
 
 # category index with pagination
-get %r|^/category/(\w+)(?:/page/(\d+))?$| do |category,page|
+named_route(:get, :category) do |category,page|
   page ||= '1'
   page = page.to_i
   @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
+  not_found if @posts.empty?
   title(category.capitalize, page)
   haml(:posts)
 end
 
 # rss feed
-get %r|^/feed.*| do
+named_route(:get, :feed) do
   redirect(fb_url, 301) unless request.env['HTTP_USER_AGENT'] =~ /feedburner/i
   @posts = Post.published.all(:limit => 10)
   content_type('application/rss+xml', :charset => 'utf-8')
@@ -372,24 +388,25 @@ get %r|^/sitemap.xml(.gz)?$| do |gzip|
   builder(:sitemap)
 end
 
-get '/google-search' do
+named_route(:get, :google) do
   haml(:page, :locals => { :page => :google })
 end
 
 %w(about contact disclaimer).each do |page|
-  get "/#{page}" do
+  named_routes[page.intern] = "/#{page}"
+  named_route(:get, page.intern) do
     title(page.capitalize)
     haml(:page, :locals => { :page => page.intern })
   end
 end
 
 # permalinks
-get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)$| do |permalink|
+named_route(:get, :permalink) do |permalink|
   @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => permalink })
     if r.nil?
-      throw(:halt, [404, 'Not Found'])
+      not_found
     else
       redirect(r.post.permalink, 301)
       return
@@ -401,17 +418,17 @@ get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)$| do |permalink|
 end
 
 # tags with pagination
-get %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$| do |tag,page| 
+named_route(:get, :tag) do |tag,page| 
   page ||= '1'
   page = page.to_i
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
-  throw(:halt, [404, 'Not Found']) if @posts.empty?
+  not_found if @posts.empty?
   title(tag, page)
   haml(:posts)
 end
 
 # edit post
-get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/edit$| do |permalink|
+named_route(:get, :edit_post) do |permalink|
   require_administrative_privileges
   @post = Post.perma(permalink).first
   title("Editing '#{@post.title}'")
@@ -419,7 +436,7 @@ get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/edit$| do |permalink|
 end
 
 # preview post
-get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/preview$| do |permalink|
+named_route(:get, :preview_post) do |permalink|
   require_administrative_privileges
   @posts = Post.perma(permalink).paginate(:page => 1, :per_page => Blog.per_page)
   title(@posts.first.title)
@@ -428,7 +445,7 @@ get %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/preview$| do |permalink|
 end
 
 # new post
-get '/posts' do
+named_route(:get, :posts) do
   require_administrative_privileges
   @post = Post.new
   title('New Post')
@@ -436,7 +453,7 @@ get '/posts' do
 end
 
 # create new post
-post '/posts' do
+named_route(:post, :posts) do
   require_administrative_privileges
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
@@ -446,7 +463,7 @@ post '/posts' do
 end
 
 # update existing post
-put '/posts' do
+named_route(:put, :posts) do
   require_administrative_privileges
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
