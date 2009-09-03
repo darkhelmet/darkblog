@@ -299,15 +299,19 @@ helpers do
   rescue Exception => e
   end
   
+  def remote_hostname
+    Socket.getaddrinfo(env['REMOTE_ADDR'], nil)[0][2]
+  end
+  
   def not_found_notification
     if named_routes.values.any? { |path| path.match(env['REQUEST_PATH']) }
-      notify("[#{Blog.title}] 404 Not Found", "Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}")
+      notify("[#{Blog.title}] 404 Not Found", "Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_INFO']}")
     end
   end
   
   def error_notification
     body = <<-EOS
-Client at #{env['REMOTE_ADDR']} tried to get #{env['PATH_INFO']}
+Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_INFO']}
 
 #{env['sinatra.error'].message}
 
