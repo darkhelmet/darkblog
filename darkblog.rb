@@ -300,7 +300,8 @@ helpers do
   end
   
   def remote_hostname
-    Socket.getaddrinfo(env['REMOTE_ADDR'], nil)[0][2]
+    host = env['REMOTE_ADDR'].split(',').first.strip
+    Socket.getaddrinfo(host, nil)[0][2]
   end
   
   def not_found_notification
