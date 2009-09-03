@@ -1,15 +1,15 @@
-.post-form
+.form
   %form{ :action => '/posts', :method => 'post' }
     - unless @post.new_record?
       %input{ :type => 'hidden', :name => '_method', :value => 'put' }
       %input{ :type => 'hidden', :name => 'post[id]', :value => @post.id }
     %label Title
     %br
-    %input{ :type => 'text', :name => 'post[title]', :value => @post.title }
+    %input.max{ :type => 'text', :name => 'post[title]', :value => @post.title }
     %br
     %label Category
     %br
-    %input{ :type => 'text', :name => 'post[category]', :value => @post.category }
+    %input.max{ :type => 'text', :name => 'post[category]', :value => @post.category }
     %br
     %label Body
     %br
@@ -17,11 +17,11 @@
     %br
     %label Tags
     %br
-    %input{ :type => 'text', :name => 'post[tag_list]', :value => @post.tag_list }
+    %input.max{ :type => 'text', :name => 'post[tag_list]', :value => @post.tag_list }
     %br
     %label Publish Date
     %br
-    %input{ :type => 'text', :name => 'post[published_on]', :value => @post.published_on }
+    %input.max{ :type => 'text', :name => 'post[published_on]', :value => @post.published_on }
     %br
     %label Published?
     %input{ :type => 'checkbox', :name => 'post[published]', :checked => @post.published }

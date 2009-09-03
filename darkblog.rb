@@ -81,11 +81,6 @@ configure do
                         :tz_display => 'MDT')
 end
 
-not_found do
-  not_found_notification
-  haml(:not_found)
-end
-
 configure :production do
   not_found do
     not_found_notification
@@ -340,6 +335,7 @@ named_routes[:tag] = %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$|
 named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/edit$|
 named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/preview$|
 named_routes[:posts] = '/posts'
+named_routes[:redirections] = '/redirections'
 
 # main index with pagination
 # get %r|^/(?:page/(\d+))?$| do |page|
@@ -458,7 +454,7 @@ named_route(:post, :posts) do
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
   post = Post.create(params[:post])
-  headers['Content-Type'] = 'application/xml'
+  content_type('application/xml')
   post.to_xml(:except => [:created_at,:updated_at], :methods => :tag_list)
 end
 
@@ -472,6 +468,20 @@ named_route(:put, :posts) do
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
   post.update_attributes(params[:post])
-  headers['Content-Type'] = 'application/xml'
+  content_type('application/xml')
   post.to_xml(:except => [:created_at,:updated_at], :methods => :tag_list)
+end
+
+# redirection form
+named_route(:get, :redirections) do
+  require_administrative_privileges
+  haml(:edit_redirection, :layout => :admin)
+end
+
+# create redirection
+named_route(:post, :redirections) do
+  require_administrative_privileges
+  r = Redirection.create(params[:redirection])
+  content_type('application/xml')
+  r.to_xml
 end
