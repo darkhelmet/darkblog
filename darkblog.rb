@@ -308,6 +308,7 @@ helpers do
     if named_routes.values.any? { |path| path.match(env['REQUEST_PATH']) }
       notify("[#{Blog.title}] 404 Not Found", "Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_INFO']}")
     end
+  rescue Exception => e
   end
   
   def error_notification
