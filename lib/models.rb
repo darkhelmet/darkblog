@@ -9,7 +9,7 @@ class Post < ActiveRecord::Base
   default_scope(:order => 'published_on DESC', :include => :tags)
   named_scope(:published, lambda { { :conditions => ['published = ? AND published_on < ?', true, Time.now.utc] } })
   named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
-  named_scope(:perma, lambda { |perma| { :limit => 1, :conditions => { :permalink => perma } } })
+  named_scope(:perma, lambda { |perma| { :limit => 1, :conditions => { :permalink => perma.gsub(' ', '+') } } })
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now.utc] } })
   named_scope(:monthly, lambda { |date| { :conditions => { :published_on => date.utc.beginning_of_month.beginning_of_day..date.utc.end_of_month.end_of_day } } })
   named_scope(:untwittered, :conditions => { :twittered => false })

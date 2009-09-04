@@ -335,11 +335,12 @@ named_routes[:index] = %r|^/(?:page/(\d+))?$|
 named_routes[:monthly] = %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|
 named_routes[:category] = %r|^/category/(\w+)(?:/page/(\d+))?$|
 named_routes[:feed] = %r|^/feed.*|
+named_routes[:sitemap] = %r|^/sitemap.xml(.gz)?$|
 named_routes[:google] = '/google-search'
-named_routes[:permalink] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+]+)$|
+named_routes[:permalink] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)$|
 named_routes[:tag] = %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$|
-named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/edit$|
-named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\-]+)/preview$|
+named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/edit$|
+named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/preview$|
 named_routes[:posts] = '/posts'
 named_routes[:redirections] = '/redirections'
 
@@ -384,16 +385,19 @@ named_route(:get, :feed) do
   builder(:feed)
 end
 
-get %r|^/sitemap.xml(.gz)?$| do |gzip|
+# sitemap
+named_route(:get, :sitemap) do |gzip|
   @posts = Post.published
   content_type('application/xml', :charset => 'utf-8')
   builder(:sitemap)
 end
 
+# google search
 named_route(:get, :google) do
   haml(:page, :locals => { :page => :google })
 end
 
+# information pages
 %w(about contact disclaimer).each do |page|
   named_routes[page.intern] = "/#{page}"
   named_route(:get, page.intern) do
