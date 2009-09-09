@@ -271,7 +271,7 @@ helpers do
   end
   
   def reader(s)
-    partial("%a{ :href => '#{s.links.first}' } #{s.title}")
+    partial("%a{ :href => '#{s.url}' } #{s.title}")
   end
   
   def repo(r)
