@@ -5,7 +5,7 @@ module Sinatra
     end
                          
     def unauthorized!(realm="myApp.com")
-      header 'WWW-Authenticate' => %(Basic realm="#{realm}")
+      headers['WWW-Authenticate'] = %(Basic realm="#{realm}")
       throw :halt, [ 401, 'Authorization Required' ]
     end
                                       
