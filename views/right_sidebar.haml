@@ -4,9 +4,8 @@
       = partial("%img{ :src => '/images/rss.png', :style => 'vertical-align: middle;' }")
     %a{ :href => '/feed' } Subscribe
 .sidebar-item.right
+  %h2 The author
   %ul
-    %li 
-      %h2 The author
     %li
       = image_tag(gravatar_url(Blog.email))
     %li= "#{Blog.author} #{Blog.bio}"
@@ -18,8 +17,7 @@
       - tag_cloud(@tags, %w(tag1 tag2 tag3 tag4 tag5)) do |tag,css|
         = partial("%a.#{css}{ :href => '/tag/#{tag}' } #{tag}") if 'tag1' != css
 .sidebar-item.right
+  %h2 Archives
   %ul
-    %li
-      %h2 Archives
     - monthly_archive_links.reverse_each do |l|
       %li= l
