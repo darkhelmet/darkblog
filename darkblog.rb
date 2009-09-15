@@ -99,31 +99,7 @@ before do
     expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
     
     run_later do
-      Post.published.untwittered.all.each do |post|
-        begin
-          print "Starting Twitter update for '#{post.title}'\n"
-          resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
-          resp = Crack::JSON.parse(resp)
-          print "Parsed tr.im response\n"
-          if resp['status']['code'] =~ /2\d\d/
-            short_url = resp['url']
-            httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
-            client = Twitter::Base.new(httpauth)
-            client.update("#{Blog.title}: #{post.title} #{short_url}")
-            print "Finished Twitter update\n"
-            post.update_attributes(:twittered => true)
-          else
-            notify('[verbose logging] Error with tr.im', resp['status']['message'])
-          end
-        rescue Exception => e
-          body = <<-EOS
-Error announcing '#{post.title}' on Twitter
-
-#{e.message}
-EOS
-          notify("[verbose logging] Error posting to Twitter", body)
-        end
-      end
+      update_twitter
     end
   end
   
@@ -328,6 +304,34 @@ EOS
   def expires_in(time)
     headers['Cache-Control'] = "public, max-age=#{time}"
   end
+  
+  def update_twitter
+    Post.published.untwittered.all.each do |post|
+      begin
+        print "Starting Twitter update for '#{post.title}'\n"
+        resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
+        resp = Crack::JSON.parse(resp)
+        print "Parsed tr.im response\n"
+        if resp['status']['code'] =~ /2\d\d/
+          short_url = resp['url']
+          httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
+          client = Twitter::Base.new(httpauth)
+          client.update("#{Blog.title}: #{post.title} #{short_url}")
+          print "Finished Twitter update\n"
+          post.update_attributes(:twittered => true)
+        else
+          notify('[verbose logging] Error with tr.im', resp['status']['message'])
+        end
+      rescue Exception => e
+        body = <<-EOS
+Error announcing '#{post.title}' on Twitter
+
+#{e.message}
+EOS
+        notify("[verbose logging] Error posting to Twitter", body)
+      end
+    end
+  end
 end
 
 use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico'], :versioning => false, :root => 'public'
@@ -346,6 +350,7 @@ named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/edit$|
 named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/preview$|
 named_routes[:posts] = '/posts'
 named_routes[:redirections] = '/redirections'
+named_routes[:update_twitter] = '/update-twitter'
 
 # main index with pagination
 # get %r|^/(?:page/(\d+))?$| do |page|
@@ -497,4 +502,10 @@ named_route(:post, :redirections) do
   r = Redirection.create(params[:redirection])
   content_type('application/xml')
   r.to_xml
+end
+
+# force update twitter
+named_route(:post, :update_twitter) do
+  require_administrative_privileges
+  update_twitter
 end
