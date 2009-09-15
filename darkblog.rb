@@ -477,6 +477,7 @@ named_route(:put, :posts) do
   if params[:post].has_key?(:title) && post.title.parameterize != params[:post][:title].parameterize
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
+  p params[:post]
   post.update_attributes(params[:post])
   content_type('application/xml')
   post.to_xml(:except => [:created_at,:updated_at], :methods => :tag_list)
