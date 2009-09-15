@@ -101,20 +101,17 @@ before do
     run_later do
       Post.published.untwittered.all.each do |post|
         begin
-          p 'starting twitter'
+          print "Starting Twitter update for '#{post.title}'\n"
           resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
           resp = Crack::JSON.parse(resp)
-          p 'parsed tr.im response'
+          print "Parsed tr.im response\n"
           if resp['status']['code'] =~ /2\d\d/
             short_url = resp['url']
             httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
-            p 'after auth'
             client = Twitter::Base.new(httpauth)
-            p 'after client'
             client.update("#{Blog.title}: #{post.title} #{short_url}")
-            p 'after update'
+            print "Finished Twitter update\n"
             post.update_attributes(:twittered => true)
-            p 'after post upadte'
           else
             notify('[verbose logging] Error with tr.im', resp['status']['message'])
           end
