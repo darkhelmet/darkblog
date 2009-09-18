@@ -2,5 +2,7 @@
 %html{ :xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en' }
   %head
     = partial(:head)
+    = stylesheet_link_tag('jquery.autocomplete')
+    = javascript_include_tag('jquery.autocomplete')
   %body
     = yield
