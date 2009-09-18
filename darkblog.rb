@@ -234,7 +234,7 @@ helpers do
   end
   
   def tweet(t)
-    t.text
+    t.text.gsub(/(https?:\/\/\S+)/, '<a href="\1">\1</a>').gsub(/@(\w+)/i, '<a href="http://twitter.com/\1">@\1</a>')
   end
   
   def twitter_link
