@@ -11,7 +11,7 @@ $(document).ready(function() {
     $.ajax({url: this.href,
             type: 'GET',
             success: function(data) {
-              link.closest('.content').prev().before($(data).addClass('new-elem').css('display','none'));
+              $(link.closest('.content').prev()).before($(data).addClass('new-elem').css('display','none'));
               $('.new-elem').slideDown('slow', function() {
                 $(this).removeClass('new-elem');
               });
