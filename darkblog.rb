@@ -334,7 +334,7 @@ EOS
   end
 end
 
-use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico'], :versioning => false, :root => 'public'
+# use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico'], :versioning => false, :root => 'public', :duration => 1/365
 use Rack::RemoveSlash
 use Rack::ETag
 
