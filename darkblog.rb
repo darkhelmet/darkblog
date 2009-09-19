@@ -210,12 +210,12 @@ helpers do
   def setup_top_panel
     @repos = Cache.get('github', 1.day) do
       resp = RestClient.get("http://github.com/api/v1/json/#{Blog.github}")
-      Crack::JSON.parse(resp)['user']['repositories'].reject do
-        |r| r['fork']
-      end.sort do
-        |l,r| l['name'] <=> r['name']
-      end.select do
-        |r| rand < 0.5
+      Crack::JSON.parse(resp)['user']['repositories'].reject do |r|
+        r['fork']
+      end.sort do |l,r|
+        l['name'] <=> r['name']
+      end.select do |r|
+        rand < 0.5
       end
     end
     
