@@ -13,7 +13,7 @@ module Rack
         val = body.nil? ? nil : body.to_s
         headers['ETag'] = %("#{Digest::MD5.hexdigest(val)}") unless val.nil?
       end
-      [status, headers, body]
+      [status, headers, body.to_s]
     end
   end
 end
