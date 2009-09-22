@@ -305,6 +305,10 @@ EOS
     headers['Cache-Control'] = "public, max-age=#{time}"
   end
   
+  def no_cache
+    headers['Cache-Control'] = 'no-cache'
+  end
+  
   def update_twitter
     Post.published.untwittered.all.each do |post|
       begin
@@ -443,6 +447,7 @@ end
 
 # edit post
 named_route(:get, :edit_post) do |permalink|
+  no_cache
   require_administrative_privileges
   @post = Post.perma(permalink).first
   title("Editing '#{@post.title}'")
@@ -451,6 +456,7 @@ end
 
 # preview post
 named_route(:get, :preview_post) do |permalink|
+  no_cache
   require_administrative_privileges
   @posts = Post.perma(permalink).paginate(:page => 1, :per_page => Blog.per_page)
   title(@posts.first.title)
@@ -460,6 +466,7 @@ end
 
 # new post
 named_route(:get, :posts) do
+  no_cache
   require_administrative_privileges
   @post = Post.new
   title('New Post')
@@ -468,6 +475,7 @@ end
 
 # create new post
 named_route(:post, :posts) do
+  no_cache
   require_administrative_privileges
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
@@ -478,6 +486,7 @@ end
 
 # update existing post
 named_route(:put, :posts) do
+  no_cache
   require_administrative_privileges
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
@@ -492,12 +501,14 @@ end
 
 # redirection form
 named_route(:get, :redirections) do
+  no_cache
   require_administrative_privileges
   haml(:edit_redirection, :layout => :admin)
 end
 
 # create redirection
 named_route(:post, :redirections) do
+  no_cache
   require_administrative_privileges
   r = Redirection.create(params[:redirection])
   content_type('application/xml')
@@ -506,6 +517,7 @@ end
 
 # force update twitter
 named_route(:post, :update_twitter) do
+  no_cache
   require_administrative_privileges
   update_twitter
 end
