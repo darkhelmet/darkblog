@@ -1,7 +1,7 @@
 .form
   %form{ :action => '/redirections', :method => :post }
     %select{ :name => 'redirection[post_id]' }
-      - Post.all.each do |post|
+      - Post.all(:order => 'title ASC').each do |post|
         %option{ :value => post.id }= "#{post.title} (#{post.permalink})"
     %br
     %input.max{ :type => 'text', :name => 'redirection[old_permalink]' }
