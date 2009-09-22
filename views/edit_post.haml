@@ -11,7 +11,7 @@
     %br
     %input.max{ :type => 'text', :id => 'post_category', :name => 'post[category]', :value => @post.category }
     :javascript
-      $('#post_category').autocomplete("#{ActiveRecord::Base.connection.execute('SELECT DISTINCT(category) FROM posts').map { |c| c[0] }.join(' ')}".split(" "));
+      $('#post_category').autocomplete("#{Post.all(:select => :category).map(&:category).uniq.join(' ')}".split(" "));
     %br
     %label Body
     %br
