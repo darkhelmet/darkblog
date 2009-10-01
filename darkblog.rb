@@ -376,7 +376,7 @@ end
 named_route(:get, :monthly) do |year,month,page|
   page ||= '1'
   page = page.to_i
-  date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z').utc
+  date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   title(date.strftime('%B %Y'), page)
