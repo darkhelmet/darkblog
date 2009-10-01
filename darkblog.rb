@@ -103,9 +103,12 @@ before do
     end
   end
   
-  params.symbolize_keys!
-  params.each do |k,v|
-    v.symbolize_keys! if v.is_a?(Hash)
+  begin
+    params.symbolize_keys!
+    params.each do |k,v|
+      v.symbolize_keys! if v.is_a?(Hash)
+    end
+  rescue
   end
   
   @tags = Post.tag_counts
@@ -212,10 +215,10 @@ helpers do
       resp = RestClient.get("http://github.com/api/v1/json/#{Blog.github}")
       Crack::JSON.parse(resp)['user']['repositories'].reject do |r|
         r['fork']
-      end.sort do |l,r|
-        l['name'] <=> r['name']
       end.select do |r|
         rand < 0.5
+      end.sort do |l,r|
+        l['name'] <=> r['name']
       end
     end
     
@@ -223,7 +226,7 @@ helpers do
       Twitter::Search.new.from(Blog.twitter).to_a[0,6]
     end
     
-    @bookmarks = Cache.get('delicious', 30.minutes) do
+    @bookmarks = Cache.get('delicious', 6.hours) do
       WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,6]
     end
     
