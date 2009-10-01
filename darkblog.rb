@@ -310,6 +310,7 @@ EOS
   end
   
   def update_twitter
+    print "Running Twitter update...checking for posts...\n"
     Post.published.untwittered.all.each do |post|
       begin
         print "Starting Twitter update for '#{post.title}'\n"
