@@ -359,6 +359,7 @@ named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/preview$|
 named_routes[:posts] = '/posts'
 named_routes[:redirections] = '/redirections'
 named_routes[:update_twitter] = '/update-twitter'
+named_routes[:admin_index] = '/index'
 
 # main index with pagination
 # get %r|^/(?:page/(\d+))?$| do |page|
@@ -522,4 +523,12 @@ named_route(:post, :update_twitter) do
   no_cache
   require_administrative_privileges
   update_twitter
+end
+
+# admin index
+named_route(:get, :admin_index) do
+  no_cache
+  require_administrative_privileges
+  @posts = Post.unpublished.all
+  haml(:admin_index, :layout => :admin)
 end

@@ -8,6 +8,7 @@ class Post < ActiveRecord::Base
   
   default_scope(:order => 'published_on DESC', :include => :tags)
   named_scope(:published, lambda { { :conditions => ['published = ? AND published_on < ?', true, Time.now.utc] } })
+  named_scope(:unpublished, :conditions => { :published => :false })
   named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
   named_scope(:perma, lambda { |perma| { :limit => 1, :conditions => { :permalink => perma.gsub(' ', '+') } } })
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now.utc] } })
