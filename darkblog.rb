@@ -484,8 +484,7 @@ named_route(:post, :posts) do
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
   post = Post.create(params[:post])
-  content_type('application/xml')
-  post.to_xml(:except => [:created_at,:updated_at], :methods => :tag_list)
+  redirect("#{post.permalink}/edit")
 end
 
 # update existing post
@@ -499,8 +498,7 @@ named_route(:put, :posts) do
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
   post.update_attributes(params[:post])
-  content_type('application/xml')
-  post.to_xml(:except => [:created_at,:updated_at], :methods => :tag_list)
+  redirect("#{post.permalink}/edit")
 end
 
 # redirection form
