@@ -31,7 +31,7 @@ body{font:13px/1.5 Helvetica,Arial,'Liberation Sans',FreeSans,sans-serif}a:focus
 .fright { float: right; }
 .center { text-align: center; }
 .showgrid { background: #fff url(/images/12_col.gif) repeat-y; }
-body { background-color: #252625; color: #a69b03; }
+html { background-color: #252625; color: #a69b03; }
 body a { color: #a69b03; }
 a { text-decoration: none; }
 a:hover { text-decoration: underline; }
