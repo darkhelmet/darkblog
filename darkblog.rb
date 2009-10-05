@@ -484,8 +484,11 @@ named_route(:post, :posts) do
   require_administrative_privileges
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
-  post = Post.create(params[:post])
-  redirect("#{post.permalink}/edit")
+  if post = Post.create(params[:post])
+    redirect("#{post.permalink}/edit")
+  else
+    redirect('/posts')
+  end
 end
 
 # update existing post
