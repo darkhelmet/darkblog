@@ -498,7 +498,7 @@ named_route(:put, :posts) do
   published = params[:post][:published]
   params[:post][:published] = (published.nil? || 'false' == published) ? false : true
   post = Post.find(params[:post].delete(:id))
-  if params[:post].has_key?(:title) && post.title.parameterize != params[:post][:title].parameterize
+  if post.published && params[:post].has_key?(:title) && post.title.parameterize != params[:post][:title].parameterize
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
   post.update_attributes(params[:post])
