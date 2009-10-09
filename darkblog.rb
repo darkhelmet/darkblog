@@ -111,7 +111,6 @@ before do
   rescue
   end
   
-  @tags = Post.tag_counts
   setup_top_panel
 end
 
@@ -123,7 +122,13 @@ helpers do
   include WillPaginate::ViewHelpers::Base
   
   def partial(page, options = {})
-    haml(page, options.merge(:layout => false))
+    if options.delete(:cache)
+      Cache.get("#{page.to_s}_partial", options.delete(:cache_max_age) || 10.minutes) do
+        haml(page, options.merge(:layout => false))
+      end
+    else
+      haml(page, options.merge(:layout => false))
+    end
   end
   
   def stylesheet_link_tag(sheet, media = 'screen,projection')

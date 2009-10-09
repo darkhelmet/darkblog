@@ -1,0 +1,2 @@
+- tag_cloud(Post.tag_counts, %w(tag1 tag2 tag3 tag4 tag5)) do |tag,css|
+  = partial("%a.#{css}{ :href => '/tag/#{tag}' } #{tag}")

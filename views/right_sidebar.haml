@@ -14,8 +14,7 @@
     %li
       %h2 Tags
     %li
-      - tag_cloud(@tags, %w(tag1 tag2 tag3 tag4 tag5)) do |tag,css|
-        = partial("%a.#{css}{ :href => '/tag/#{tag}' } #{tag}") if 'tag1' != css
+      = partial(:tag_sidebar)
 .sidebar-item.right
   %h2 Archives
   %ul
