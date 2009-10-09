@@ -19,7 +19,7 @@
     %br
     %label Tags
     %br
-    %input.max{ :type => 'text', :name => 'post[tag_list]', :value => @post.tag_list }
+    %input.max{ :type => 'text', :id => 'post_tag_list', :name => 'post[tag_list]', :value => @post.tag_list }
     :javascript
       $('#post_tag_list').autocomplete("#{Tag.all.map(&:name).join(' ')}".split(' '), { multiple: true });
     %br
