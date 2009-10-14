@@ -544,6 +544,6 @@ end
 
 # maybe this will work
 named_route(:get, :sitemap_xsl) do
-  content_type('application/xml', :charset => 'utf-8')
+  content_type('text/xsl', :charset => 'utf-8')
   File.read(File.join('.', 'public', 'sitemap.xsl'))
 end
