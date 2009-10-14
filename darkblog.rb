@@ -541,9 +541,3 @@ named_route(:get, :admin_index) do
   @posts = Post.unpublished.all
   haml(:admin_index, :layout => :admin)
 end
-
-# maybe this will work
-named_route(:get, :sitemap_xsl) do
-  content_type('application/xml', :charset => 'utf-8')
-  File.read(File.join('.', 'public', 'sitemap.xsl'))
-end
