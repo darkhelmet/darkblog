@@ -365,7 +365,6 @@ named_routes[:posts] = '/posts'
 named_routes[:redirections] = '/redirections'
 named_routes[:update_twitter] = '/update-twitter'
 named_routes[:admin_index] = '/index'
-named_routes[:sitemap_xsl] = '/sitemap.xsl'
 
 # main index with pagination
 # get %r|^/(?:page/(\d+))?$| do |page|
@@ -540,10 +539,4 @@ named_route(:get, :admin_index) do
   require_administrative_privileges
   @posts = Post.unpublished.all
   haml(:admin_index, :layout => :admin)
-end
-
-# maybe this will work
-named_route(:get, :sitemap_xsl) do
-  content_type('text/xsl', :charset => 'utf-8')
-  File.read(File.join('.', 'public', 'sitemap.xsl'))
 end
