@@ -97,10 +97,6 @@ before do
     end
     
     expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
-    
-    run_later do
-      update_twitter
-    end
   end
   
   begin
