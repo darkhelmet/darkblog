@@ -217,7 +217,7 @@ helpers do
       Crack::JSON.parse(resp)['user']['repositories'].reject do |r|
         r['fork']
       end.select do |r|
-        rand < 0.5
+        rand < 0.75
       end.sort do |l,r|
         l['name'] <=> r['name']
       end
