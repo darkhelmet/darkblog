@@ -19,6 +19,6 @@
 :javascript
   if (top.location != self.location) { top.location = self.location.href; }
 
-- if development?
+- if development? || env['REQUEST_PATH'] =~ %r{/preview$}
   :javascript
     var disqus_developer = 1;
