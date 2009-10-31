@@ -9,7 +9,7 @@ module Rack
       if '/' != path
         if '/' == path[-1,1]
           while '/' == path.chop![-1,1]; end
-          return [301, { 'Location' => "#{protocol(env)}://#{host(env)}#{path}", 'Content-Type' => 'text/html' }, 'A trailing slash? Really?']
+          return [301, { 'Location' => "#{protocol(env)}://#{host(env)}#{path}", 'Content-Type' => 'text/html' }, ['A trailing slash? Really?']]
         end
       end
       @app.call(env)

@@ -19,7 +19,8 @@ EOCODE
     
     def call(env)
       status, headers, body = @app.call(env)
-      
+      body = [body].flatten
+
       body.each do |part|
         if part =~ /<\/body>/
           part.sub!(/<\/body>/, "#{tracking_code}</body>")
