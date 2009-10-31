@@ -37,7 +37,7 @@ require 'run_later'
 
 if development?
   require 'ruby-debug'
-  ActiveRecord::Base.logger = Logger.new('db.log')
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
 end
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
