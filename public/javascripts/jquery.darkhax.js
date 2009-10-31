@@ -33,4 +33,9 @@ $(document).ready(function() {
     return false;
   });
   $('a.lightbox').lightBox(lightboxVars);
+  
+  $('.swfembed').each(function() {
+    t = $(this)
+    $(this).swfembed(t.attr('movie'), parseInt(t.attr('mwidth')), parseInt(t.attr('mheight')));
+  });
 });
