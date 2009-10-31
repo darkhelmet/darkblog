@@ -35,6 +35,7 @@ require 'messagepub'
 require 'tzinfo'
 require 'run_later'
 require 'canonical_host'
+require 'google_analytics'
 
 if development?
   require 'ruby-debug'
@@ -343,6 +344,7 @@ end
 use CanonicalHost, Blog.host if production?
 use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :versioning => false, :root => 'public', :duration => 1/365
 use Rack::RemoveSlash
+use Rack::GoogleAnalytics, 'UA-2062105-4' if production?
 use Rack::ETag
 
 named_routes[:index] = %r|^/(?:page/(\d+))?$|
