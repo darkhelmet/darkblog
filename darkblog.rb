@@ -34,6 +34,7 @@ require 'rack/remove_slash'
 require 'messagepub'
 require 'tzinfo'
 require 'run_later'
+require 'canonical_host'
 
 if development?
   require 'ruby-debug'
@@ -92,10 +93,6 @@ end
 
 before do
   if production?
-    if env['HTTP_HOST'] != Blog.host
-      redirect("http://#{Blog.host}#{env['REQUEST_PATH']}", 301)
-    end
-    
     expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
   end
   
@@ -343,6 +340,7 @@ EOS
   end
 end
 
+use CanonicalHost, Blog.host if production?
 use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :versioning => false, :root => 'public', :duration => 1/365
 use Rack::RemoveSlash
 use Rack::ETag
