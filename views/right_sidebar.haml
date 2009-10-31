@@ -16,6 +16,9 @@
     %li
       = partial(:tag_sidebar)
 .sidebar-item.right
+  %h2 Categories
+  = partial(:category_sidebar)
+.sidebar-item.right
   %h2 Archives
   %ul
     - monthly_archive_links.reverse_each do |l|

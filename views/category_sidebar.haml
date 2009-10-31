@@ -1,0 +1,3 @@
+%ul
+  - Post.all.map(&:category).uniq.sort.each do |cat|
+    %li= category_link(cat)
