@@ -98,14 +98,6 @@ before do
     expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
   end
   
-  begin
-    params.symbolize_keys!
-    params.each do |k,v|
-      v.symbolize_keys! if v.is_a?(Hash)
-    end
-  rescue
-  end
-  
   setup_top_panel
 end
 
