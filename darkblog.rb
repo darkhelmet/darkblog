@@ -304,31 +304,17 @@ EOS
     headers['Cache-Control'] = 'no-cache'
   end
   
-  def update_twitter
-    print "Running Twitter update...checking for posts...\n"
-    Post.published.untwittered.all.each do |post|
+  def announce
+    Post.published.unannounced.each do |post|
       begin
-        print "Starting Twitter update for '#{post.title}'\n"
-        resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(post))
-        resp = Crack::JSON.parse(resp)
-        print "Parsed tr.im response\n"
-        if resp['status']['code'] =~ /2\d\d/
-          short_url = resp['url']
-          httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
-          client = Twitter::Base.new(httpauth)
-          client.update("#{Blog.title}: #{post.title} #{short_url}")
-          print "Finished Twitter update\n"
-          post.update_attributes(:twittered => true)
-        else
-          notify('[verbose logging] Error with tr.im', resp['status']['message'])
-        end
+        post.announce
       rescue Exception => e
         body = <<-EOS
-Error announcing '#{post.title}' on Twitter
+Error announcing '#{post.title}'
 
 #{e.message}
 EOS
-        notify("[verbose logging] Error posting to Twitter", body)
+        notify("[verbose logging] Error announcing post", body)
       end
     end
   end
@@ -353,7 +339,7 @@ named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/edit$|
 named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/preview$|
 named_routes[:posts] = '/posts'
 named_routes[:redirections] = '/redirections'
-named_routes[:update_twitter] = '/update-twitter'
+named_routes[:announce] = '/announce'
 named_routes[:admin_index] = '/index'
 
 # main index with pagination
@@ -517,10 +503,10 @@ named_route(:post, :redirections) do
 end
 
 # force update twitter
-named_route(:post, :update_twitter) do
+named_route(:post, :announce) do
   no_cache
   require_administrative_privileges
-  update_twitter
+  announce
 end
 
 # admin index

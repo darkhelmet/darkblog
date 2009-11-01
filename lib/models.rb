@@ -13,7 +13,7 @@ class Post < ActiveRecord::Base
   named_scope(:perma, lambda { |perma| { :limit => 1, :conditions => { :permalink => perma.gsub(' ', '+') } } })
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now.utc] } })
   named_scope(:monthly, lambda { |date| { :conditions => { :published_on => date.beginning_of_month.beginning_of_day.utc..date.end_of_month.end_of_day.utc } } })
-  named_scope(:untwittered, :conditions => { :twittered => false })
+  named_scope(:unannounced, :conditions => { :announced => false })
   
   before_save do |record|
     record.published_on  = Time.now.utc unless record.published_on?
@@ -30,6 +30,21 @@ class Post < ActiveRecord::Base
   
   def published_on_local
     Blog.tz.utc_to_local(published_on)
+  end
+
+  def announce
+    resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => post_permaurl(self))
+    resp = Crack::JSON.parse(resp)
+    if resp['status']['code'] =~ /2\d\d/
+      short_url = resp['url']
+      httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
+      client = Twitter::Base.new(httpauth)
+      client.update("#{Blog.title}: #{title} #{short_url}")
+    else
+      raise "Error with tr.im\n\n#{resp['status']['message']}"
+    end
+    RestClient.get('http://pingomatic.com/ping/', :title => Blog.title, :blogurl => Blog.index, :rssurl => "#{Blog.index}feed")
+    update_attributes(:announced => true)
   end
 end
 
