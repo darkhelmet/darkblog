@@ -43,7 +43,7 @@ class Post < ActiveRecord::Base
     else
       raise "Error with tr.im\n\n#{resp['status']['message']}"
     end
-    RestClient.get('http://pingomatic.com/ping/', :title => Blog.title, :blogurl => Blog.index, :rssurl => "#{Blog.index}feed")
+    RestClient.get('http://pingomatic.com/ping/', :title => Blog.title, :blogurl => Blog.index, :rssurl => "#{Blog.index}feed", :chk_weblogscom => 'on', :chk_blogs => 'on', :chk_technorati => 'on', :chk_feedburner => 'on', :chk_syndic8 => 'on', :chk_newsgator => 'on', :chk_myyahoo => 'on', :chk_pubsubcom => 'on', :chk_blogdigger => 'on', :chk_blogrolling => 'on', :chk_blogstreet => 'on', :chk_moreover => 'on', :chk_weblogalot => 'on', :chk_icerocket => 'on', :chk_newsisfree => 'on', :chk_topicexchange => 'on', :chk_google => 'on', :chk_tailrank => 'on', :chk_bloglines => 'on', :chk_postrank => 'on', :chk_skygrid => 'on', :chk_collecta => 'on')
     update_attributes(:announced => true)
   end
 end
