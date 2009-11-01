@@ -36,6 +36,7 @@ require 'tzinfo'
 require 'run_later'
 require 'canonical_host'
 require 'google_analytics'
+require 'response_time_injector'
 
 if development?
   require 'ruby-debug'
@@ -341,9 +342,10 @@ EOS
   end
 end
 
-use CanonicalHost, Blog.host if production?
+use Rack::CanonicalHost, Blog.host if production?
 use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :versioning => false, :root => 'public', :duration => 1/365
 use Rack::RemoveSlash
+use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::GoogleAnalytics, 'UA-2062105-4' if production?
 use Rack::ETag
 
