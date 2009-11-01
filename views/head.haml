@@ -16,6 +16,16 @@
 = javascript_include_tag('swfobject')
 = javascript_include_tag('flowplayer')
 
+- if env['REQUEST_PATH'] =~ %r{/edit$}
+  = stylesheet_link_tag('markitup/style')
+  = stylesheet_link_tag('markitup/set')
+  = javascript_include_tag('jquery.markitup')
+  = javascript_include_tag('set')
+  :javascript
+    $(document).ready(function() {
+      $('textarea').markItUp(mySettings);
+    });
+
 :javascript
   if (top.location != self.location) { top.location = self.location.href; }
 
