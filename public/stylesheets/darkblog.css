@@ -41,7 +41,7 @@ a:hover { text-decoration: underline; }
 .post-title { margin-bottom: 0px; }
 hr.end { margin-bottom: 5px; }
 #top-title h1 { margin-bottom: 0px; }
-.date { margin-top: 10px; text-decoration: underline; }
+.date { margin-top: 10px; text-decoration: underline; text-transform: uppercase; }
 .leftbar * { margin-bottom: 0px; }
 #toppanel-extras ul { list-style-type: square; }
 #toppanel-extras div { overflow: hidden; }

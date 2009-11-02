@@ -1,5 +1,5 @@
 %div.grid_2.leftbar.right.alpha{ :id => "post-#{post.id}-sidebar" }
-  %h1.date= post.published_on_local.strftime('%m.%d.%y')
+  %h1.date= post.published_on_local.strftime('%d%b%y')
   %p.time= post.published_on_local.strftime("%I:%M %p #{Blog.tz_display}")
   %p.category= "Posted in #{category_link(post.category)}"
   %p.tags= tag_links(post)
