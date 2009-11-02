@@ -508,6 +508,7 @@ named_route(:post, :announce) do
   no_cache
   require_administrative_privileges
   announce
+  ''
 end
 
 # admin index
