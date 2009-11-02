@@ -463,9 +463,9 @@ end
 named_route(:post, :posts) do
   no_cache
   require_administrative_privileges
-  published = params[:post][:published]
-  params[:post][:published] = (published.nil? || 'false' == published) ? false : true
-  if post = Post.create(params[:post])
+  published = params['post']['published']
+  params['post']['published'] = (published.nil? || 'false' == published) ? false : true
+  if post = Post.create(params['post'])
     redirect("#{post.permalink}/edit")
   else
     redirect('/posts')
@@ -474,15 +474,16 @@ end
 
 # update existing post
 named_route(:put, :posts) do
+  debugger
   no_cache
   require_administrative_privileges
-  published = params[:post][:published]
-  params[:post][:published] = (published.nil? || 'false' == published) ? false : true
-  post = Post.find(params[:post].delete(:id))
-  if post.published && params[:post].has_key?(:title) && post.title.parameterize != params[:post][:title].parameterize
+  published = params['post']['published']
+  params['post']['published'] = (published.nil? || 'false' == published) ? false : true
+  post = Post.find(params['post'].delete('id'))
+  if post.published && params['post'].has_key?('title') && post.title.parameterize != params['post']['title'].parameterize
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
-  post.update_attributes(params[:post])
+  post.update_attributes(params['post'])
   redirect("#{post.permalink}/edit")
 end
 
@@ -497,7 +498,7 @@ end
 named_route(:post, :redirections) do
   no_cache
   require_administrative_privileges
-  r = Redirection.create(params[:redirection])
+  r = Redirection.create(params['redirection'])
   content_type('application/xml')
   r.to_xml
 end
