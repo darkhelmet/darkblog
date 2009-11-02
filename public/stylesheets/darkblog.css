@@ -49,7 +49,7 @@ ul#nav-menu { list-style-image: none; list-style-position: outside; list-style-t
 ul#nav-menu li { display: inline; margin-left: 10px; margin-right: 10px; }
 ul#nav-menu li a { color: #a69b03; }
 #right-sidebar ul { list-style-image: none; list-style-position: outside; list-style-type: none; }
-#right-sidebar ul li { display: block; }
+#right-sidebar ul li { display: block; margin-left: 0px; }
 input#s { width: 130px; }
 .entry a { text-decoration: underline; }
 blockquote { background-color: #252625; color: #a69b03; margin: 0px auto; padding: 5px; width: 80%; }
