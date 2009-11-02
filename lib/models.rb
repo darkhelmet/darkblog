@@ -33,7 +33,7 @@ class Post < ActiveRecord::Base
   end
 
   def announce
-    resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => Blog.index + permalink[1..-1]
+    resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => Blog.index + permalink[1..-1])
     resp = Crack::JSON.parse(resp)
     if resp['status']['code'] =~ /2\d\d/
       short_url = resp['url']
