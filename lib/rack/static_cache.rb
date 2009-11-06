@@ -55,6 +55,7 @@ module Rack
         status, headers, body = @file_server.call(env)
         headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public"
         headers['Expires'] = duration_in_words
+        %w(Etag Pragma Last-Modified).each { |key| headers.delete(key) }
         [status, headers, body]
       else
         @app.call(env)
