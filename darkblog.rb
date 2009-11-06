@@ -95,7 +95,7 @@ end
 
 before do
   if production?
-    expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+    #expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
   end
 
   setup_top_panel
