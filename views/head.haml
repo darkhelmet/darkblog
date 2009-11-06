@@ -30,13 +30,6 @@
 :javascript
   if (top.location != self.location) { top.location = self.location.href; }
 
-  $(document).ready(function() {
-    var query = $.map($('a[href$=#disqus_thread]'), function(a, index) {
-      return 'url' + index + '=' + encodeURIComponent(a.href);
-    }).join('&');
-    $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
-  });
-
 - if development? || env['REQUEST_PATH'] =~ %r{/preview$}
   :javascript
     var disqus_developer = 1;

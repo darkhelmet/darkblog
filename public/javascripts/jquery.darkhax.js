@@ -32,10 +32,16 @@ $(document).ready(function() {
             }});
     return false;
   });
+
   $('a.lightbox').lightBox(lightboxVars);
 
   $('.swfembed').each(function() {
     t = $(this);
     $(this).swfembed(t.attr('movie'), parseInt(t.attr('mwidth')), parseInt(t.attr('mheight')));
   });
+
+  var query = $.map($('a[href$=#disqus_thread]'), function(a, index) {
+    return 'url' + index + '=' + encodeURIComponent(a.href);
+  }).join('&');
+  $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
 });
