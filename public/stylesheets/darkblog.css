@@ -51,7 +51,8 @@ ul#nav-menu li a { color: #a69b03; }
 #right-sidebar ul { list-style-image: none; list-style-position: outside; list-style-type: none; }
 #right-sidebar ul li { display: block; margin-left: 0px; }
 input#s { width: 130px; }
-.entry a { text-decoration: underline; }
+.entry a { text-decoration: underline; padding: 2px; }
+.entry a:hover { -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; background-color: #252625; color: #a69b03; }
 blockquote { background-color: #252625; color: #a69b03; margin: 0px auto; padding: 5px; width: 80%; }
 #footer { position: fixed; bottom: 0; left: 0; width: 100%; height: 35px; clear: both; margin-top: -35px; background: #252625; }
 #main-content { padding-bottom: 35px; }
