@@ -63,7 +63,7 @@ module Rack
             body = [Rainpress.compress(::File.read(body.path))]
             headers['Content-Length'] = body.to_s.size.to_s
           when '.js'
-            body = [Packr.pack(::File.read(body.path))]
+            body = [Packr.pack(::File.read(body.path), :shrink_vars => true)]
             headers['Content-Length'] = body.to_s.size.to_s
           end
         end
