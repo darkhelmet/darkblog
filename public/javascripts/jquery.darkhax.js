@@ -3,8 +3,8 @@
     this.each(function() {
       scale = 600 / width;
       w = '600px';
-      h = (height * scale) + 'px'
-      swfobject.embedSWF(movie, this.id, w, h, '9.0.124', '/swf/expressInstall.swf', null, { wmode: 'opaque', allowFullscreen: true })
+      h = (height * scale) + 'px';
+      swfobject.embedSWF(movie, this.id, w, h, '9.0.124', '/swf/expressInstall.swf', null, { wmode: 'opaque', allowFullscreen: true });
     });
   }
 })(jQuery);
@@ -13,7 +13,7 @@ var lightboxVars = { imageLoading: 'http://s3.blog.darkhax.com/lightbox-ico-load
                      imageBtnClose: 'http://s3.blog.darkhax.com/lightbox-btn-close.gif',
                      imageBtnPrev: 'http://s3.blog.darkhax.com/lightbox-btn-prev.gif',
                      imageBtnNext: 'http://s3.blog.darkhax.com/lightbox-btn-next.gif',
-                     imageBlank: 'http://s3.blog.darkhax.com/lightbox-blank.gif' }
+                     imageBlank: 'http://s3.blog.darkhax.com/lightbox-blank.gif' };
 
 $(document).ready(function() {
   $('a.remote-inline').live('click', function() {
@@ -33,9 +33,9 @@ $(document).ready(function() {
     return false;
   });
   $('a.lightbox').lightBox(lightboxVars);
-  
+
   $('.swfembed').each(function() {
-    t = $(this)
+    t = $(this);
     $(this).swfembed(t.attr('movie'), parseInt(t.attr('mwidth')), parseInt(t.attr('mheight')));
   });
 });

@@ -37,6 +37,8 @@ require 'run_later'
 require 'canonical_host'
 require 'google_analytics'
 require 'response_time_injector'
+require 'rainpress'
+require 'packr'
 
 if development?
   require 'ruby-debug'
@@ -321,7 +323,7 @@ EOS
 end
 
 use Rack::CanonicalHost, Blog.host if production?
-use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :root => 'public'
+use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :root => 'public', :compress => true if production?
 use Rack::RemoveSlash
 use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::GoogleAnalytics, 'UA-2062105-4' if production?

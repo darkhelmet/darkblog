@@ -42,11 +42,12 @@ module Rack
 
 
   class StaticCache
-    def initialize(app, options={})
+    def initialize(app, options = { })
       @app = app
       @urls = options[:urls]
       @file_server = Rack::File.new(options[:root] || Dir.pwd)
       @cache_duration = options[:duration] || 1
+      @compress = options[:compress] || false
     end
 
     def call(env)
@@ -56,6 +57,16 @@ module Rack
         headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public"
         headers['Expires'] = duration_in_words
         %w(Etag Pragma Last-Modified).each { |key| headers.delete(key) }
+        if @compress
+          case ::File.extname(body.path)
+          when '.css'
+            body = [Rainpress.compress(::File.read(body.path))]
+            headers['Content-Length'] = body.to_s.size.to_s
+          when '.js'
+            body = [Packr.pack(::File.read(body.path))]
+            headers['Content-Length'] = body.to_s.size.to_s
+          end
+        end
         [status, headers, body]
       else
         @app.call(env)
