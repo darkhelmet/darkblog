@@ -20,7 +20,9 @@ module Rack
             end
           end
         end
-        headers['Content-Length'] = body.to_s.length.to_s
+        if headers['Content-Length']
+          headers['Content-Length'] = body.to_s.length.to_s
+        end
       end
       [status, headers, body]
     end

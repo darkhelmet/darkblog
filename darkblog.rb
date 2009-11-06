@@ -39,6 +39,10 @@ require 'google_analytics'
 require 'response_time_injector'
 require 'rainpress'
 require 'packr'
+require 'hpricot'
+require 'inline_compress'
+
+STATIC_PATHS = ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf']
 
 if development?
   require 'ruby-debug'
@@ -96,11 +100,12 @@ configure :production do
 end
 
 before do
-  if production?
-    expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+  unless STATIC_PATHS.any? { |path| env['PATH_INFO'].match(path) }
+    if production?
+      expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+    end
+    setup_top_panel
   end
-
-  setup_top_panel
 end
 
 require 'models'
@@ -323,10 +328,11 @@ EOS
 end
 
 use Rack::CanonicalHost, Blog.host if production?
-use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :root => 'public', :compress => true if production?
+use Rack::StaticCache, :urls => STATIC_PATHS, :root => 'public', :compress => true if production?
 use Rack::RemoveSlash
 use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::GoogleAnalytics, 'UA-2062105-4' if production?
+use Rack::InlineCompress if production?
 use Rack::ETag
 
 named_routes[:index] = %r|^/(?:page/(\d+))?$|
