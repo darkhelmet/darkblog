@@ -42,40 +42,19 @@ module Rack
 
 
   class StaticCache
-
     def initialize(app, options={})
       @app = app
       @urls = options[:urls]
-      @no_cache = {}
-      @urls.collect! do |url|
-        if url  =~ /\*$/
-          url.sub!(/\*$/, '')
-          @no_cache[url] = 1
-        end
-        url
-      end
-      root = options[:root] || Dir.pwd
-      @file_server = Rack::File.new(root)
+      @file_server = Rack::File.new(options[:root] || Dir.pwd)
       @cache_duration = options[:duration] || 1
-      @versioning_enabled = true
-      @versioning_enabled = options[:versioning] unless options[:versioning].nil?
-      @duration_in_seconds = self.duration_in_seconds
-      @duration_in_words    = self.duration_in_words
     end
 
     def call(env)
-      path = env["PATH_INFO"]
-      url = @urls.detect{ |u| path.index(u) == 0 }
-      unless url.nil?
-        path.sub!(/-[\d.]+([.][a-zA-Z][\w]+)?$/, '\1') if @versioning_enabled
+      path = env['PATH_INFO']
+      if @urls.any? { |url| path.match(url) }
         status, headers, body = @file_server.call(env)
-        if @no_cache[url].nil?
-          headers['Cache-Control'] ="max-age=#{@duration_in_seconds}, public"
-          headers['Expires'] = @duration_in_words
-          headers.delete 'Etag'
-          headers.delete 'Pragma'
-          headers.delete 'Last-Modified'
-        end
+        headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public"
+        headers['Expires'] = duration_in_words
         [status, headers, body]
       else
         @app.call(env)
@@ -83,11 +62,11 @@ module Rack
     end
 
     def duration_in_words
-      (Time.now + self.duration_in_seconds).strftime '%a, %d %b %Y %H:%M:%S GMT'
+      (Time.now + duration_in_seconds).strftime '%a, %d %b %Y %H:%M:%S GMT'
     end
 
     def duration_in_seconds
-      60 * 60 * 24 * 365 * @cache_duration
+      60 * 60 * 24 * @cache_duration
     end
   end
 end

@@ -321,7 +321,7 @@ EOS
 end
 
 use Rack::CanonicalHost, Blog.host if production?
-use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :versioning => false, :root => 'public', :duration => 1/365
+use Rack::StaticCache, :urls => ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf'], :root => 'public'
 use Rack::RemoveSlash
 use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::GoogleAnalytics, 'UA-2062105-4' if production?
