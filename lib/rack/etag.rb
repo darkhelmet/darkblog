@@ -1,7 +1,6 @@
 require 'digest/md5'
 
 module Rack
-  # Automatically sets the ETag header on all String bodies
   class ETag
     def initialize(app)
       @app = app
@@ -9,11 +8,13 @@ module Rack
 
     def call(env)
       status, headers, body = @app.call(env)
-      if !headers.has_key?('ETag')
-        val = body.nil? ? nil : body.to_s
-        headers['ETag'] = %("#{Digest::MD5.hexdigest(val)}") unless val.nil?
+      if body.is_a?(String) || body.is_a?(Array)
+        if !headers.has_key?('ETag')
+          val = body.nil? ? nil : body.to_s
+          headers['ETag'] = Digest::MD5.hexdigest(val) unless val.nil?
+        end
       end
-      [status, headers, body.to_s]
+      [status, headers, body]
     end
   end
 end

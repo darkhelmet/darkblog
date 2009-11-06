@@ -3,7 +3,7 @@ module Rack
     def initialize(app)
       @app = app
     end
-    
+
     def call(env)
       path = env['REQUEST_PATH']
       if '/' != path
@@ -14,13 +14,13 @@ module Rack
       end
       @app.call(env)
     end
-    
+
   private
-  
+
     def host(env)
       env['HTTP_HOST']
     end
-    
+
     def protocol(env)
       env['rack.url_scheme']
     end
