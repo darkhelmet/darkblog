@@ -63,7 +63,7 @@ module Rack
     end
 
     def duration_in_words
-      (Time.now + duration_in_seconds).strftime '%a, %d %b %Y %H:%M:%S GMT'
+      (Time.now.utc + duration_in_seconds).strftime '%a, %d %b %Y %H:%M:%S GMT'
     end
 
     def duration_in_seconds
