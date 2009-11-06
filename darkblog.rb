@@ -45,7 +45,7 @@ end
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
 protected
-  
+
   def url(page)
     path = @template.request.path
     case path
@@ -89,7 +89,7 @@ configure :production do
     not_found_notification
     haml(:not_found)
   end
-  
+
   error { error_notification }
 end
 
@@ -97,7 +97,7 @@ before do
   if production?
     expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
   end
-  
+
   setup_top_panel
 end
 
@@ -107,7 +107,7 @@ helpers do
   include Sinatra::Authorization
   include TagsHelper
   include WillPaginate::ViewHelpers::Base
-  
+
   def partial(page, options = {})
     if options.delete(:cache)
       Cache.get("#{page.to_s}_partial", options.delete(:cache_max_age) || 10.minutes) do
@@ -117,22 +117,22 @@ helpers do
       haml(page, options.merge(:layout => false))
     end
   end
-  
+
   def stylesheet_link_tag(sheet, media = 'screen,projection')
     link = sheet.include?('http://') ? sheet : "/stylesheets/#{sheet}.css"
     partial("%link{ :type => 'text/css', :href => '#{link}', :rel => 'stylesheet', :media => '#{media}' }")
   end
-  
+
   def javascript_include_tag(js)
     link = js.include?('http://') ? js : "/javascripts/#{js}.js"
     partial("%script{ :type => 'text/javascript', :src => '#{link}' }")
   end
-  
+
   def image_tag(img, alt = img.split('/').last)
     link = img.include?('http://') ? img : "/images/#{img}"
     partial("%img{ :src => '#{link}', :alt => '#{alt}' }")
   end
-  
+
   def title(t = nil, page = 1)
     if t.nil?
       @title || Blog.title
@@ -143,39 +143,39 @@ helpers do
       end
     end
   end
-  
+
   def keywords(k = nil)
     @keywords ||= k
   end
-  
+
   def fb_url
     "http://feeds.feedburner.com/#{Blog.feedburner}"
   end
-  
+
   def gravatar_url(email)
     "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}"
   end
-  
+
   def tag_link(tag)
     partial("%a{ :href => '/tag/#{tag}', :rel => 'tag' } #{tag}")
   end
-  
+
   def tag_links(post)
     post.tag_list.map { |tag| tag_link(tag) }.join(' ')
   end
-  
+
   def post_class(post)
     (post.tag_list.map { |tag| "tag-#{tag}" } | ['post', "post-#{post.id}", "category-#{post.category}"]).join(' ')
   end
-  
+
   def post_permaurl(post)
     Blog.index + post.permalink[1..-1]
   end
-  
+
   def category_link(cat)
     partial("%a{ :href => '/category/#{cat}' } #{cat.capitalize}")
   end
-  
+
   def next_month(year,month)
     if 12 == month
       year += 1
@@ -185,14 +185,14 @@ helpers do
       return year,month + 1
     end
   end
-  
+
   def monthly_archive_links
     newest = Post.published.first
     return Array.new if newest.nil?
     oldest = Post.published.last
     year = oldest.published_on_local.year
     month = oldest.published_on_local.month
-    
+
     links = Array.new
     while year <= newest.published_on_local.year && month <= newest.published_on_local.month
       date = Date.new(year,month,1)
@@ -201,7 +201,7 @@ helpers do
     end
     links
   end
-  
+
   def setup_top_panel
     @repos = Cache.get('github', 1.day) do
       resp = RestClient.get("http://github.com/api/v1/json/#{Blog.github}")
@@ -213,49 +213,49 @@ helpers do
         l['name'] <=> r['name']
       end
     end
-    
+
     @tweets = Cache.get('twitter', 10.minutes) do
       Twitter::Search.new.from(Blog.twitter).to_a[0,6]
     end
-    
+
     @bookmarks = Cache.get('delicious', 6.hours) do
       WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,6]
     end
-    
+
     @shared_items = Cache.get('reader', 6.hours) do
       url = "http://www.google.com/reader/public/atom/user/#{Blog.reader_id}/state/com.google/broadcast"
       Feedzirra::Feed.fetch_and_parse(url).entries[0,6]
     end
   end
-  
+
   def tweet(t)
     t.text.gsub(/(https?:\/\/\S+)/, '<a href="\1">\1</a>').gsub(/@(\w+)/i, '<a href="http://twitter.com/\1">@\1</a>').gsub(/#(\w+)/, '<a href="http://twitter.com/#search?q=%23\1">#\1</a>')
   end
-  
+
   def twitter_link
     partial("%a{ :href => 'http://twitter.com/#{Blog.twitter}'} Follow me on twitter")
   end
-  
+
   def delicious(b)
     partial("%a{ :href => '#{b.url.to_s}' } #{b.title}")
   end
-  
+
   def delicious_link
     partial("I'm\n%a{ :href => 'http://delicious.com/#{Blog.delicious_user}' } #{Blog.delicious_user}\non Delicious.\n<br />\n%a{ :href => 'http://delicious.com/network?add=#{Blog.delicious_user}'} Add me to your network")
   end
-  
+
   def reader(s)
     partial("%a{ :href => '#{s.url}' } #{s.title}")
   end
-  
+
   def repo(r)
     partial("%a{ :href => '#{r['url']}' } #{r['name']}")
   end
-  
+
   def github_link
     partial("%a{ :href => 'https://github.com/#{Blog.github}' } Fork me on Github")
   end
-  
+
   def disqus_part(part = nil)
     if part.nil?
       @disqus_part || 'disqus_index'
@@ -263,7 +263,7 @@ helpers do
       @disqus_part = part
     end
   end
-  
+
   def notify(subject, body)
     return if Blog.messagepub_key.nil?
     c = MessagePub::Client.new(Blog.messagepub_key)
@@ -272,19 +272,19 @@ helpers do
     c.create!(n)
   rescue Exception => e
   end
-  
+
   def remote_hostname
     host = env['REMOTE_ADDR'].split(',').first.strip
     Socket.getaddrinfo(host, nil)[0][2]
   end
-  
+
   def not_found_notification
     if named_routes.values.any? { |path| path.match(env['REQUEST_PATH']) }
       notify("[#{Blog.title}] 404 Not Found", "Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_INFO']}")
     end
   rescue Exception => e
   end
-  
+
   def error_notification
     body = <<-EOS
 Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_INFO']}
@@ -295,15 +295,15 @@ Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_IN
 EOS
     notify("[#{Blog.title}] 500 Internal Server Error", body)
   end
-  
+
   def expires_in(time)
     headers['Cache-Control'] = "public, max-age=#{time}"
   end
-  
+
   def no_cache
     headers['Cache-Control'] = 'no-cache'
   end
-  
+
   def announce
     Post.published.unannounced.each do |post|
       begin
@@ -422,7 +422,7 @@ named_route(:get, :permalink) do |permalink|
 end
 
 # tags with pagination
-named_route(:get, :tag) do |tag,page| 
+named_route(:get, :tag) do |tag,page|
   page ||= '1'
   page = page.to_i
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
