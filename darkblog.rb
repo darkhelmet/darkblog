@@ -325,6 +325,10 @@ EOS
       end
     end
   end
+
+  def h(s)
+    CGI.escapeHTML(s)
+  end
 end
 
 use Rack::CanonicalHost, Blog.host if production?
@@ -482,7 +486,6 @@ end
 
 # update existing post
 named_route(:put, :posts) do
-  debugger
   no_cache
   require_administrative_privileges
   published = params['post']['published']
