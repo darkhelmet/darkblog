@@ -15,7 +15,7 @@
     %br
     %label Body
     %br
-    %textarea{ :name => 'post[body]' }= h(@post.body)
+    %textarea{ :name => 'post[body]' }= h(@post.body || '')
     %br
     %label Tags
     %br
