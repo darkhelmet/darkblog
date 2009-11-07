@@ -327,7 +327,7 @@ EOS
   end
 
   def h(s)
-    CGI.escapeHTML(s)
+    s.nil? ? '' : CGI.escapeHTML(s)
   end
 end
 
