@@ -54,7 +54,7 @@ module Rack
       path = env['PATH_INFO']
       if @urls.any? { |url| path.match(url) }
         status, headers, body = @file_server.call(env)
-        return [status,headers,body] unless body.respond_to?(:path)
+        return @app.call(env) unless body.respond_to?(:path)
         headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public"
         headers['Expires'] = duration_in_words
         %w(Etag Pragma Last-Modified).each { |key| headers.delete(key) }
