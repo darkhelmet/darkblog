@@ -33,14 +33,13 @@ require 'rack/static_cache'
 require 'rack/remove_slash'
 require 'messagepub'
 require 'tzinfo'
-require 'run_later'
-require 'canonical_host'
-require 'google_analytics'
-require 'response_time_injector'
+require 'rack/canonical_host'
+require 'rack/google_analytics'
+require 'rack/response_time_injector'
 require 'rainpress'
 require 'packr'
 require 'hpricot'
-require 'inline_compress'
+require 'rack/inline_compress'
 
 STATIC_PATHS = ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf']
 
