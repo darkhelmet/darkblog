@@ -335,7 +335,7 @@ use Rack::StaticCache, :urls => STATIC_PATHS, :root => 'public', :compress => tr
 use Rack::RemoveSlash
 use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::GoogleAnalytics, 'UA-2062105-4' if production?
-use Rack::InlineCompress if production?
+use Rack::InlineCompress, :ignore => ['/feed'] if production?
 use Rack::ETag
 
 named_routes[:index] = %r|^/(?:page/(\d+))?$|
@@ -388,10 +388,13 @@ end
 
 # rss feed
 named_route(:get, :feed) do
-  redirect(fb_url, 301) unless env['HTTP_USER_AGENT'] =~ /feedburner/i || development?
-  @posts = Post.published.all(:limit => 10)
-  content_type('application/rss+xml', :charset => 'utf-8')
-  builder(:feed)
+  if env['HTTP_USER_AGENT'] =~ /feedburner/i || development?
+    @posts = Post.published.all(:limit => 10)
+    content_type('application/rss+xml', :charset => 'utf-8')
+    builder(:feed)
+  else
+    redirect(fb_url, 301)
+  end
 end
 
 # sitemap

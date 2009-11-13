@@ -1,10 +1,13 @@
 module Rack
   class InlineCompress
-    def initialize(app)
+    def initialize(app, options)
       @app = app
+      @ignore = options[:ignore]
     end
 
     def call(env)
+      path = env['PATH_INFO']
+      return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
       if body.is_a?(String) || body.is_a?(Array)
         doc = Hpricot(body.to_s)
