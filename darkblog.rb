@@ -391,33 +391,7 @@ named_route(:get, :feed) do
   redirect(fb_url, 301) unless env['HTTP_USER_AGENT'] =~ /feedburner/i || development?
   @posts = Post.published.all(:limit => 10)
   content_type('application/rss+xml', :charset => 'utf-8')
-  #builder(:feed)
-  xml = Builder::XmlMarkup.new(:indent => 2)
-  xml.instruct!
-  xml.rss(:version => "2.0") do
-    xml.channel do
-      xml.title(Blog.title)
-      xml.link(Blog.index)
-      xml.description(Blog.tagline)
-      xml.language('en-us')
-      xml.managingEditor(Blog.email)
-      xml.webMaster(Blog.email)
-      xml.lastBuildDate(@posts.first.published_on)
-      @posts.each do |post|
-        xml.item do
-          xml.title(post.title)
-          xml.category(post.category.capitalize)
-          xml.pubDate(post.published_on)
-          xml.link(post_permaurl(post))
-          xml.guid(post_permaurl(post))
-          xml.author(Blog.email)
-          xml.description do
-            xml.cdata!(post.body_html)
-          end
-        end
-      end
-    end
-  end
+  builder(:feed)
 end
 
 # sitemap
