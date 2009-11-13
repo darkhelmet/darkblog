@@ -388,7 +388,7 @@ end
 
 # rss feed
 named_route(:get, :feed) do
-  redirect(fb_url, 301) unless env['HTTP_USER_AGENT'] =~ /feedburner/i
+  redirect(fb_url, 301) unless env['HTTP_USER_AGENT'] =~ /feedburner/i || development?
   @posts = Post.published.all(:limit => 10)
   content_type('application/rss+xml', :charset => 'utf-8')
   builder(:feed)
