@@ -2,8 +2,6 @@ xml.instruct!
 xml.rss(:version => "2.0") do
   xml.channel do
     xml.title(Blog.title)
-    # hack
-    xml.target! << "    <link>#{Blog.index}</link>\n"
     xml.link(Blog.index)
     xml.description(Blog.tagline)
     xml.language('en-us')
