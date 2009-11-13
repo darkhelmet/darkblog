@@ -4,7 +4,7 @@ xml.rss(:version => "2.0") do
     xml.title(Blog.title)
     # hack
     xml.target! << "    <link>#{Blog.index}</link>\n"
-    xnml.link(Blog.index)
+    xml.link(Blog.index)
     xml.description(Blog.tagline)
     xml.language('en-us')
     xml.managingEditor(Blog.email)
