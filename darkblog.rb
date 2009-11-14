@@ -41,7 +41,7 @@ require 'packr'
 require 'hpricot'
 require 'rack/inline_compress'
 
-STATIC_PATHS = ['/images','/javascripts','/stylesheets','/favicon.ico','/sitemap.xsl','/swf']
+STATIC_PATHS = %w(image javascripts stylesheets favicon.ico sitemap.xsl swf).map { |p| "^/#{p}" }
 
 if development?
   require 'ruby-debug'
