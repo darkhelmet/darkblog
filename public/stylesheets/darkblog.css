@@ -167,6 +167,14 @@ blockquote {
   width: 80%;
 }
 
+#footer {
+  height: 35px;
+}
+
+#footer p {
+  margin: 0px;
+}
+
 img.alignright {
   float: right;
   margin-left: 5px;
