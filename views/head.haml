@@ -34,7 +34,7 @@
   :javascript
     var disqus_developer = 1;
 
-- unless env['USER_AGENT'].match('iPhone')
+- unless env['HTTP_USER_AGENT'].match('iPhone')
   :sass
     #footer
       position: fixed
