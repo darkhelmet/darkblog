@@ -31,7 +31,6 @@ require 'sinatra/named_routes'
 require 'rack/etag'
 require 'rack/static_cache'
 require 'rack/remove_slash'
-require 'messagepub'
 require 'tzinfo'
 require 'rack/canonical_host'
 require 'rack/google_analytics'
@@ -40,6 +39,8 @@ require 'rainpress'
 require 'packr'
 require 'hpricot'
 require 'rack/inline_compress'
+require 'bugzscout'
+require 'rack/bugzscout'
 
 STATIC_PATHS = %w(image javascripts stylesheets favicon.ico sitemap.xsl swf).map { |p| "^/#{p}" }
 
@@ -70,7 +71,6 @@ configure do
                         :index => ENV['BLOG_INDEX'] || 'http://blog.darkhax.com/',
                         :host => ENV['BLOG_HOST'] || 'blog.darkhax.com',
                         :email => ENV['BLOG_EMAIL'] || 'darkhelmet@darkhelmetlive.com',
-                        :notify_email => ENV['BLOG_NOTIFY_EMAIL'] || '',
                         :username => ENV['BLOG_USERNAME'] || 'darkhelmet',
                         :author => ENV['BLOG_AUTHOR'] || 'Daniel Huckstep',
                         :bio => ENV['BLOG_BIO'] || 'is a software engineer (EIT) in Edmonton, Alberta, Canada',
@@ -86,7 +86,11 @@ configure do
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10,
                         :tz => TZInfo::Timezone.get('America/Edmonton'),
-                        :tz_display => 'MDT')
+                        :tz_display => 'MDT',
+                        :fogbugz_host => ENV['BLOG_FOGBUGZ_HOST'] || 'darkhax.fogbugz.com',
+                        :fogbugz_user => ENV['BLOG_FOGBUZ_USER'] || 'Daniel Huckstep',
+                        :fogbugz_project => ENV['BLOG_FOGBUZ_PROJECT'] || 'darkhax',
+                        :fogbugz_area => ENV['BLOG_FOGBUZ_AREA'] || 'Blog')
 end
 
 configure :production do
@@ -94,8 +98,6 @@ configure :production do
     not_found_notification
     haml(:not_found)
   end
-
-  error { error_notification }
 end
 
 before do
@@ -270,15 +272,6 @@ helpers do
     end
   end
 
-  def notify(subject, body)
-    return if Blog.messagepub_key.nil?
-    c = MessagePub::Client.new(Blog.messagepub_key)
-    n = MessagePub::Notification.new(:subject => subject, :body => body)
-    n.add_recipient(MessagePub::Recipient.new(:position => 1, :channel => 'email', :address => Blog.notify_email))
-    c.create!(n)
-  rescue Exception => e
-  end
-
   def remote_hostname
     host = env['REMOTE_ADDR'].split(',').first.strip
     Socket.getaddrinfo(host, nil)[0][2]
@@ -286,20 +279,15 @@ helpers do
 
   def not_found_notification
     if named_routes.values.any? { |path| path.match(env['REQUEST_PATH']) }
-      notify("[#{Blog.title}] 404 Not Found", "Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_INFO']}")
+      FogBugz::BugzScout.submit("https://#{Blog.fogbugz_host}:/scoutsubmit.asp") do |scout|
+        scout.user = Blog.fogbugz_user
+        scout.project = Blog.fogbugz_project
+        scout.area = Blog.fogbugz_area
+        scout.title = "404 Not Found - #{env['PATH_INFO']}"
+        scout.body = "Remote host: #{remote_hostname} (#{env['REMOTE_ADDR']})"
+      end
     end
   rescue Exception => e
-  end
-
-  def error_notification
-    body = <<-EOS
-Client at #{remote_hostname} (#{env['REMOTE_ADDR']}) tried to get #{env['PATH_INFO']}
-
-#{env['sinatra.error'].message}
-
-#{env.to_a.sort{ |a,b| a.first <=> b.first }.map{ |k,v| "%-25s%p" % [k+':', v] }.join("\n  ")}
-EOS
-    notify("[#{Blog.title}] 500 Internal Server Error", body)
   end
 
   def expires_in(time)
@@ -311,18 +299,7 @@ EOS
   end
 
   def announce
-    Post.published.unannounced.each do |post|
-      begin
-        post.announce
-      rescue Exception => e
-        body = <<-EOS
-Error announcing '#{post.title}'
-
-#{e.message}
-EOS
-        notify("[verbose logging] Error announcing post", body)
-      end
-    end
+    Post.published.unannounced.each(&:announce)
   end
 
   def h(s)
@@ -337,6 +314,7 @@ use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::GoogleAnalytics, 'UA-2062105-4' if production?
 use Rack::InlineCompress, :ignore => ['/feed'] if production?
 use Rack::ETag
+use Rack::BugzScout, "https://#{Blog.fogbugz_host}/scoutsubmit.asp", Blog.fogbugz_user, Blog.fogbugz_project, Blog.fogbugz_area if production?
 
 named_routes[:index] = %r|^/(?:page/(\d+))?$|
 named_routes[:monthly] = %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|
