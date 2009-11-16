@@ -167,26 +167,6 @@ blockquote {
   width: 80%;
 }
 
-#footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 35px;
-  clear: both;
-  margin-top: -35px;
-  background: #252625;
-}
-
-#main-content {
-  padding-bottom: 35px;
-}
-
-body > #main-content {
-  height: auto;
-  min-height: 100%;
-}
-
 img.alignright {
   float: right;
   margin-left: 5px;
