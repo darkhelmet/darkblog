@@ -298,10 +298,6 @@ helpers do
     headers['Cache-Control'] = 'no-cache'
   end
 
-  def announce
-    Post.published.unannounced.each(&:announce)
-  end
-
   def h(s)
     s.nil? ? '' : CGI.escapeHTML(s)
   end
@@ -310,7 +306,7 @@ end
 use Rack::CanonicalHost, Blog.host if production?
 use Rack::StaticCache, :urls => STATIC_PATHS, :root => 'public', :compress => true if production?
 use Rack::RemoveSlash
-use Rack::GoogleAnalytics, 'UA-2062105-4', :ignore => [%r{/posts$}, %r{/index$}, %r{/preview$},%r{/edit$},%r{/redirections$},%r{/announce$}] if production?
+use Rack::GoogleAnalytics, 'UA-2062105-4', :ignore => %w(posts index preview edit redirections announce).map { |url| "/#{url}$" } if production?
 use Rack::InlineCompress, :ignore => ['/feed'] if production?
 use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::ETag
@@ -498,7 +494,7 @@ end
 named_route(:post, :announce) do
   no_cache
   require_administrative_privileges
-  announce
+  Post.published.unannounced.each(&:announce)
   ''
 end
 
