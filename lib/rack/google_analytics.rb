@@ -12,14 +12,15 @@ pageTracker._trackPageview();
 } catch(err) {}</script>
 EOCODE
 
-    def initialize(app, id)
+    def initialize(app, id, options = { })
       @app = app
       @id = id
+      @ignore = options[:ignore] || []
     end
 
     def call(env)
       status, headers, body = @app.call(env)
-      if body.is_a?(String) || body.is_a?(Array)
+      if body.is_a?(String) || body.is_a?(Array) || @ignore.any? { |url| env['PATH_INFO'].match(url) }
         body = [body].flatten
         body.each do |part|
           if part =~ /<\/body>/

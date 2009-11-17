@@ -1,11 +1,11 @@
 class Post < ActiveRecord::Base
   has_many :redirections
-  
+
   validates_presence_of :title
   validates_presence_of :category
-  
+
   acts_as_taggable
-  
+
   default_scope(:order => 'published_on DESC', :include => :tags)
   named_scope(:published, lambda { { :conditions => ['published = ? AND published_on < ?', true, Time.now.utc] } })
   named_scope(:unpublished, :conditions => { :published => false })
@@ -14,20 +14,20 @@ class Post < ActiveRecord::Base
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now.utc] } })
   named_scope(:monthly, lambda { |date| { :conditions => { :published_on => date.beginning_of_month.beginning_of_day.utc..date.end_of_month.end_of_day.utc } } })
   named_scope(:unannounced, :conditions => { :announced => false })
-  
+
   before_save do |record|
     record.published_on  = Time.now.utc unless record.published_on?
     record.permalink = "/#{record.published_on_local.strftime('%Y/%m/%d')}/#{record.title.parameterize}"
   end
-  
+
   def category=(cat)
     write_attribute(:category, cat.downcase)
   end
-  
+
   def body_html
     RedCloth.new(body).to_html
   end
-  
+
   def published_on_local
     Blog.tz.utc_to_local(published_on)
   end
@@ -39,7 +39,7 @@ class Post < ActiveRecord::Base
       short_url = resp['url']
       httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
       client = Twitter::Base.new(httpauth)
-      client.update("#{Blog.title}: #{title} #{short_url}")
+      client.update("#{Blog.title}: #{title} #{short_url} #fb #in")
     else
       raise "Error with tr.im\n\n#{resp['status']['message']}"
     end
@@ -50,7 +50,7 @@ end
 
 class Cache < ActiveRecord::Base
   serialize :value
-  
+
   def self.get(key, max_age = 1.hour)
     item = Cache.first(:conditions => { :key => key })
     if block_given?
@@ -70,14 +70,14 @@ class Cache < ActiveRecord::Base
       item.nil? ? nil : item.value
     end
   end
-  
+
   def self.put(key,value)
     c = Cache.find_or_create_by_key(key)
     c.value = value
     c.save
     c.touch
   end
-  
+
   def self.purge(key)
     items = key.nil? ? Cache.all : Cache.all(:conditions => { :key => key })
     items.each do |item|
