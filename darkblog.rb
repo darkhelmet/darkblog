@@ -310,7 +310,7 @@ end
 use Rack::CanonicalHost, Blog.host if production?
 use Rack::StaticCache, :urls => STATIC_PATHS, :root => 'public', :compress => true if production?
 use Rack::RemoveSlash
-use Rack::GoogleAnalytics, 'UA-2062105-4', :ignore => [%r{/posts$}, %r{/index$}, %r{/preview$},%r{/edit$},%r{/redirections$},%r{/announce$}] if production?
+use Rack::GoogleAnalytics, 'UA-2062105-4', :ignore => [%r{/posts$}, %r{/index$}, %r{/preview$},%r{/edit$},%r{/redirections$},%r{/announce$}] #if production?
 use Rack::InlineCompress, :ignore => ['/feed'] if production?
 use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::ETag
