@@ -1,5 +1,4 @@
 require 'darkblog'
-require 'texticle/tasks'
 
 namespace :db do
   task :migrate do
@@ -36,9 +35,16 @@ namespace :wp do
   end
 end
 
-task :console do
-  exec('irb -r darkblog')
+namespace :texticle do
+  task :create_indexes => [:destroy_indexes] do
+    Post.full_text_indexes.each { |fti| fti.create }
+  end
+
+  task :destroy_indexes do
+    Post.full_text_indexes.each { |fti| fti.destroy }
+  end
 end
 
-task :environment do
+task :console do
+  exec('irb -r darkblog')
 end
