@@ -3,8 +3,9 @@
   %head
     = partial(:head)
   %body
-    = partial(:panel)
-    .spacer
+    - unless env['HTTP_USER_AGENT'].match(/google/i)
+      = partial(:panel)
+      .spacer
     #main-content.container_12
       #content.grid_12
         = partial(:header)
