@@ -381,6 +381,8 @@ end
 
 # search with pagination
 named_route(:get, :search) do |page|
+  page ||= '1'
+  page = page.to_i
   if query = params['q']
     @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
     not_found if @posts.empty?
