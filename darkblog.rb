@@ -244,7 +244,12 @@ helpers do
   end
 
   def tweet(t)
-    t.text.gsub(/(https?:\/\/\S+)/, '<a href="\1">\1</a>').gsub(/@(\w+)/i, '<a href="http://twitter.com/\1">@\1</a>').gsub(/#(\w+)/, '<a href="http://twitter.com/#search?q=%23\1">#\1</a>')
+    txt = t.text
+    txt.gsub!(/(https?:\/\/\S+)/, '<a href="\1">\1</a>')
+    txt.gsub!(/@(\w+)/i, '<a href="http://twitter.com/\1">@\1</a>')
+    txt.gsub!(/#(\w+)/, '<a href="http://twitter.com/#search?q=%23\1">#\1</a>')
+    d = Blog.tz.utc_to_local(DateTime.parse(t.created_at))
+    txt + " - <a class='tweet-date' href='http://twitter.com/#{t.from_user}/status/#{t.id}'>#{d.strftime("%d-%m-%Y %I:%M %p #{Blog.tz_display}")}</a>"
   end
 
   def twitter_link

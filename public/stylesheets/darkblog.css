@@ -217,3 +217,7 @@ img.pimg {
   width: 600px;
   height: 350px;
 }
+
+.tweet-date {
+  font-size: 10px;
+}
