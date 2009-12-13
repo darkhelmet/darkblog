@@ -16,7 +16,7 @@ def destroy
 end
 
 def create
-  system('heroku bundles:capture --app #{APP}')
+  system("heroku bundles:capture --app #{APP}")
 end
 
 def capturing?
