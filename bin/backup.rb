@@ -8,23 +8,23 @@ APP = 'darkblog'
 BUCKET = 's3.blog.darkhax.com'
 
 def bundle
-  `heroku bundles`.split(/\s/).first
+  `heroku bundles --app #{APP}`.split(/\s/).first
 end
 
 def destroy
-  system("heroku bundles:destroy #{bundle}")
+  system("heroku bundles:destroy #{bundle} --app #{APP}")
 end
 
 def create
-  system('heroku bundles:capture')
+  system('heroku bundles:capture --app #{APP}')
 end
 
 def capturing?
-  !`heroku bundles`.match('capturing').nil?
+  !`heroku bundles --app #{APP}`.match('capturing').nil?
 end
 
 def download
-  `heroku bundles:download`.split(' ').last
+  `heroku bundles:download --app #{APP}`.split(' ').last
 end
 
 def key
