@@ -1,4 +1,5 @@
 require 'darkblog'
+require 'texticle/tasks'
 
 namespace :db do
   task :migrate do
@@ -6,7 +7,7 @@ namespace :db do
     ActiveRecord::Migration.verbose = true
     ActiveRecord::Migrator.migrate('db/migrate')
   end
-  
+
   task :reset do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true

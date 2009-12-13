@@ -1,6 +1,13 @@
 class Post < ActiveRecord::Base
   has_many :redirections
 
+  index do
+    title
+    category
+    body
+    cached_tag_list
+  end
+
   validates_presence_of :title
   validates_presence_of :category
 

@@ -8,8 +8,8 @@ require 'rubygems'
 require 'sinatra'
 require 'haml'
 require 'builder'
-require 'activerecord'
-require 'activesupport'
+require 'active_record'
+require 'active_support'
 require 'will_paginate'
 require 'will_paginate/finders/active_record'
 require 'will_paginate/view_helpers/base'
@@ -42,6 +42,9 @@ require 'rack/inline_compress'
 require 'bugzscout'
 require 'rack/bugzscout'
 require 'newrelic_rpm'
+require 'texticle'
+
+ActiveRecord::Base.extend(Texticle)
 
 STATIC_PATHS = %w(image javascripts stylesheets favicon.ico sitemap.xsl swf).map { |p| "^/#{p}" }
 
@@ -55,11 +58,14 @@ protected
 
   def url(page)
     path = @template.request.path
+    params = @template.request.params
     case path
     when /tag|category/
       1 == page ? "/#{path.split('/')[1,2].join('/')}" : "/#{path.split('/')[1,2].join('/')}/page/#{page}"
     when /\/(\d{4})\/(\d{2})/
       1 == page ? "/#{$1}/#{$2}" : "/#{$1}/#{$2}/page/#{page}"
+    when /\/search/
+      1 == page ? "/search?q=#{params['q']}" : "/search/page/#{page}?q=#{params['q']}"
     else
       1 == page ? '/' : "/page/#{page}"
     end
@@ -314,6 +320,7 @@ use Rack::ETag
 use Rack::BugzScout, "https://#{Blog.fogbugz_host}/scoutsubmit.asp", Blog.fogbugz_user, Blog.fogbugz_project, Blog.fogbugz_area if production?
 
 named_routes[:index] = %r|^/(?:page/(\d+))?$|
+named_routes[:search] = %r|^/search(?:/page/(\d+))?$|
 named_routes[:monthly] = %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|
 named_routes[:category] = %r|^/category/(\w+)(?:/page/(\d+))?$|
 named_routes[:feed] = %r|^/feed.*|
@@ -369,6 +376,18 @@ named_route(:get, :feed) do
     builder(:feed)
   else
     redirect(fb_url, 301)
+  end
+end
+
+# search with pagination
+named_route(:get, :search) do |page|
+  if query = params['q']
+    @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
+    not_found if @posts.empty?
+    title("Search '#{query}'")
+    haml(:posts)
+  else
+    redirect('/')
   end
 end
 
