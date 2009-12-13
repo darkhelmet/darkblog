@@ -41,6 +41,7 @@ require 'hpricot'
 require 'rack/inline_compress'
 require 'bugzscout'
 require 'rack/bugzscout'
+require 'newrelic_rpm'
 
 STATIC_PATHS = %w(image javascripts stylesheets favicon.ico sitemap.xsl swf).map { |p| "^/#{p}" }
 
