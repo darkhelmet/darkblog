@@ -39,3 +39,6 @@ end
 task :console do
   exec('irb -r darkblog')
 end
+
+task :environment do
+end
