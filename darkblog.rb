@@ -266,13 +266,7 @@ end
 named_route(:post, :announce) do
   no_cache
   require_administrative_privileges
-  @posts = Post.published.unannounced.all
-  unless @posts.empty?
-    announce
-    @posts.each do |post|
-      post.update_attributes(:announced => true)
-    end
-  end
+  announce unless Post.published.unannounced.all.each(&:announce).empty?
   ''
 end
 

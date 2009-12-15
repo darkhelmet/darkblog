@@ -40,6 +40,10 @@ class Post < ActiveRecord::Base
   def published_on_local
     Blog.tz.utc_to_local(published_on)
   end
+
+  def announce
+    update_attributes(:announced => true)
+  end
 end
 
 class Cache < ActiveRecord::Base
