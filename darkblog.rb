@@ -175,12 +175,6 @@ named_route(:get, :permalink) do |permalink|
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
-named_route(:get, :short_permalink) do |title|
-  @posts = Post.published.ptitle(title)
-  not_found if @posts.empty?
-  redirect(@posts.first.permalink, 301)
-end
-
 # tags with pagination
 named_route(:get, :tag) do |tag,page|
   page ||= '1'
@@ -276,4 +270,10 @@ named_route(:get, :admin_index) do
   require_administrative_privileges
   @posts = Post.unpublished.all
   haml(:admin_index, :layout => :admin)
+end
+
+named_route(:get, :short_permalink) do |title|
+  @posts = Post.published.ptitle(title)
+  not_found if @posts.empty?
+  redirect(@posts.first.permalink, 301)
 end
