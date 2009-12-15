@@ -40,21 +40,6 @@ class Post < ActiveRecord::Base
   def published_on_local
     Blog.tz.utc_to_local(published_on)
   end
-
-  def announce
-    resp = RestClient.post('http://api.tr.im/v1/trim_url.json', :url => Blog.index + permalink[1..-1])
-    resp = Crack::JSON.parse(resp)
-    if resp['status']['code'] =~ /2\d\d/
-      short_url = resp['url']
-      httpauth = Twitter::HTTPAuth.new(Blog.twitter, Blog.twitter_password)
-      client = Twitter::Base.new(httpauth)
-      client.update("#{Blog.title}: #{title} #{short_url} #fb #in")
-    else
-      raise "Error with tr.im\n\n#{resp['status']['message']}"
-    end
-    RestClient.get('http://pingomatic.com/ping/?title=verbose+logging&blogurl=http%3A%2F%2Fblog.darkhax.com%2F&rssurl=http%3A%2F%2Fblog.darkhax.com%2Ffeed&chk_weblogscom=on&chk_blogs=on&chk_technorati=on&chk_feedburner=on&chk_syndic8=on&chk_newsgator=on&chk_myyahoo=on&chk_pubsubcom=on&chk_blogdigger=on&chk_blogrolling=on&chk_blogstreet=on&chk_moreover=on&chk_weblogalot=on&chk_icerocket=on&chk_newsisfree=on&chk_topicexchange=on&chk_google=on&chk_tailrank=on&chk_bloglines=on&chk_postrank=on&chk_skygrid=on&chk_collecta=on')
-    update_attributes(:announced => true)
-  end
 end
 
 class Cache < ActiveRecord::Base
