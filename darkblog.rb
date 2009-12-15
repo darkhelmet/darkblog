@@ -73,6 +73,7 @@ named_routes[:feed] = %r|^/feed.*|
 named_routes[:sitemap] = %r|^/sitemap.xml(.gz)?$|
 named_routes[:google] = '/google-search'
 named_routes[:permalink] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)$|
+named_routes[:short_permalink] = %r|^/([\w\d\-+ ]+)$|
 named_routes[:tag] = %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$|
 named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/edit$|
 named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/preview$|
@@ -82,7 +83,6 @@ named_routes[:announce] = '/announce'
 named_routes[:admin_index] = '/index'
 
 # main index with pagination
-# get %r|^/(?:page/(\d+))?$| do |page|
 named_route(:get, :index) do |page|
   page ||= '1'
   page = page.to_i
@@ -175,6 +175,12 @@ named_route(:get, :permalink) do |permalink|
   title(@posts.first.title)
   disqus_part('disqus_single')
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
+end
+
+named_route(:get, :short_permalink) do |title|
+  @posts = Post.published.ptitle(title)
+  not_found if @posts.empty?
+  redirect(@posts.first.permalink, 301)
 end
 
 # tags with pagination

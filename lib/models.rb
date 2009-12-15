@@ -21,10 +21,12 @@ class Post < ActiveRecord::Base
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now.utc] } })
   named_scope(:monthly, lambda { |date| { :conditions => { :published_on => date.beginning_of_month.beginning_of_day.utc..date.end_of_month.end_of_day.utc } } })
   named_scope(:unannounced, :conditions => { :announced => false })
+  named_scope(:ptitle, lambda { |ptitle| { :conditions => { :parameterized_title => ptitle } } })
 
   before_save do |record|
     record.published_on  = Time.now.utc unless record.published_on?
     record.permalink = "/#{record.published_on_local.strftime('%Y/%m/%d')}/#{record.title.parameterize}"
+    record.parameterized_title = record.title.parameterize
   end
 
   def category=(cat)
