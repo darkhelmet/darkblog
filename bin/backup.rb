@@ -47,7 +47,6 @@ def backup!
   File.open(archive, 'rb') do |f|
     AWS::S3::S3Object.store("/backups/#{key}", f, BUCKET)
   end
-  File.unlink(archive)
   print "Done!\n"
 end
 
