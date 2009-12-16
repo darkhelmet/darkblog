@@ -114,6 +114,7 @@ end
 
 # rss feed
 named_route(:get, :feed) do
+  no_cache
   if env['HTTP_USER_AGENT'].match(/feedburner/i) || development?
     @posts = Post.published.all(:limit => 10)
     content_type('application/rss+xml', :charset => 'utf-8')
