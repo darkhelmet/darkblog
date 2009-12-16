@@ -179,6 +179,14 @@ module BlogHelper
   end
 
   module Utilities
+    def user_agent
+      env['HTTP_USER_AGENT']
+    end
+
+    def user_agent?(s)
+      user_agent.try(:match, s)
+    end
+
     def setup_top_panel
       @repos = Cache.get('github', 1.day) do
         resp = RestClient.get("http://github.com/api/v1/json/#{Blog.github}")

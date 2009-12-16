@@ -46,7 +46,7 @@ before do
     if production?
       expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
     end
-    setup_top_panel unless env['HTTP_USER_AGENT'].try(:match, /google/i)
+    setup_top_panel unless user_agent?(/google/i)
   end
 end
 
@@ -115,7 +115,7 @@ end
 # rss feed
 named_route(:get, :feed) do
   no_cache
-  if env['HTTP_USER_AGENT'].try(:match, /feedburner/i) || development?
+  if user_agent?(/feedburner/i) || development?
     @posts = Post.published.all(:limit => 10)
     content_type('application/rss+xml', :charset => 'utf-8')
     builder(:feed)
