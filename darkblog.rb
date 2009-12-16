@@ -46,7 +46,6 @@ before do
     if production?
       expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
     end
-    setup_top_panel unless user_agent?(/google/i)
   end
 end
 
@@ -84,6 +83,7 @@ named_routes[:admin_index] = '/index'
 named_route(:get, :index) do |page|
   page ||= '1'
   page = page.to_i
+  setup_top_panel
   @posts = Post.published.paginate(:page => page, :per_page => Blog.per_page)
   not_found('Not Found') if @posts.empty?
   @future_post = Post.future.last if 1 == page
@@ -95,6 +95,7 @@ end
 named_route(:get, :monthly) do |year,month,page|
   page ||= '1'
   page = page.to_i
+  setup_top_panel
   date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
@@ -106,6 +107,7 @@ end
 named_route(:get, :category) do |category,page|
   page ||= '1'
   page = page.to_i
+  setup_top_panel
   @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   title(category.capitalize, page)
@@ -128,6 +130,7 @@ end
 named_route(:get, :search) do |page|
   page ||= '1'
   page = page.to_i
+  setup_top_panel
   if query = params['q']
     @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
     return haml(:empty_search) if @posts.empty?
@@ -147,6 +150,7 @@ end
 
 # google search
 named_route(:get, :google) do
+  setup_top_panel
   haml(:page, :locals => { :page => :google })
 end
 
@@ -154,6 +158,7 @@ end
 %w(about contact disclaimer).each do |page|
   named_routes[page.intern] = "/#{page}"
   named_route(:get, page.intern) do
+    setup_top_panel
     title(page.capitalize)
     haml(:page, :locals => { :page => page.intern })
   end
@@ -161,6 +166,7 @@ end
 
 # permalinks
 named_route(:get, :permalink) do |permalink|
+  setup_top_panel
   @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => permalink })
@@ -180,6 +186,7 @@ end
 named_route(:get, :tag) do |tag,page|
   page ||= '1'
   page = page.to_i
+  setup_top_panel
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   title(tag, page)
@@ -257,7 +264,6 @@ named_route(:post, :redirections) do
   r.to_xml
 end
 
-# force update twitter
 named_route(:post, :announce) do
   no_cache
   require_administrative_privileges

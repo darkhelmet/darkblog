@@ -188,6 +188,7 @@ module BlogHelper
     end
 
     def setup_top_panel
+      return if user_agent?(/google/i)
       @repos = Cache.get('github', 1.day) do
         resp = RestClient.get("http://github.com/api/v1/json/#{Blog.github}")
         Crack::JSON.parse(resp)['user']['repositories'].reject do |r|
