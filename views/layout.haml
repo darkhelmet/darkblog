@@ -3,7 +3,7 @@
   %head
     = partial(:head)
   %body
-    - unless env['HTTP_USER_AGENT'].match(/google/i)
+    - unless env['HTTP_USER_AGENT'].try(:match, /google/i)
       = partial(:panel)
       .spacer
     #main-content.container_12
