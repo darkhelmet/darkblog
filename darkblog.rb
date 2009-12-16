@@ -46,7 +46,7 @@ before do
     if production?
       expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
     end
-    setup_top_panel unless env['HTTP_USER_AGENT'].match(/google/i)
+    setup_top_panel unless env['HTTP_USER_AGENT'].try(:match, /google/i)
   end
 end
 
