@@ -205,12 +205,12 @@ module BlogHelper
       end
 
       @bookmarks = Cache.get('delicious', 6.hours) do
-        WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,6]
+        WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,8]
       end
 
       @shared_items = Cache.get('reader', 6.hours) do
         url = "http://www.google.com/reader/public/atom/user/#{Blog.reader_id}/state/com.google/broadcast"
-        Feedzirra::Feed.fetch_and_parse(url).entries[0,6]
+        Feedzirra::Feed.fetch_and_parse(url).entries[0,8]
       end
     end
 
