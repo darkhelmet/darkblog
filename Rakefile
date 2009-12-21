@@ -44,7 +44,3 @@ namespace :texticle do
     Post.full_text_indexes.each { |fti| fti.destroy }
   end
 end
-
-task :console do
-  exec('irb -r darkblog')
-end

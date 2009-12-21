@@ -12,3 +12,6 @@ hpricot
 httpclient
 newrelic_rpm
 texticle
+term_extraction
+addressable
+sanitize --prerelease

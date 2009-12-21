@@ -31,7 +31,9 @@ configure do
                         :fogbugz_host => ENV['BLOG_FOGBUGZ_HOST'] || 'darkhax.fogbugz.com',
                         :fogbugz_user => ENV['BLOG_FOGBUZ_USER'] || 'Daniel Huckstep',
                         :fogbugz_project => ENV['BLOG_FOGBUZ_PROJECT'] || 'darkhax',
-                        :fogbugz_area => ENV['BLOG_FOGBUZ_AREA'] || 'Blog')
+                        :fogbugz_area => ENV['BLOG_FOGBUZ_AREA'] || 'Blog',
+                        :yahoo_api_key => ENV['BLOG_YAHOO_API_KEY'] || nil,
+                        :zemanta_api_key => ENV['BLOG_ZEMANTA_API_KEY'] || nil)
 end
 
 configure :production do
@@ -177,6 +179,7 @@ named_route(:get, :permalink) do |permalink|
       return
     end
   end
+  keywords_post(@posts.first)
   title(@posts.first.title)
   disqus_part('disqus_single')
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)

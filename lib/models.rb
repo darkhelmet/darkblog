@@ -1,5 +1,11 @@
 class Post < ActiveRecord::Base
   has_many :redirections
+  has_many :keywordings, :dependent => :destroy, :include => :keyword
+  has_many :keywords, :through => :keywordings, :uniq => true
+
+  after_save do |post|
+    post.update_keywords!
+  end
 
   index do
     title
@@ -13,7 +19,7 @@ class Post < ActiveRecord::Base
 
   acts_as_taggable
 
-  default_scope(:order => 'published_on DESC', :include => :tags)
+  default_scope(:order => 'published_on DESC', :include => :tags, :include => :keywords)
   named_scope(:published, lambda { { :conditions => ['published = ? AND published_on < ?', true, Time.now.utc] } })
   named_scope(:unpublished, :conditions => { :published => false })
   named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
@@ -37,12 +43,47 @@ class Post < ActiveRecord::Base
     RedCloth.new(body).to_html
   end
 
+  def body_clean
+    Sanitize.clean(body_html)
+  end
+
   def published_on_local
     Blog.tz.utc_to_local(published_on)
   end
 
   def announce
     update_attributes(:announced => true)
+  end
+
+  def extract_keywords!
+    # @zemanta_keywords ||= TermExtraction::Zemanta.new(:api_key => Blog.zemanta_api_key, :context => body_clean).terms
+    @yahoo_keywords ||= TermExtraction::Yahoo.new(:api_key => Blog.yahoo_api_key, :context => body_clean).terms
+  end
+
+  def update_keywords(*words)
+    words.each do |word|
+      keywords << Keyword.find_or_create_by_name(word)
+    end
+  end
+
+  def update_keywords!
+    keywords = []
+    update_keywords(*extract_keywords!)
+  end
+
+  class << self
+    def find_by_keywords(*args)
+      args.flatten!
+      words = case args.first
+              when Post
+                args.first.keywords.map(&:name)
+              when Keyword
+                args.map(&:name)
+              else
+                args
+              end
+      Post.find_by_sql(["SELECT p.*, pkw.relevance FROM (SELECT kw.post_id, COUNT(*) AS relevance FROM keywordings kw INNER JOIN keywords k ON kw.keyword_id = k.id WHERE k.name IN (?) GROUP BY kw.post_id HAVING COUNT(*) > 0) pkw INNER JOIN posts p ON pkw.post_id = p.id ORDER BY pkw.relevance DESC", words])
+    end
   end
 end
 
@@ -78,15 +119,42 @@ class Cache < ActiveRecord::Base
 
   def self.purge(key)
     items = key.nil? ? Cache.all : Cache.all(:conditions => { :key => key })
-    items.each do |item|
-      item.destroy
-    end
+    items.each(&:destroy)
   end
 end
 
 class Redirection < ActiveRecord::Base
   belongs_to :post
 end
+
+class Keyword < ActiveRecord::Base
+  has_many :keywordings, :dependent => :destroy
+  has_many :posts, :through => :keywordings
+
+  def to_s
+    name
+  end
+end
+
+class Keywording < ActiveRecord::Base
+  belongs_to :keyword
+  belongs_to :post
+end
+
+class Zemanta
+  include HTTParty
+  base_uri 'http://api.zemanta.com/services/rest/0.0/'
+  default_params :format => 'xml', :api_key => Blog.zemanta_api_key
+  format :xml
+
+  class << self
+    def suggest(text)
+      post('', :body => { :method => 'zemanta.suggest' }, :text => text)
+    end
+  end
+end
+
+Tag.destroy_unused = true
 
 env = ENV.has_key?('RACK_ENV') ? ENV['RACK_ENV'] : 'development'
 CONFIG_FILE = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))

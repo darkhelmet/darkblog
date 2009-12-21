@@ -3,6 +3,18 @@
 - if @posts && 0 < @posts.size
   - @posts.each do |post|
     = partial(:post, :locals => { :post => post })
+  - if keywords_post && 0 < (related_posts = (Post.find_by_keywords(keywords_post) - [keywords_post])[0,10]).count
+    %div.grid_2.alpha{ :id => 'related-sidebar' }
+      %p <!-- take up space -->
+    %div.grid_8.omega.content{ :id => 'related-content' }
+      .border
+        .entry
+          %h3 Possibly Related Posts
+          %ul
+            - related_posts.each do |post|
+              %li
+                %a{ :href => post.permalink }= h(post.title)
+
   - unless request.xhr?
     = partial(:pagination)
 - else

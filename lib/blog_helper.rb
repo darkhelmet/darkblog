@@ -33,8 +33,10 @@ require 'hpricot'
 require 'rack/inline_compress'
 require 'bugzscout'
 require 'rack/bugzscout'
-require 'newrelic_rpm'
+# require 'newrelic_rpm'
 require 'texticle'
+require 'term_extraction'
+require 'sanitize'
 
 module BlogHelper
   module ViewHelpers
@@ -80,6 +82,14 @@ module BlogHelper
         @disqus_part || 'disqus_index'
       else
         @disqus_part = part
+      end
+    end
+
+    def keywords_post(post = nil)
+      if post.nil?
+        @keywords_post
+      else
+        @keywords_post = post
       end
     end
 
