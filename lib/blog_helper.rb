@@ -176,9 +176,9 @@ module BlogHelper
       if t.nil?
         @title || Blog.title
       else
-        @title = "#{Blog.title} | #{t}"
+        @title = "#{t} | #{Blog.title}"
         if 1 < page
-          @title += " Page #{page}"
+          @title += " | Page #{page}"
         end
       end
     end
