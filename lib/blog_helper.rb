@@ -98,7 +98,7 @@ module BlogHelper
     end
 
     def gravatar_url(email)
-      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}"
+      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png"
     end
 
     def tag_link(tag)
@@ -121,13 +121,13 @@ module BlogHelper
       partial("%a{ :href => '/category/#{cat}' } #{cat.capitalize}")
     end
 
-    def next_month(year,month)
+    def next_month(year, month)
       if 12 == month
         year += 1
         month = 1
-        return year,month
+        return year, month
       else
-        return year,month + 1
+        return year, month + 1
       end
     end
 
@@ -147,6 +147,7 @@ module BlogHelper
       links
     end
 
+    # TODO: Refactor to support :collection
     def partial(page, options = {})
       if options.delete(:cache)
         Cache.get("#{page.to_s}_partial", options.delete(:cache_max_age) || 10.minutes) do
@@ -211,7 +212,7 @@ module BlogHelper
       end
 
       @tweets = Cache.get('twitter', 10.minutes) do
-        Twitter::Search.new.from(Blog.twitter).to_a[0,6]
+        Twitter::Search.new.from(Blog.twitter).to_a[0,4]
       end
 
       @bookmarks = Cache.get('delicious', 6.hours) do
@@ -231,7 +232,7 @@ module BlogHelper
 
     def not_found_notification
       if named_routes.values.any? { |path| path.match(env['REQUEST_PATH']) }
-        FogBugz::BugzScout.submit("https://#{Blog.fogbugz_host}:/scoutsubmit.asp") do |scout|
+        FogBugz::BugzScout.submit("https://#{Blog.fogbugz_host}/scoutsubmit.asp") do |scout|
           scout.user = Blog.fogbugz_user
           scout.project = Blog.fogbugz_project
           scout.area = Blog.fogbugz_area
