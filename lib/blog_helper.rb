@@ -74,7 +74,7 @@ module BlogHelper
     end
 
     def github_link
-      partial("%a{ :href => 'https://github.com/#{Blog.github}' } Fork me on Github")
+      partial("%a{ :href => 'https://github.com/#{Blog.github}' } Fork me on Github, and see the rest of my code")
     end
 
     def disqus_part(part = nil)
