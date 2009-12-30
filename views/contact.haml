@@ -1,14 +1,10 @@
+= javascript_include_tag('http://wufoo.com/scripts/embed/form.js')
 :javascript
-  var id = 25542;
-  var referrer = window.top.location.href;
-
-  if ( typeof( window[ 'clr' ] ) == "undefined" ) { var clr = "none"; }
-  if ( typeof( window[ 'n' ] ) == "undefined" ) {  var n = 0; }
-  if(n == 1)
-  {
-    document.write('<iframe src="http://kontactr.com/w.php?id='+id+'&referrer='+referrer+'&color='+clr+'&n=1" style="width: 100%; height: 500px;" frameborder="0"></iframe>');
-  }
-  else
-  {
-    document.write('<iframe src="http://kontactr.com/w.php?id='+id+'&referrer='+referrer+'&color='+clr+'" style="width: 100%; height: 500px;" frameborder="0"></iframe>');
-  }
+  var z7x4z5 = new WufooForm();
+  z7x4z5.initialize({
+    'userName':'darkhelmetlive',
+    'formHash':'z7x4z5',
+    'autoResize':true,
+    'height':'434'
+  });
+  z7x4z5.display();
