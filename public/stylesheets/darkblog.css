@@ -55,6 +55,7 @@ body{font:13px/1.5 Helvetica,Arial,'Liberation Sans',FreeSans,sans-serif}a:focus
 html {
   background-color: #252625;
   color: #a69b03;
+  font-family: Helvetica,Arial,'Liberation Sans',FreeSans,sans-serif;
 }
 
 body a {
