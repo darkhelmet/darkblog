@@ -183,6 +183,7 @@ named_route(:get, :permalink) do |permalink|
   keywords_post(@posts.first)
   title(@posts.first.title)
   disqus_part('disqus_single')
+  sharing(true)
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 

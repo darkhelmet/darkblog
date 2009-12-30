@@ -197,6 +197,10 @@ module BlogHelper
   end
 
   module Utilities
+    def sharing(on = nil)
+      @sharing ||= on
+    end
+
     def user_agent
       env['HTTP_USER_AGENT']
     end

@@ -95,6 +95,18 @@ a:hover {
   color: #a69b03;
 }
 
+.addthis_toolbox a {
+  padding: 0px;
+}
+
+.addthis_toolbox a:hover {
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  background-color: #7da5a5;
+  color: #593202;
+}
+
 .border {
   margin: 10px;
 }
