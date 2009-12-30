@@ -168,6 +168,7 @@ end
 
 # permalinks
 named_route(:get, :permalink) do |permalink|
+  no_cache if request.xhr?
   setup_top_panel
   @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
