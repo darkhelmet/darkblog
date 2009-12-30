@@ -80,8 +80,11 @@ a:hover {
 
 .content a {
   color: #593202;
-  text-decoration: underline;
   padding: 2px;
+}
+
+.entry a {
+  text-decoration: underline;
 }
 
 .content a:hover {
@@ -98,6 +101,8 @@ a:hover {
 
 .post-title {
   margin-bottom: 0px;
+  position: relative;
+  left: -2px;
 }
 
 hr.end {
