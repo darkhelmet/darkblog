@@ -1,7 +1,6 @@
 !!!
 %html{ :xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en' }
-  %head
-    = partial(:head)
+  %head= partial(:head)
   %body
     - unless user_agent?(/google/i)
       = partial(:panel)
@@ -9,10 +8,8 @@
     #main-content.container_12
       #content.grid_12
         = partial(:header)
-        #posts-container.grid_10.alpha
-          = yield
-        #right-sidebar.grid_2.omega.sidebar.right
-          = partial(:right_sidebar, :cache => production?, :cache_max_age => 6.hours)
+        #posts-container.grid_10.alpha= yield
+        #right-sidebar.grid_2.omega.sidebar.right= partial(:right_sidebar, :cache => production?, :cache_max_age => 6.hours)
         .clear
       .clear
     = partial(:footer)

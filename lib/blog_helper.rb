@@ -38,10 +38,16 @@ require 'texticle'
 require 'term_extraction'
 require 'sanitize'
 
+class String
+  def url_encode
+    CGI.escape(self)
+  end
+end
+
 module BlogHelper
   module ViewHelpers
     def h(s)
-      s.nil? ? '' : CGI.escapeHTML(s)
+      CGI.escapeHTML(s.to_s)
     end
 
     def tweet(t)
@@ -58,7 +64,7 @@ module BlogHelper
     end
 
     def delicious(b)
-      partial("%a{ :href => '#{b.url.to_s}' } #{b.title}")
+      partial("%a{ :href => '#{b.url.to_s}' } #{h(b.title)}")
     end
 
     def delicious_link
@@ -66,11 +72,11 @@ module BlogHelper
     end
 
     def reader(s)
-      partial("%a{ :href => '#{s.url}' } #{s.title}")
+      partial("%a{ :href => '#{s.url}' } #{h(s.title)}")
     end
 
     def repo(r)
-      partial("%a{ :href => '#{r['url']}' } #{r['name']}")
+      partial("%a{ :href => '#{r['url']}' } #{h(r['name'])}")
     end
 
     def github_link
@@ -101,8 +107,9 @@ module BlogHelper
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png"
     end
 
-    def tag_link(tag)
-      partial("%a{ :href => '/tag/#{tag}', :rel => 'tag' } #{tag}")
+    def tag_link(tag, css = '')
+      tag = tag.to_s
+      partial("%a#{css}{ :href => '/tag/#{tag.url_encode}', :rel => 'tag' } #{h(tag)}")
     end
 
     def tag_links(post)
@@ -118,7 +125,7 @@ module BlogHelper
     end
 
     def category_link(cat)
-      partial("%a{ :href => '/category/#{cat}' } #{cat.capitalize}")
+      partial("%a{ :href => '/category/#{cat.url_encode}' } #{h(cat).capitalize}")
     end
 
     def next_month(year, month)

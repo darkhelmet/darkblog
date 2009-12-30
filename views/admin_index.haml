@@ -2,4 +2,4 @@
 %ul
   - @posts.each do |p|
     %li
-      %a{ :href => "#{p.permalink}/edit" }= p.title
+      %a{ :href => "#{p.permalink}/edit" }= h(p.title)

@@ -11,8 +11,7 @@
 .sidebar-item.right
   %h2 The author
   %ul
-    %li
-      = image_tag(gravatar_url(Blog.email))
+    %li= image_tag(gravatar_url(Blog.email))
     %li= "#{Blog.author} #{Blog.bio}"
 .sidebar-item.right
   %ul

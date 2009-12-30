@@ -11,7 +11,7 @@
     %br
     %input.max{ :type => 'text', :id => 'post_category', :name => 'post[category]', :value => @post.category }
     :javascript
-      $('#post_category').autocomplete("#{Post.all(:select => :category).map(&:category).uniq.join(' ')}".split(' '));
+      $('#post_category').autocomplete("#{Post.all(:select => :category).map(&:category).uniq.map { |c| h(c) }.join(' ')}".split(' '));
     %br
     %label Body
     %br
@@ -21,7 +21,7 @@
     %br
     %input.max{ :type => 'text', :id => 'post_tag_list', :name => 'post[tag_list]', :value => @post.tag_list }
     :javascript
-      $('#post_tag_list').autocomplete("#{Tag.all.map(&:name).join(' ')}".split(' '), { multiple: true });
+      $('#post_tag_list').autocomplete("#{Tag.all.map(&:name).uniq.map { |t| h(t) }.join(' ')}".split(' '), { multiple: true });
     %br
     %label Publish Date
     %br
