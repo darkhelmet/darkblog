@@ -80,6 +80,16 @@ a:hover {
 
 .content a {
   color: #593202;
+  text-decoration: underline;
+  padding: 2px;
+}
+
+.content a:hover {
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  background-color: #252625;
+  color: #a69b03;
 }
 
 .border {
@@ -148,19 +158,6 @@ ul#nav-menu li a {
 
 input#s {
   width: 130px;
-}
-
-.entry a {
-  text-decoration: underline;
-  padding: 2px;
-}
-
-.entry a:hover {
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  background-color: #252625;
-  color: #a69b03;
 }
 
 blockquote {
