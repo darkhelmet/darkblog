@@ -27,14 +27,25 @@ mySettings = {
 		{name:'Stroke through', key:'S', closeWith:'-', openWith:'-'},
 		{separator:'---------------' },
 		{name:'Bulleted list', openWith:'(!(* |!|*)!)'},
-		{name:'Numeric list', openWith:'(!(# |!|#)!)'}, 
+		{name:'Numeric list', openWith:'(!(# |!|#)!)'},
 		{separator:'---------------' },
-		{name:'Picture', replaceWith:'![![Source:!:http://]!]([![Alternative text]!])!'}, 
+		{name:'Picture', replaceWith:'![![Source:!:http://]!]([![Alternative text]!])!'},
 		{name:'Link', openWith:'"', closeWith:'([![Title]!])":[![Link:!:http://]!]', placeHolder:'Your text to link here...' },
 		{separator:'---------------' },
 		{name:'Quotes', openWith:'bq(!(([![Class]!]))!). '},
 		{name:'Code', openWith:'@', closeWith:'@'},
 		{separator:'---------------' },
-		{name:'Preview', call:'preview', className:'preview'}
+		{name:'YouTube', replaceWith: function(h) {
+		  var html = "<div id='REPLACE-ME-video' class='swfembed' movie='URL' mheight='HEIGHT' mwidth='WIDTH'>Witty comment about needing Javascript goes here...</div>";
+		  var sel = h.selection;
+		  if (null == sel || '' == sel.toString()) {
+		    return html;
+		  }
+
+		  html = html.replace('WIDTH', /width="(\d+)"/.exec(sel)[1]);
+		  html = html.replace('HEIGHT', /height="(\d+)"/.exec(sel)[1]);
+		  html = html.replace('URL', /src="([^\"]+)"/.exec(sel)[1]);
+		  return html;
+		}}
 	]
 }
