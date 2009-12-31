@@ -1,12 +1,14 @@
 (function($) {
-  $.fn.swfembed = function(movie, width, height) {
-    this.each(function() {
-      scale = 600 / width;
-      w = '600px';
-      h = (height * scale) + 'px';
-      swfobject.embedSWF(movie, this.id, w, h, '9.0.124', '/swf/expressInstall.swf', null, { wmode: 'opaque', allowFullscreen: true });
-    });
-  }
+  $.fn.extend({
+    swfembed: function(movie, width, height) {
+      this.each(function() {
+        scale = 600 / width;
+        w = '600px';
+        h = (height * scale) + 'px';
+        swfobject.embedSWF(movie, this.id, w, h, '9.0.124', '/swf/expressInstall.swf', null, { wmode: 'opaque', allowFullscreen: true });
+      });
+    }
+  });
 })(jQuery);
 
 var lightboxVars = { imageLoading: 'http://s3.blog.darkhax.com/lightbox-ico-loading.gif',
@@ -37,7 +39,7 @@ $(document).ready(function() {
 
   $('.swfembed').each(function() {
     t = $(this);
-    $(this).swfembed(t.attr('movie'), parseInt(t.attr('mwidth')), parseInt(t.attr('mheight')));
+    t.swfembed(t.attr('movie'), parseInt(t.attr('mwidth')), parseInt(t.attr('mheight')));
   });
 
   var query = $.map($('a[href$=#disqus_thread]'), function(a, index) {
