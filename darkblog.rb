@@ -292,7 +292,7 @@ named_route(:get, :short_permalink) do |title|
 end
 
 # get twitter statuses
-named_route(:post, :twitter) do |status_id|
+named_route(:get, :twitter) do |status_id|
   content_type('text/plain')
   individual_tweet(status_id).text
 end

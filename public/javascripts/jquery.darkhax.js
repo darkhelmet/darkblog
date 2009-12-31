@@ -53,7 +53,7 @@ $(document).ready(function() {
     if (null != matches && 1 < matches.length) {
       var id = matches[1];
       var link = this;
-      $.post('/twitter/' + id, null, function(data) {
+      $.get('/twitter/' + id, null, function(data) {
         $(link).attr('title', data);
       }, 'text');
     }
