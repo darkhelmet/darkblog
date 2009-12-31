@@ -80,6 +80,7 @@ named_routes[:posts] = '/posts'
 named_routes[:redirections] = '/redirections'
 named_routes[:announce] = '/announce'
 named_routes[:admin_index] = '/index'
+named_routes[:twitter] = '/twitter/:status'
 
 # main index with pagination
 named_route(:get, :index) do |page|
@@ -288,4 +289,10 @@ named_route(:get, :short_permalink) do |title|
   @posts = Post.published.ptitle(title)
   not_found if @posts.empty?
   redirect(@posts.first.permalink, 301)
+end
+
+# get twitter statuses
+named_route(:post, :twitter) do |status_id|
+  content_type('text/plain')
+  individual_tweet(status_id).text
 end

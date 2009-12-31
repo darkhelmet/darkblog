@@ -46,4 +46,16 @@ $(document).ready(function() {
     return 'url' + index + '=' + encodeURIComponent(a.href);
   }).join('&');
   $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
+
+  $('#posts-container a').each(function() {
+    var re = /http:\/\/twitter\.com\/\w+\/status\/(\d+)/;
+    var matches = re.exec($(this).attr('href'));
+    if (null != matches && 1 < matches.length) {
+      var id = matches[1];
+      var link = this;
+      $.post('/twitter/' + id, null, function(data) {
+        $(link).attr('title', data);
+      }, 'text');
+    }
+  });
 });
