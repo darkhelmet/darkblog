@@ -72,28 +72,36 @@ module BlogHelper
       txt + "<br /><a class='tweet-date' href='http://twitter.com/#{t.from_user}/status/#{t.id}'>#{d.strftime("%d-%m-%Y %I:%M %p #{Blog.tz_display}")}</a>"
     end
 
-    # Get the link to the author's twitter profile
+    # Get the link to the author's Twitter profile
     #
     # @return [String] HTML link to the Twitter profile with the text 'Follow me on twitter'
     def twitter_link
-      partial("%a{ :href => 'http://twitter.com/#{Blog.twitter}'} Follow me on twitter")
+      partial("%a{ :href => 'http://twitter.com/#{Blog.twitter}' } Follow me on twitter")
     end
 
-    # Turns a Delicious bookmark into a link from insertion into the page
+    # Turns a Delicious bookmark into a link for insertion into the page
     #
+    # @see http://github.com/weppos/www-delicious www-delicious gem
     # @param [WWW::Delicious::Post] b A bookmark/post from the www-delicious gem
     # @return [String] HTML link to the bookmark
-    # @see http://github.com/weppos/www-delicious www-delicious gem
     def delicious(b)
       partial("%a{ :href => '#{b.url.to_s}' } #{h(b.title)}")
     end
 
+    # Get the link the author's Delicious profile and to add to your network
+    #
+    # @return [String] The HTML insertion-ready string with the relevant links
     def delicious_link
       partial("I'm\n%a{ :href => 'http://delicious.com/#{Blog.delicious_user}' } #{Blog.delicious_user}\non Delicious.\n<br />\n%a{ :href => 'http://delicious.com/network?add=#{Blog.delicious_user}'} Add me to your network")
     end
 
-    def reader(s)
-      partial("%a{ :href => '#{s.url}' } #{h(s.title)}")
+    # Turns a shared RSS item into a link for insertion into the page
+    #
+    # @see http://github.com/pauldix/feedzirra feedzirra gem
+    # @param [Object] item An RSS item from the Feedzirra gem
+    # @return [String] HTML link to the shared item
+    def reader(item)
+      partial("%a{ :href => '#{item.url}' } #{h(item.title)}")
     end
 
     def repo(r)
