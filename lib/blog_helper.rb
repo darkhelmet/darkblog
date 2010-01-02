@@ -15,19 +15,13 @@ require 'ostruct'
 require 'RedCloth'
 require 'crack'
 require 'restclient'
-require 'www/delicious'
-require 'feedzirra'
-require 'twitter'
 require 'tzinfo'
 require 'rainpress'
 require 'packr'
 require 'hpricot'
 require 'bugzscout'
 # require 'newrelic_rpm'
-require 'texticle'
-require 'term_extraction'
 require 'sanitize'
-require 'hashie'
 require 'social'
 
 %w(authorization named_routes).each do |ext|
@@ -289,8 +283,6 @@ module BlogHelper
     end
   end
 end
-
-ActiveRecord::Base.extend(Texticle)
 
 STATIC_PATHS = %w(image javascripts stylesheets favicon.ico sitemap.xsl swf).map { |p| "^/#{p}" }
 

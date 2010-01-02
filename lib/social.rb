@@ -1,3 +1,8 @@
+require 'feedzirra'
+require 'twitter'
+require 'www/delicious'
+require 'hashie'
+
 class Social
   class << self
     def repositories(username)

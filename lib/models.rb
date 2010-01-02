@@ -1,3 +1,8 @@
+require 'term_extraction'
+require 'texticle'
+
+ActiveRecord::Base.extend(Texticle)
+
 class Post < ActiveRecord::Base
   has_many :redirections
   has_many :keywordings, :dependent => :destroy, :include => :keyword
