@@ -21,6 +21,10 @@ class Social
       Twitter::Search.new.from(username).to_a[0,4]
     end
 
+    def tweet(id, username, password)
+      Hashie::Mash.new(Crack::JSON.parse(RestClient.get("https://twitter.com/statuses/show/#{id}.json", 'User-Agent' => 'verbose logging http://blog.darkhax.com/', :user => username, :password => password)))
+    end
+
     def bookmarks(username, password)
       WWW::Delicious.new(username, password).posts_recent[0,8]
     end
