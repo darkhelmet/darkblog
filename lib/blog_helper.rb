@@ -262,7 +262,7 @@ module BlogHelper
 
     def individual_tweet(id)
       Cache.get("twitter:status:#{id}", 1.year) do
-        Hashie::Mash.new(Crack::JSON.parse(RestClient.get("http://twitter.com/statuses/show/#{id}.json", 'User-Agent' => 'verbose logging http://blog.darkhax.com/')))
+        Hashie::Mash.new(Crack::JSON.parse(RestClient.get("https://twitter.com/statuses/show/#{id}.json", 'User-Agent' => 'verbose logging http://blog.darkhax.com/', :user => Blog.twitter, :password => Blog.twitter_password)))
       end
     end
   end
