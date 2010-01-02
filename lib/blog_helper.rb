@@ -28,6 +28,7 @@ require 'texticle'
 require 'term_extraction'
 require 'sanitize'
 require 'hashie'
+require 'social'
 
 %w(authorization named_routes).each do |ext|
   require "sinatra/#{ext}"
@@ -104,6 +105,10 @@ module BlogHelper
       partial("%a{ :href => '#{item.url}' } #{h(item.title)}")
     end
 
+    # Turns a Github repo from the Github API into a link to it
+    #
+    # @param [Hashie::Mash] r A repository
+    # @return [String] HTML link to the Github repo
     def repo(r)
       partial("%a{ :href => '#{r['url']}' } #{h(r['name'])}")
     end
@@ -240,29 +245,10 @@ module BlogHelper
 
     def setup_top_panel
       return if user_agent?(/google/i)
-      @repos = Cache.get('github', 1.day) do
-        resp = RestClient.get("http://github.com/api/v1/json/#{Blog.github}")
-        Crack::JSON.parse(resp)['user']['repositories'].reject do |r|
-          r['fork']
-        end.select do |r|
-          rand < 0.60
-        end.sort do |l,r|
-          l['name'] <=> r['name']
-        end
-      end
-
-      @tweets = Cache.get('twitter', 10.minutes) do
-        Twitter::Search.new.from(Blog.twitter).to_a[0,4]
-      end
-
-      @bookmarks = Cache.get('delicious', 6.hours) do
-        WWW::Delicious.new(Blog.delicious_user, Blog.delicious_password).posts_recent[0,8]
-      end
-
-      @shared_items = Cache.get('reader', 6.hours) do
-        url = "http://www.google.com/reader/public/atom/user/#{Blog.reader_id}/state/com.google/broadcast"
-        Feedzirra::Feed.fetch_and_parse(url).entries[0,8]
-      end
+      @repos = Cache.get('github', 1.day) { Social.repositories(Blog.github) }
+      @tweets = Cache.get('twitter', 10.minutes) { Social.tweets(Blog.twitter) }
+      @bookmarks = Cache.get('delicious', 6.hours) { Social.bookmarks(Blog.delicious_user, Blog.delicious_password) }
+      @shared_items = Cache.get('reader', 6.hours) { Social.shared_items(Blog.reader_id) }
     end
 
     def remote_hostname
