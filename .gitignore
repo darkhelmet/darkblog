@@ -3,3 +3,5 @@ log/*.log
 config/*.yml
 db.log
 .DS_Store
+doc/
+.yardoc/

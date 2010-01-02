@@ -1,12 +1,15 @@
 require 'darkblog'
+require 'yard'
 
 namespace :db do
+  desc 'Run database migrations'
   task :migrate do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true
     ActiveRecord::Migrator.migrate('db/migrate')
   end
 
+  desc 'Reset the database'
   task :reset do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true
@@ -16,31 +19,24 @@ namespace :db do
 end
 
 namespace :cache do
+  desc 'Purge cache items'
   task :purge do
     Cache.purge(nil)
   end
 end
 
-namespace :wp do
-  task :migrate do
-    require '../wp_ar/wp_ar.rb'
-    ActiveRecord::Base.default_timezone = :local
-    WpBlogPost.all(:conditions => { :post_type => 'post', :post_status => ['publish','future'] }).reverse_each do |post|
-      Post.create(:title => post.post_title,
-                  :published => true,
-                  :published_on => (post.post_date + 1.hour).utc,
-                  :category => post.term_taxonomies.select { |tt| tt.taxonomy == 'category' }.map { |t| t.term.name }.first,
-                  :body => post.post_content, :tag_list => post.tags.map(&:name))
-    end
-  end
-end
-
 namespace :texticle do
+  desc 'Create full text search indexes'
   task :create_indexes => [:destroy_indexes] do
     Post.full_text_indexes.each { |fti| fti.create }
   end
 
+  desc 'Destroy full text search indexes'
   task :destroy_indexes do
     Post.full_text_indexes.each { |fti| fti.destroy }
   end
+end
+
+YARD::Rake::YardocTask.new do |t|
+  t.files = ['lib/**/*.rb', 'darkblog.rb']
 end
