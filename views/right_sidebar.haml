@@ -4,8 +4,8 @@
       %img{ :src => '/images/rss.png', :style => 'vertical-align: middle;' }
     %a{ :href => '/feed' } Subscribe
 .sidebar-item.right
-  %form{ :action => '/search', :method => 'GET' }
-    %input{ :type => 'text', :name => 'q' }
+  %form#search{ :action => '/search', :method => 'GET' }
+    %input#query{ :type => 'text', :name => 'q' }
     %br
     %input{ :type => 'submit', :value => 'Search' }
 .sidebar-item.right

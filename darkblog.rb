@@ -293,6 +293,7 @@ end
 
 # get twitter statuses
 named_route(:get, :twitter) do |status_id|
+  expires_in(1.day)
   content_type('text/plain')
   individual_tweet(status_id).text
 end

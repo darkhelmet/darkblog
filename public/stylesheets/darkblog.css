@@ -239,3 +239,8 @@ img.pimg {
 .tweet-date {
   font-size: 10px;
 }
+
+form#search input#query {
+  width: 99%;
+  border-width: 1px;
+}
