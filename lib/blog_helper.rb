@@ -18,28 +18,29 @@ require 'restclient'
 require 'www/delicious'
 require 'feedzirra'
 require 'twitter'
-require 'sinatra/authorization'
-require 'sinatra/named_routes'
-require 'rack/etag'
-require 'rack/static_cache'
-require 'rack/remove_slash'
 require 'tzinfo'
-require 'rack/canonical_host'
-require 'rack/google_analytics'
-require 'rack/response_time_injector'
 require 'rainpress'
 require 'packr'
 require 'hpricot'
-require 'rack/inline_compress'
 require 'bugzscout'
-require 'rack/bugzscout'
 # require 'newrelic_rpm'
 require 'texticle'
 require 'term_extraction'
 require 'sanitize'
 require 'hashie'
 
+%w(authorization named_routes).each do |ext|
+  require "sinatra/#{ext}"
+end
+
+%w(etag static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout).each do |ext|
+  require "rack/#{ext}"
+end
+
 class String
+  # Encodes the string for use in a URL
+  #
+  # @return [String] The string escaped for URL usage
   def url_encode
     CGI.escape(self)
   end
@@ -51,12 +52,17 @@ module BlogHelper
   module ViewHelpers
     # HTML escapes things
     #
-    # @param [String] s the string to escape
-    # @return [String] the freshly escaped string
+    # @param [String] s The string to escape
+    # @return [String] The freshly escaped string
     def h(s)
       CGI.escapeHTML(s.to_s)
     end
 
+    # Turns a tweet from the Twitter gem into HTML to be inserted into the page
+    #
+    # @see http://github.com/jnunemaker/twitter Twitter gem
+    # @param [Hashie::Mash] t A tweet from the Twitter gem
+    # @return [String] HTML of the tweet, with links made, and a permalink with date and time
     def tweet(t)
       txt = t.text
       txt.gsub!(/(https?:\/\/\S+)/, '<a href="\1">\1</a>')
@@ -66,10 +72,18 @@ module BlogHelper
       txt + "<br /><a class='tweet-date' href='http://twitter.com/#{t.from_user}/status/#{t.id}'>#{d.strftime("%d-%m-%Y %I:%M %p #{Blog.tz_display}")}</a>"
     end
 
+    # Get the link to the author's twitter profile
+    #
+    # @return [String] HTML link to the Twitter profile with the text 'Follow me on twitter'
     def twitter_link
       partial("%a{ :href => 'http://twitter.com/#{Blog.twitter}'} Follow me on twitter")
     end
 
+    # Turns a Delicious bookmark into a link from insertion into the page
+    #
+    # @param [WWW::Delicious::Post] b A bookmark/post from the www-delicious gem
+    # @return [String] HTML link to the bookmark
+    # @see http://github.com/weppos/www-delicious www-delicious gem
     def delicious(b)
       partial("%a{ :href => '#{b.url.to_s}' } #{h(b.title)}")
     end

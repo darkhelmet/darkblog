@@ -38,9 +38,7 @@ namespace :texticle do
   end
 end
 
-YARD::Rake::YardocTask.new do |t|
-  t.options += ['--use-cache', '.yardoc', '--title', "darkhelmet's darkblog documentation"]
-end
+YARD::Rake::YardocTask.new
 
 namespace :yard do
   desc 'Purge docs'

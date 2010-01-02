@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-$KCODE = 'u'
+$KCODE = 'u' if RUBY_VERSION.match(/1\.8/)
 
 $: << File.expand_path(File.join('.', 'lib'))
 
