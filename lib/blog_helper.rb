@@ -45,8 +45,14 @@ class String
   end
 end
 
+# Helpers for the blog
 module BlogHelper
+  # View related helpers
   module ViewHelpers
+    # HTML escapes things
+    #
+    # @param [String] s the string to escape
+    # @return [String] the freshly escaped string
     def h(s)
       CGI.escapeHTML(s.to_s)
     end
