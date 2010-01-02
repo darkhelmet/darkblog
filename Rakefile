@@ -39,7 +39,14 @@ namespace :texticle do
 end
 
 YARD::Rake::YardocTask.new do |t|
-  t.files = ['lib/**/*.rb', 'darkblog.rb']
+  t.options += ['--use-cache', '.yardoc', '--title', "darkhelmet's darkblog documentation"]
+end
+
+namespace :yard do
+  desc 'Purge docs'
+  task :purge do
+    %x{rm -rf doc/ .yardoc}
+  end
 end
 
 desc 'Run tests'
