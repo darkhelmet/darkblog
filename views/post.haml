@@ -22,6 +22,6 @@
           %span.addthis_separator |
           %a.addthis_button_compact{ :href => 'http://www.addthis.com/bookmark.php?v=250&amp;username=darkhelmetlive' } Share
         = javascript_include_tag('http://s7.addthis.com/js/250/addthis_widget.js#username=darkhelmetlive')
-      - unless request.xhr?
+      - unless request.xhr? || user_agent?(/thunderbird/i)
         .spacer
         = partial(disqus_part.intern, :locals => { :post => post })
