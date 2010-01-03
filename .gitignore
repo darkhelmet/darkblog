@@ -1,6 +1,5 @@
 db/*.sqlite3
 log/*.log
-config/*.yml
 db.log
 .DS_Store
 doc/

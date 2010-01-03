@@ -1,0 +1,13 @@
+development:
+  adapter: postgresql
+  database: darkblog
+  encoding: utf8
+  template: template0
+  username: build
+
+test:
+  adapter: postgresql
+  database: darkhelmet_darkblog_test
+  encoding: utf8
+  template: template0
+  username: build
