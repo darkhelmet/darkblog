@@ -17,6 +17,15 @@ namespace :db do
     ActiveRecord::Migrator.down('db/migrate')
     ActiveRecord::Migrator.migrate('db/migrate')
   end
+
+  namespace :schema do
+    desc 'Dump the schema'
+    task :dump do
+      File.open('db/schema.rb', 'w') do |f|
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, f)
+      end
+    end
+  end
 end
 
 namespace :cache do
