@@ -24,4 +24,4 @@
         = javascript_include_tag('http://s7.addthis.com/js/250/addthis_widget.js#username=darkhelmetlive')
       - unless request.xhr? || user_agent?(/thunderbird/i)
         .spacer
-        = partial(disqus_part.intern, :locals => { :post => post })
+        = partial(disqus_part, :locals => { :post => post })

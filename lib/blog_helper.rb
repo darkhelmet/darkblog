@@ -83,7 +83,7 @@ module BlogHelper
       partial("%a{ :href => '#{b.url.to_s}' } #{h(b.title)}")
     end
 
-    # Get the link the author's Delicious profile and to add to your network
+    # Get the link to the author's Delicious profile and to add to your network
     #
     # @return [String] The HTML insertion-ready string with the relevant links
     def delicious_link
@@ -107,18 +107,37 @@ module BlogHelper
       partial("%a{ :href => '#{r['url']}' } #{h(r['name'])}")
     end
 
+    # Get the author's Github profile link
+    #
+    # @return [String] The HTML insertion-ready string with the link to the Github profile
     def github_link
       partial("%a{ :href => 'https://github.com/#{Blog.github}' } Fork me on Github, and see the rest of my code")
     end
 
+    # Setup or get the disqus part to include after a post
+    #
+    # @overload disqus_part(nil)
+    #   Retrieve the Disqus partial to use
+    #   @return [Symbol] :disqus_index unless it has been previously set
+    # @overload disqus_part(part)
+    #   Set the disqus_part to use
+    #   @param [String] part The part to use, 'disqus_single' or 'disqus_index'
     def disqus_part(part = nil)
       if part.nil?
-        @disqus_part || 'disqus_index'
+        (@disqus_part || 'disqus_index').intern
       else
         @disqus_part = part
       end
     end
 
+    # Setup or get the post to use for keywords
+    #
+    # @overload keywords_post(nil)
+    #   Get the post to use for keywords
+    #   @return [Post] The post to use for keywords
+    # @overload keywords_post(post)
+    #   Set the keywords post
+    #   @param [Post] post The post to use for keywords
     def keywords_post(post = nil)
       if post.nil?
         @keywords_post
@@ -127,21 +146,37 @@ module BlogHelper
       end
     end
 
+    # Get the FeedBurner URL for the blog
+    #
+    # @return [String] The URL to the FeedBurner feed
     def fb_url
       "http://feeds.feedburner.com/#{Blog.feedburner}"
     end
 
+    # Get a Gravatar URL for an email
+    #
+    # @param [String] email The email to use
+    # @return [String] The url to the Gravatar png image
     def gravatar_url(email)
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png"
     end
 
-    def tag_link(tag, css = '')
+    # Generate a HAML partial for a link to a tag
+    #
+    # @param [Tag,String] tag The tag to create a link to
+    # @param [String] css The CSS class (.foo) or id (#bar) to use
+    # @return [String] A partial that can be fed to HAML using {#partial}
+    def tag_partial(tag, css = '')
       tag = tag.to_s
-      partial("%a#{css}{ :href => '/tag/#{tag.url_encode}', :rel => 'tag' } #{h(tag)}")
+      "%a#{css}{ :href => '/tag/#{tag.url_encode}', :rel => 'tag' } #{h(tag)}"
+    end
+
+    def tag_link(tag, css = '')
+      partial(tag_partial(tag, css))
     end
 
     def tag_links(post)
-      post.tag_list.map { |tag| tag_link(tag) }.join(' ')
+      partial(post.tag_list.map { |tag| tag_partial(tag) }.join("\n"))
     end
 
     def post_class(post)
