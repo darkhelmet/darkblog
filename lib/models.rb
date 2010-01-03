@@ -72,7 +72,7 @@ class Post < ActiveRecord::Base
   end
 
   def update_keywords!
-    keywords = []
+    Keywording.destroy_all(:post_id => id)
     update_keywords(*extract_keywords!)
   end
 
