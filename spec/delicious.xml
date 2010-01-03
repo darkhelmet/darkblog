@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<posts user="darkhelmetlive" tag="">
+  <post href="http://tux3.org/" hash="ff6c0d0a860b7ebe2dfcab46aeaac337" description="Tux3 - Home" tag="linux filesystem tux3" time="2009-12-14T05:41:50Z" extended=""/>
+  <post href="http://murmurhash.googlepages.com/" hash="5daee80d43543a511587ed10ece6342a" description="murmurhash - MurmurHash 2.0" tag="algorithms hashing programming cryptography" time="2009-12-13T03:05:21Z" extended=""/>
+  <post href="http://www.isthe.com/chongo/tech/comp/fnv/" hash="74d63f42ef4adb8f6caeede4960ae717" description="FNV hash" tag="algorithms hashing fnv cryptography programming" time="2009-12-13T03:04:46Z" extended=""/>
+  <post href="http://make.paulandlesley.org/autodep.html" hash="9705dbba9bdfeab25fcf3fd1af1153ed" description="Advanced Auto-Dependency Generation" tag="c c++ dependency make build gcc" time="2009-12-12T20:51:59Z" extended=""/>
+  <post href="http://www.codeguru.com/cpp/w-p/win32/tutorials/article.php/c15419/" hash="3664e23959571ca12e96becde33e7d66" description="32 OpenMP Traps for C++ Developers — CodeGuru.com" tag="openmp programming c++ concurrency" time="2009-12-12T20:45:31Z" extended=""/>
+  <post href="http://tammersaleh.com/posts/automatically-generate-heroku-gems-file" hash="fd0e428021d56135989bee25d4f47448" description="Tammer Saleh: Automatically generate Heroku .gems file" tag="rails heroku" time="2009-12-06T04:34:19Z" extended=""/>
+  <post href="http://railspikes.com/2008/9/22/is-your-rails-application-safe-from-mass-assignment" hash="070d0233101431d0b979bedc35d2e471" description="Rail Spikes: Is your Rails application safe?" tag="rails security" time="2009-12-05T23:23:06Z" extended=""/>
+  <post href="http://www.nvidia.com/object/SC09_Theater.html" hash="30c876c44f5c4353dc02897c1caa93a3" description="NVIDIA GPU Computing Theater" tag="video darkhax" time="2009-12-04T00:39:14Z" extended=""/>
+  <post href="http://rubyconf2009.confreaks.com/" hash="0131c961d924d1f168ee2058815ba3a3" description="Confreaks: RubyConf 2009" tag="video" time="2009-12-03T20:40:49Z" extended=""/>
+  <post href="http://www.chromium.org/chromium-os" hash="a2d041c6fc3abae8c94d9c1117aed5aa" description="Chromium OS (The Chromium Projects)" tag="google chromium chrome-os" time="2009-11-20T02:51:12Z" extended=""/>
+  <post href="http://lorgonblog.spaces.live.com/Blog/cns!701679AD17B6D310!1526.entry" hash="912688b406472565ffd7c63ca8936d3f" description="Overview of type inference in F# - Windows Live" tag="reading" time="2009-11-12T00:00:44Z" extended=""/>
+  <post href="http://idesigniphone.com/" hash="383e234f731ef28ce724d340cf49ade2" description="iDesign * iPhone - Free iPhone Wallpapers &amp; Free iPhone Backgrounds. Updated Daily!" tag="iphone wallpaper" time="2009-11-07T07:26:54Z" extended=""/>
+  <post href="http://www.knightarmco.com/bulletflight/index.htm" hash="3b312fd2c0367c00970c40271f81731c" description="Bulletflight 3.0.0" tag="iphone" time="2009-11-03T06:30:45Z" extended=""/>
+  <post href="http://www-cs-students.stanford.edu/~blynn/gitmagic/book.html" hash="a0ff090f721265c419f600d14b0e9f66" description="Git Magic" tag="httrack" time="2009-11-01T09:38:59Z" extended=""/>
+  <post href="http://ninite.com/" hash="b674075a5087f35505e43818e18a2a47" description="Ninite Easy PC Setup and Multiple App Installer - Great For Win7 Upgrades" tag="tool computer windows format" time="2009-10-23T17:29:15Z" extended=""/>
+</posts>
+<!-- fe06.api.del.ac4.yahoo.net uncompressed/chunked Sat Jan  2 20:18:31 PST 2010 -->

@@ -58,8 +58,9 @@ end
 
 desc 'Run tests'
 Spec::Rake::SpecTask.new('spec') do |t|
+  ENV['RACK_ENV'] = 'test'
   t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = ['--colour', '--format', 'nested']
+  t.spec_opts = ['--colour', '--format', 'nested', '--debugger', '--backtrace']
 end
 
 task :default => [:spec]

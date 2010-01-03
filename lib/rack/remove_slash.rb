@@ -5,7 +5,7 @@ module Rack
     end
 
     def call(env)
-      path = env['REQUEST_PATH']
+      path = env['REQUEST_PATH'] || env['PATH_INFO']
       if '/' != path
         if '/' == path[-1,1]
           while '/' == path.chop![-1,1]; end

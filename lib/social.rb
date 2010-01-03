@@ -1,6 +1,5 @@
 require 'feedzirra'
 require 'twitter'
-require 'www/delicious'
 require 'hashie'
 
 # Helper class to get certain social web things, like Delicious bookmarks and Twitter stuff
@@ -51,18 +50,17 @@ class Social
     # @param [String] password The password to authenticate with
     # @return [Hashie::Mash] The tweet
     def tweet(id, username, password)
-      Hashie::Mash.new(Crack::JSON.parse(RestClient.get("https://twitter.com/statuses/show/#{id}.json", 'User-Agent' => 'verbose logging http://blog.darkhax.com/', :user => username, :password => password)))
+      Hashie::Mash.new(Crack::JSON.parse(RestClient.get("https://twitter.com/statuses/show/#{id}.json", 'User-Agent' => Blog.user_agent, :user => username, :password => password)))
     end
 
     # Gets latest bookmarks from Delicious for a user
     #
-    # @see http://github.com/weppos/www-delicious www-delicious gem
     # @param [String] username The Delicious username to use
     # @param [String] password The password to use
     # @param [Integer] num The max number of bookmarks to return
     # @return [Array] An array of the bookmarks
     def bookmarks(username, password, num = 8)
-      WWW::Delicious.new(username, password).posts_recent[0,num]
+      Hashie::Mash.new(Crack::XML.parse(RestClient.get("https://#{username}:#{password}@api.del.icio.us/v1/posts/recent?count=#{num}", 'User-Agent' => Blog.user_agent))).posts.post
     end
   end
 end

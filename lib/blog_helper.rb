@@ -80,7 +80,7 @@ module BlogHelper
     # @param [WWW::Delicious::Post] b A bookmark/post from the www-delicious gem
     # @return [String] HTML link to the bookmark
     def delicious(b)
-      partial("%a{ :href => '#{b.url.to_s}' } #{h(b.title)}")
+      partial("%a{ :href => '#{b.href}' } #{h(b.description)}")
     end
 
     # Get the link to the author's Delicious profile and to add to your network
@@ -289,8 +289,8 @@ module BlogHelper
       unless user_agent?(/google/i)
         @repos = Cache.get('github', 1.day) { Social.repositories(Blog.github) }
         @tweets = Cache.get('twitter', 10.minutes) { Social.tweets(Blog.twitter) }
-        @bookmarks = Cache.get('delicious', 6.hours) { Social.bookmarks(Blog.delicious_user, Blog.delicious_password) }
-        @shared_items = Cache.get('reader', 6.hours) { Social.shared_items(Blog.reader_id) }
+        @bookmarks = Cache.get('delicious', 1.day) { Social.bookmarks(Blog.delicious_user, Blog.delicious_password) }
+        @shared_items = Cache.get('reader', 1.day) { Social.shared_items(Blog.reader_id) }
       end
     end
 
