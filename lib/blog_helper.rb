@@ -171,18 +171,35 @@ module BlogHelper
       "%a#{css}{ :href => '/tag/#{tag.url_encode}', :rel => 'tag' } #{h(tag)}"
     end
 
+    # Bundles up {#tag_partial} and {#partial} into one call
+    #
+    # @param [Tag,String] tag The tag to create a link to
+    # @param [String] css The CSS class (.foo) or id (#bar) to use
+    # @return [String] HTML that can be inserted into the page
     def tag_link(tag, css = '')
       partial(tag_partial(tag, css))
     end
 
+    # Creates the HTML links for all the tags in a post
+    #
+    # @param [Post] post The post to use
+    # @return [String] HTML ready to be inserted into the page
     def tag_links(post)
       partial(post.tag_list.map { |tag| tag_partial(tag) }.join("\n"))
     end
 
+    # Creates the CSS class for a post
+    #
+    # @param [Post] post The post to use
+    # @return [String] The CSS class to be used
     def post_class(post)
-      (post.tag_list.map { |tag| "tag-#{tag}" } | ['post', "post-#{post.id}", "category-#{post.category}"]).join(' ')
+      (post.tag_list.map { |tag| "tag-#{h(tag)}" } | ['post', "post-#{post.id}", "category-#{h(post.category)}"]).join(' ')
     end
 
+    # Get the absolute permalink to a post
+    #
+    # @param [Post] post The post to create the link to
+    # @return [String] The full URL including protocol and host
     def post_permaurl(post)
       Blog.index + post.permalink[1..-1]
     end
@@ -253,10 +270,6 @@ module BlogHelper
         end
       end
     end
-
-    def keywords(k = nil)
-      @keywords ||= k
-    end
   end
 
   module Utilities
@@ -273,11 +286,12 @@ module BlogHelper
     end
 
     def setup_top_panel
-      return if user_agent?(/google/i)
-      @repos = Cache.get('github', 1.day) { Social.repositories(Blog.github) }
-      @tweets = Cache.get('twitter', 10.minutes) { Social.tweets(Blog.twitter) }
-      @bookmarks = Cache.get('delicious', 6.hours) { Social.bookmarks(Blog.delicious_user, Blog.delicious_password) }
-      @shared_items = Cache.get('reader', 6.hours) { Social.shared_items(Blog.reader_id) }
+      unless user_agent?(/google/i)
+        @repos = Cache.get('github', 1.day) { Social.repositories(Blog.github) }
+        @tweets = Cache.get('twitter', 10.minutes) { Social.tweets(Blog.twitter) }
+        @bookmarks = Cache.get('delicious', 6.hours) { Social.bookmarks(Blog.delicious_user, Blog.delicious_password) }
+        @shared_items = Cache.get('reader', 6.hours) { Social.shared_items(Blog.reader_id) }
+      end
     end
 
     def remote_hostname
