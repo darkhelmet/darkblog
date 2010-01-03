@@ -8,6 +8,7 @@ require 'spec/autorun'
 # Include the Rack::Test helpers
 Spec::Runner.configure do |conf|
   conf.include Rack::Test::Methods
+  conf.include BlogHelper::Test
 end
 
 set(:environment, :test)
@@ -19,4 +20,5 @@ disable(:logging)
 FakeWeb.register_uri(:get, 'http://github.com/api/v1/json/darkhelmet', :body => File.read('spec/github.json'), :content_type => 'application/json; charset=utf-8')
 FakeWeb.register_uri(:get, 'http://search.twitter.com/search.json?q=from%3Adarkhelmetlive', :body => File.read('spec/twitter.json'), :content_type => 'application/json; charset=utf-8')
 FakeWeb.register_uri(:get, 'https://darkhelmetlive:secret@api.del.icio.us/v1/posts/recent?count=8', :body => File.read('spec/delicious.xml'), :content_type => 'text/xml; charset=utf-8')
+
 FakeWeb.allow_net_connect = false

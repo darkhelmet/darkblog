@@ -1,17 +1,25 @@
-require 'darkblog'
 require 'yard'
 require 'spec/rake/spectask'
 
+def runcoderun?
+  ENV['RUN_CODE_RUN']
+end
+
+desc 'Setup environment'
+task :env do
+  require 'darkblog'
+end
+
 namespace :db do
   desc 'Run database migrations'
-  task :migrate do
+  task :migrate => [:env] do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true
     ActiveRecord::Migrator.migrate('db/migrate')
   end
 
   desc 'Reset the database'
-  task :reset do
+  task :reset => [:env] do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true
     ActiveRecord::Migrator.down('db/migrate')
@@ -20,7 +28,7 @@ namespace :db do
 
   namespace :schema do
     desc 'Dump the schema'
-    task :dump do
+    task :dump => [:env] do
       File.open('db/schema.rb', 'w') do |f|
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, f)
       end
@@ -30,7 +38,7 @@ end
 
 namespace :cache do
   desc 'Purge cache items'
-  task :purge do
+  task :purge => [:env] do
     Cache.purge(nil)
   end
 end
@@ -42,7 +50,7 @@ namespace :texticle do
   end
 
   desc 'Destroy full text search indexes'
-  task :destroy_indexes do
+  task :destroy_indexes => [:env] do
     Post.full_text_indexes.each { |fti| fti.destroy }
   end
 end
@@ -63,4 +71,21 @@ Spec::Rake::SpecTask.new('spec') do |t|
   t.spec_opts = ['--colour', '--format', 'nested', '--debugger', '--backtrace']
 end
 
-task :default => [:spec]
+desc 'Setup task for runcoderun'
+task :runcoderun do
+  db = 'darkhelmet_darkblog_test'
+  user = 'build'
+  %w(drop create).each { |action| %x(#{action}db -U #{user} #{db}) }
+end
+
+desc 'Local test setup'
+task :local do
+  ENV['RACK_ENV'] = 'test'
+end
+
+if runcoderun?
+  ENV['RACK_ENV'] = 'test'
+  task :default => %w(env runcoderun db:migrate spec)
+else
+  task :default => %w(local db:migrate spec)
+end

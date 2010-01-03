@@ -12,14 +12,12 @@ describe 'verbose logging' do
 
     it 'should 404 when there are no posts' do
       Post.destroy_all
-      get('/')
-      last_response.should_not be_ok
+      bad_get('/')
       last_response.status.should == 404
     end
 
     it 'should include Delicious bookmarks' do
-      get('/')
-      last_response.should be_ok
+      good_get('/')
     end
   end
 end
