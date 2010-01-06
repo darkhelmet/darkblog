@@ -53,27 +53,6 @@ module BlogHelper
       CGI.escapeHTML(s.to_s)
     end
 
-    # Turns a tweet from the Twitter gem into HTML to be inserted into the page
-    #
-    # @see http://github.com/jnunemaker/twitter Twitter gem
-    # @param [Hashie::Mash] t A tweet from the Twitter gem
-    # @return [String] HTML of the tweet, with links made, and a permalink with date and time
-    def tweet(t)
-      txt = t.text
-      txt.gsub!(/(https?:\/\/\S+)/, '<a href="\1">\1</a>')
-      txt.gsub!(/@(\w+)/i, '<a href="http://twitter.com/\1">@\1</a>')
-      txt.gsub!(/#(\w+)/, '<a href="http://twitter.com/#search?q=%23\1">#\1</a>')
-      d = Blog.tz.utc_to_local(DateTime.parse(t.created_at))
-      txt + "<br /><a class='tweet-date' href='http://twitter.com/#{t.from_user}/status/#{t.id}'>#{d.strftime("%d-%m-%Y %I:%M %p #{Blog.tz_display}")}</a>"
-    end
-
-    # Get the link to the author's Twitter profile
-    #
-    # @return [String] HTML link to the Twitter profile with the text 'Follow me on twitter'
-    def twitter_link
-      partial("%a{ :href => 'http://twitter.com/#{Blog.twitter}' } Follow me on twitter")
-    end
-
     # Turns a Delicious bookmark into a link for insertion into the page
     #
     # @see http://github.com/weppos/www-delicious www-delicious gem
