@@ -13,12 +13,13 @@ module Rack
       end
     end
 
+  private
+
     def url(env)
       if @host && env['SERVER_NAME'] != @host
         url = Rack::Request.new(env).url
         url.sub(%r{\A(https?://)(.*?)(:\d+)?(/|$)}, "\\1#{@host}\\3/")
       end
     end
-    private :url
   end
 end

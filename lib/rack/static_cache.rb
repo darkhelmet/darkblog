@@ -51,7 +51,7 @@ module Rack
     end
 
     def call(env)
-      path = env['PATH_INFO']
+      path = env['REQUEST_PATH'] || env['PATH_INFO']
       if @urls.any? { |url| path.match(url) }
         status, headers, body = @file_server.call(env)
         return @app.call(env) unless body.respond_to?(:path)

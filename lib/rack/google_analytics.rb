@@ -26,7 +26,7 @@ EOCODE
           if part =~ /<\/body>/
             part.sub!(/<\/body>/, "#{tracking_code}</body>")
             if headers['Content-Length']
-              headers['Content-Length'] = (headers['Content-Length'].to_i + tracking_code.length).to_s
+              headers['Content-Length'] = body.to_s.size.to_s
             end
             break
           end
@@ -36,6 +36,7 @@ EOCODE
     end
 
   private
+
     def tracking_code
       TRACKING_CODE.sub(/\{\{ID\}\}/, @id)
     end

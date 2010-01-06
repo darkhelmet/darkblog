@@ -6,7 +6,7 @@ module Rack
     end
 
     def call(env)
-      path = env['PATH_INFO']
+      path = env['REQUEST_PATH'] || env['PATH_INFO']
       return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
       if body.is_a?(String) || body.is_a?(Array)

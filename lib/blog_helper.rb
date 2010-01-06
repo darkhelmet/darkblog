@@ -28,7 +28,7 @@ require 'social'
   require "sinatra/#{ext}"
 end
 
-%w(etag static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout).each do |ext|
+%w(etag static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard).each do |ext|
   require "rack/#{ext}"
 end
 
@@ -288,7 +288,6 @@ module BlogHelper
     def setup_top_panel
       unless user_agent?(/google/i)
         @repos = Cache.get('github', 1.day) { Social.repositories(Blog.github) }
-        @tweets = Cache.get('twitter', 10.minutes) { Social.tweets(Blog.twitter) }
         @bookmarks = Cache.get('delicious', 1.day) { Social.bookmarks(Blog.delicious_user, Blog.delicious_password) }
         @shared_items = Cache.get('reader', 1.day) { Social.shared_items(Blog.reader_id) }
       end
