@@ -5,6 +5,13 @@ development:
   template: template0
   username: build
 
+production:
+  adapter: postgresql
+  database: darkblog
+  encoding: utf8
+  template: template0
+  username: build
+
 test:
   adapter: postgresql
   database: darkhelmet_darkblog_test

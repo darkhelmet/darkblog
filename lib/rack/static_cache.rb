@@ -1,3 +1,5 @@
+require 'rack/abstract_middleware'
+
 module Rack
 
   #
@@ -41,7 +43,7 @@ module Rack
   #
 
 
-  class StaticCache
+  class StaticCache < AbstractMiddleware
     def initialize(app, options = { })
       @app = app
       @urls = options[:urls]
@@ -51,7 +53,7 @@ module Rack
     end
 
     def call(env)
-      path = env['REQUEST_PATH'] || env['PATH_INFO']
+      super(env)
       if @urls.any? { |url| path.match(url) }
         status, headers, body = @file_server.call(env)
         return @app.call(env) unless body.respond_to?(:path)

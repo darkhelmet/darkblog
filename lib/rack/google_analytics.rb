@@ -1,5 +1,7 @@
+require 'rack/abstract_middleware'
+
 module Rack
-  class GoogleAnalytics
+  class GoogleAnalytics < AbstractMiddleware
     TRACKING_CODE = <<-EOCODE
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -19,8 +21,9 @@ EOCODE
     end
 
     def call(env)
+      super(env)
       status, headers, body = @app.call(env)
-      if (body.is_a?(String) || body.is_a?(Array)) && !@ignore.any? { |url| env['PATH_INFO'].match(url) }
+      if (body.is_a?(String) || body.is_a?(Array)) && !@ignore.any? { |url| path.match(url) }
         body = [body].flatten
         body.each do |part|
           if part =~ /<\/body>/
