@@ -54,7 +54,10 @@ $(document).ready(function() {
       var id = matches[1];
       var link = this;
       $.get('/twitter/' + id, null, function(data) {
-        $(link).attr('title', data);
+        $(link).attr('title', data).tipsy({
+          gravity: $.fn.tipsy.autoNS,
+          fade: true
+        });
       }, 'text');
     }
   });
