@@ -23,6 +23,7 @@ require 'bugzscout'
 # require 'newrelic_rpm'
 require 'sanitize'
 require 'social'
+require 'archive_date'
 
 %w(authorization named_routes).each do |ext|
   require "sinatra/#{ext}"
@@ -187,30 +188,15 @@ module BlogHelper
       partial("%a{ :href => '/category/#{cat.url_encode}' } #{h(cat).capitalize}")
     end
 
-    def next_month(year, month)
-      if 12 == month
-        year += 1
-        month = 1
-        return year, month
-      else
-        return year, month + 1
-      end
-    end
-
     def monthly_archive_links
       newest = Post.published.first
       return Array.new if newest.nil?
-      oldest = Post.published.last
-      year = oldest.published_on_local.year
-      month = oldest.published_on_local.month
+      newest = newest.published_on_local
+      oldest = Post.published.last.published_on_local
 
-      links = Array.new
-      while year <= newest.published_on_local.year && month <= newest.published_on_local.month
-        date = Date.new(year,month,1)
-        links << partial("%a{ :href => '/#{date.strftime('%Y/%m')}' } #{date.strftime('%B %Y')}")
-        year, month = next_month(year,month)
+      (ArchiveDate.new(oldest.year, oldest.month, 1)..ArchiveDate.new(newest.year, newest.month, 1)).map do |date|
+        partial("%a{ :href => '/#{date.strftime('%Y/%m')}' } #{date.strftime('%B %Y')}")
       end
-      links
     end
 
     # TODO: Refactor to support :collection
