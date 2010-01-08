@@ -137,7 +137,7 @@ module BlogHelper
     # @param [String] email The email to use
     # @return [String] The url to the Gravatar png image
     def gravatar_url(email)
-      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png?s=120"
+      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.jpg?s=120"
     end
 
     # Generate a HAML partial for a link to a tag
