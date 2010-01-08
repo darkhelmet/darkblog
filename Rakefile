@@ -12,14 +12,14 @@ end
 
 namespace :db do
   desc 'Run database migrations'
-  task :migrate => [:env] do
+  task :migrate => %w(env) do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true
     ActiveRecord::Migrator.migrate('db/migrate')
   end
 
   desc 'Reset the database'
-  task :reset => [:env] do
+  task :reset => %w(env) do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
     ActiveRecord::Migration.verbose = true
     ActiveRecord::Migrator.down('db/migrate')
@@ -28,7 +28,7 @@ namespace :db do
 
   namespace :schema do
     desc 'Dump the schema'
-    task :dump => [:env] do
+    task :dump => %w(env) do
       File.open('db/schema.rb', 'w') do |f|
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, f)
       end
@@ -38,19 +38,19 @@ end
 
 namespace :cache do
   desc 'Purge cache items'
-  task :purge => [:env] do
+  task :purge => %w(env) do
     Cache.purge(nil)
   end
 end
 
 namespace :texticle do
   desc 'Create full text search indexes'
-  task :create_indexes => [:destroy_indexes] do
+  task :create_indexes => %w(destroy_indexes) do
     Post.full_text_indexes.each { |fti| fti.create }
   end
 
   desc 'Destroy full text search indexes'
-  task :destroy_indexes => [:env] do
+  task :destroy_indexes => %w(env) do
     Post.full_text_indexes.each { |fti| fti.destroy }
   end
 end
