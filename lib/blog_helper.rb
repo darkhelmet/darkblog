@@ -37,7 +37,7 @@ class String
   #
   # @return [String] The string escaped for URL usage
   def url_encode
-    CGI.escape(self)
+    Rack::Utils.escape(self)
   end
 end
 
@@ -50,7 +50,7 @@ module BlogHelper
     # @param [String] s The string to escape
     # @return [String] The freshly escaped string
     def h(s)
-      CGI.escapeHTML(s.to_s)
+      Rack::Utils.escape_html(s.to_s)
     end
 
     # Turns a Delicious bookmark into a link for insertion into the page
@@ -137,7 +137,7 @@ module BlogHelper
     # @param [String] email The email to use
     # @return [String] The url to the Gravatar png image
     def gravatar_url(email)
-      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png"
+      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png?s=120"
     end
 
     # Generate a HAML partial for a link to a tag
