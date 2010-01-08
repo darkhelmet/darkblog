@@ -9,7 +9,7 @@
       #content.grid_12
         = partial(:header)
         #posts-container.grid_10.alpha= yield
-        #right-sidebar.grid_2.omega.sidebar.right= partial(:right_sidebar, :cache => production?, :cache_max_age => 6.hours)
+        #right-sidebar.grid_2.omega.sidebar= partial(:right_sidebar, :cache => production?, :cache_max_age => 6.hours)
         .clear
       .clear
     = partial(:footer)

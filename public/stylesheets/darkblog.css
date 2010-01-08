@@ -244,3 +244,7 @@ form#search input#query {
   width: 99%;
   border-width: 1px;
 }
+
+.sidebar-item {
+  margin-bottom: 15px;
+}

@@ -1,28 +1,24 @@
-.sidebar-item.right
+.sidebar-item
   %h3
     %a{ :href => '/feed' }
       %img{ :src => '/images/rss.png', :style => 'vertical-align: middle;' }
     %a{ :href => '/feed' } Subscribe
-.sidebar-item.right
+.sidebar-item
   %form#search{ :action => '/search', :method => 'GET' }
     %input#query{ :type => 'text', :name => 'q' }
     %br
     %input{ :type => 'submit', :value => 'Search' }
-.sidebar-item.right
+.sidebar-item
   %h2 The author
-  %ul
-    %li= image_tag(gravatar_url(Blog.email))
-    %li= "#{Blog.author} #{Blog.bio}"
-.sidebar-item.right
-  %ul
-    %li
-      %h2 Tags
-    %li
-      = partial(:tag_sidebar)
-.sidebar-item.right
+  = image_tag(gravatar_url(Blog.email))
+  = "#{Blog.author} #{Blog.bio}"
+.sidebar-item
+  %h2 Tags
+  = partial(:tag_sidebar)
+.sidebar-item
   %h2 Categories
   = partial(:category_sidebar)
-.sidebar-item.right
+.sidebar-item
   %h2 Archives
   %ul
     - monthly_archive_links.reverse_each do |l|
