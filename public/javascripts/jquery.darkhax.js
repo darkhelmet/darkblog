@@ -47,6 +47,11 @@ $(document).ready(function() {
   }).join('&');
   $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
 
+  $('a.github').tipsy({
+    gravity: 'e',
+    fade: true
+  });
+
   $('#posts-container a').each(function() {
     var re = /http:\/\/twitter\.com\/\w+\/status\/(\d+)/;
     var matches = re.exec($(this).attr('href'));

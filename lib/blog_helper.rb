@@ -83,7 +83,7 @@ module BlogHelper
     # @param [Hashie::Mash] r A repository
     # @return [String] HTML link to the Github repo
     def repo(r)
-      partial("%a{ :href => '#{r['url']}' } #{h(r['name'])}")
+      partial("%a.github{ :href => '#{r.url}', :title => \"#{h(r.description)}\" } #{h(r.name)}")
     end
 
     # Get the author's Github profile link
