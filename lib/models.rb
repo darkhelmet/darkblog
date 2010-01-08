@@ -166,7 +166,7 @@ end
 Tag.destroy_unused = true
 
 RACK_ENV = ENV.has_key?('RACK_ENV') ? ENV['RACK_ENV'] : 'development'
-CONFIG_FILE = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))
-CONFIG = YAML.load_file(CONFIG_FILE)
-ActiveRecord::Base.establish_connection(CONFIG[RACK_ENV])
+DB_CONFIG_FILE = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml'))
+DB_CONFIG = YAML.load_file(DB_CONFIG_FILE)
+ActiveRecord::Base.establish_connection(DB_CONFIG[RACK_ENV])
 ActiveRecord::Base.default_timezone = :utc
