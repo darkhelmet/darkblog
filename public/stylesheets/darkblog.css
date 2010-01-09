@@ -249,6 +249,10 @@ form#search input#query {
   margin-bottom: 15px;
 }
 
+blockquote {
+  margin-bottom: 20px;
+}
+
 blockquote > p {
   margin-bottom: 0px;
 }
