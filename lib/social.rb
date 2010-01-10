@@ -1,5 +1,4 @@
 require 'feedzirra'
-require 'twitter'
 require 'hashie'
 
 # Helper class to get certain social web things, like Delicious bookmarks and Twitter stuff
@@ -31,16 +30,6 @@ class Social
     def shared_items(id, num = 8)
       url = "http://www.google.com/reader/public/atom/user/#{id}/state/com.google/broadcast"
       Feedzirra::Feed.fetch_and_parse(url).entries[0,num]
-    end
-
-    # Gets the most recent tweets for a Twitter user
-    #
-    # @see http://github.com/jnunemaker/twitter twitter gem
-    # @param [String] username The Twitter username
-    # @param [Integer] num The max number of tweets to return
-    # @return [Array] An array of Hashie::Mash objects of all the tweets
-    def tweets(username, num = 4)
-      Twitter::Search.new.from(username).to_a[0,num]
     end
 
     # Gets a single tweet using authentication for rate limit purposes

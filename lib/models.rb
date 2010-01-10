@@ -1,5 +1,6 @@
 require 'term_extraction'
 require 'texticle'
+require 'httparty'
 
 ActiveRecord::Base.extend(Texticle)
 
