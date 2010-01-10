@@ -155,7 +155,7 @@ module BlogHelper
     # @return [String] A partial that can be fed to HAML using {#partial}
     def tag_link(tag, css = '')
       tag = tag.to_s
-      link_to(h(tag), "/tag/#{tag}", :rel => 'tag', :class => css)
+      link_to(h(tag), "/tag/#{tag.url_encode}", :rel => 'tag', :class => css)
     end
 
     # Creates the HTML links for all the tags in a post
@@ -183,7 +183,7 @@ module BlogHelper
     end
 
     def category_link(cat)
-      link_to(cat.capitalize, "/category/#{cat}")
+      link_to(h(cat.capitalize), "/category/#{cat.url_encode}")
     end
 
     def archive_link(date)
