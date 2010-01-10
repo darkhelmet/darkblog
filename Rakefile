@@ -1,6 +1,3 @@
-require 'yard'
-require 'spec/rake/spectask'
-
 def runcoderun?
   ENV['RUN_CODE_RUN']
 end
@@ -55,7 +52,11 @@ namespace :texticle do
   end
 end
 
-YARD::Rake::YardocTask.new
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new
+rescue LoadError
+end
 
 namespace :yard do
   desc 'Purge docs'
@@ -64,11 +65,15 @@ namespace :yard do
   end
 end
 
-desc 'Run tests'
-Spec::Rake::SpecTask.new('spec') do |t|
-  ENV['RACK_ENV'] = 'test'
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = ['--colour', '--format', 'nested', '--debugger', '--backtrace']
+begin
+  require 'spec/rake/spectask'
+  desc 'Run tests'
+  Spec::Rake::SpecTask.new('spec') do |t|
+    ENV['RACK_ENV'] = 'test'
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = ['--colour', '--format', 'nested', '--debugger', '--backtrace']
+  end
+rescue LoadError
 end
 
 desc 'Setup task for runcoderun'
