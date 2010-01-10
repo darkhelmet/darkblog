@@ -1,8 +1,7 @@
 %hr
 #disqus_thread
 = javascript_include_tag("http://disqus.com/forums/#{Blog.disqus}/embed.js")
-%noscript
-  %a{ :href => "http://#{Blog.disqus}.disqus.com/?url=ref" } View the discussion thread.
+%noscript= link_to('View the discussion thread.', "http://#{Blog.disqus}.disqus.com/?url=ref")
 %a.dsq-brlink{ :href => "http://disqus.com" }
   blog comments powered by
   %span.logo-disqus Disqus

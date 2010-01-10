@@ -17,3 +17,5 @@ addressable
 darkhelmet-sanitize
 hashie
 yard
+tilt
+darkhelmet-sinatra_more

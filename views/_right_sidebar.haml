@@ -1,8 +1,7 @@
 .sidebar-item
   %h3
-    %a{ :href => '/feed' }
-      %img{ :src => '/images/rss.png', :style => 'vertical-align: middle;' }
-    %a{ :href => '/feed' } Subscribe
+    = link_to(image_tag('/images/rss.png', :style => 'vertical-align: middle;'), '/feed')
+    = link_to('Subscribe', '/feed')
 .sidebar-item
   %form#search{ :action => '/search', :method => 'GET' }
     %input#query{ :type => 'text', :name => 'q' }
@@ -11,7 +10,8 @@
 .sidebar-item
   %h2 The author
   = image_tag(gravatar_url(Blog.email))
-  = "#{Blog.author} #{Blog.bio}"
+  = Blog.author
+  = Blog.bio
 .sidebar-item
   %h2 Tags
   = partial(:tag_sidebar)

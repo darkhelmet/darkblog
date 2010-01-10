@@ -1,5 +1,4 @@
-%a{ :href => '/posts' } New Post
+= link_to('New Post', '/posts')
 %ul
   - @posts.each do |p|
-    %li
-      %a{ :href => "#{p.permalink}/edit" }= h(p.title)
+    %li= link_to(h(p.title), "#{p.permalink}/edit")

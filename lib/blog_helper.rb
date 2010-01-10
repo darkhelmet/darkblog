@@ -2,15 +2,22 @@ require 'haml'
 require 'builder'
 require 'active_record'
 require 'active_support'
+
+%w(markup render routing).each do |plugin|
+  require "sinatra/#{plugin}_plugin"
+end
+
 require 'will_paginate'
 require 'will_paginate/finders/active_record'
 require 'will_paginate/view_helpers/base'
 require 'will_paginate/view_helpers/link_renderer'
+
 require 'acts_as_taggable_on_steroids'
 require 'tag'
 require 'tag_list'
 require 'tagging'
 require 'tags_helper'
+
 require 'ostruct'
 require 'RedCloth'
 require 'crack'
@@ -25,9 +32,7 @@ require 'sanitize'
 require 'social'
 require 'archive_date'
 
-%w(authorization named_routes).each do |ext|
-  require "sinatra/#{ext}"
-end
+require 'sinatra/authorization'
 
 %w(etag static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard).each do |ext|
   require "rack/#{ext}"
@@ -46,12 +51,12 @@ end
 module BlogHelper
   # View related helpers
   module ViewHelpers
-    # HTML escapes things
-    #
-    # @param [String] s The string to escape
-    # @return [String] The freshly escaped string
-    def h(s)
-      Rack::Utils.escape_html(s.to_s)
+    def sidebar
+      if production?
+        Cache.get('right_sidebar_partial', 1.hour) { partial(:right_sidebar) }
+      else
+        partial(:right_sidebar)
+      end
     end
 
     # Turns a Delicious bookmark into a link for insertion into the page
@@ -60,14 +65,16 @@ module BlogHelper
     # @param [WWW::Delicious::Post] b A bookmark/post from the www-delicious gem
     # @return [String] HTML link to the bookmark
     def delicious(b)
-      partial("%a{ :href => '#{b.href}' } #{h(b.description)}")
+      link_to(h(b.description), b.href)
     end
 
     # Get the link to the author's Delicious profile and to add to your network
     #
     # @return [String] The HTML insertion-ready string with the relevant links
     def delicious_link
-      partial("I'm\n%a{ :href => 'http://delicious.com/#{Blog.delicious_user}' } #{Blog.delicious_user}\non Delicious.\n<br />\n%a{ :href => 'http://delicious.com/network?add=#{Blog.delicious_user}'} Add me to your network")
+      profile_link = link_to(Blog.delicious_user, "http://delicious.com/#{Blog.delicious_user}")
+      add_link = link_to('Add me to your network', "http://delicious.com/network?add=#{Blog.delicious_user}")
+      "I'm #{profile_link} on Delicious.<br />#{add_link}"
     end
 
     # Turns a shared RSS item into a link for insertion into the page
@@ -76,7 +83,7 @@ module BlogHelper
     # @param [Object] item An RSS item from the Feedzirra gem
     # @return [String] HTML link to the shared item
     def reader(item)
-      partial("%a{ :href => '#{item.url}' } #{h(item.title)}")
+      link_to(h(item.title), item.url)
     end
 
     # Turns a Github repo from the Github API into a link to it
@@ -84,14 +91,14 @@ module BlogHelper
     # @param [Hashie::Mash] r A repository
     # @return [String] HTML link to the Github repo
     def repo(r)
-      partial("%a.github{ :href => '#{r.url}', :title => \"#{h(r.description)}\" } #{h(r.name)}")
+      link_to(h(r.name), r.url, :title => h(r.description), :class => 'github')
     end
 
     # Get the author's Github profile link
     #
     # @return [String] The HTML insertion-ready string with the link to the Github profile
     def github_link
-      partial("%a{ :href => 'https://github.com/#{Blog.github}' } Fork me on Github, and see the rest of my code")
+      link_to('Fork me on Github, and see the rest of my code', "https://github.com/#{Blog.github}")
     end
 
     # Setup or get the disqus part to include after a post
@@ -141,23 +148,14 @@ module BlogHelper
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.jpg?s=120"
     end
 
-    # Generate a HAML partial for a link to a tag
+    # Generate a link to a tag
     #
     # @param [Tag,String] tag The tag to create a link to
-    # @param [String] css The CSS class (.foo) or id (#bar) to use
+    # @param [String] css The CSS class (foo)
     # @return [String] A partial that can be fed to HAML using {#partial}
-    def tag_partial(tag, css = '')
-      tag = tag.to_s
-      "%a#{css}{ :href => '/tag/#{tag.url_encode}', :rel => 'tag' } #{h(tag)}"
-    end
-
-    # Bundles up {#tag_partial} and {#partial} into one call
-    #
-    # @param [Tag,String] tag The tag to create a link to
-    # @param [String] css The CSS class (.foo) or id (#bar) to use
-    # @return [String] HTML that can be inserted into the page
     def tag_link(tag, css = '')
-      partial(tag_partial(tag, css))
+      tag = tag.to_s
+      link_to(h(tag), "/tag/#{tag}", :rel => 'tag', :class => css)
     end
 
     # Creates the HTML links for all the tags in a post
@@ -165,7 +163,7 @@ module BlogHelper
     # @param [Post] post The post to use
     # @return [String] HTML ready to be inserted into the page
     def tag_links(post)
-      partial(post.tag_list.map { |tag| tag_partial(tag) }.join("\n"))
+      post.tag_list.map { |tag| tag_link(tag) }.join("\n")
     end
 
     # Creates the CSS class for a post
@@ -185,7 +183,11 @@ module BlogHelper
     end
 
     def category_link(cat)
-      partial("%a{ :href => '/category/#{cat.url_encode}' } #{h(cat).capitalize}")
+      link_to(cat.capitalize, "/category/#{cat}")
+    end
+
+    def archive_link(date)
+      link_to(date.strftime('%B %Y'), "/#{date.strftime('%Y/%m')}")
     end
 
     def monthly_archive_links
@@ -195,34 +197,8 @@ module BlogHelper
       oldest = Post.published.last.published_on_local
 
       (ArchiveDate.new(oldest.year, oldest.month, 1)..ArchiveDate.new(newest.year, newest.month, 1)).map do |date|
-        partial("%a{ :href => '/#{date.strftime('%Y/%m')}' } #{date.strftime('%B %Y')}")
+        archive_link(date)
       end
-    end
-
-    # TODO: Refactor to support :collection
-    def partial(page, options = {})
-      if options.delete(:cache)
-        Cache.get("#{page.to_s}_partial", options.delete(:cache_max_age) || 10.minutes) do
-          haml(page, options.merge(:layout => false))
-        end
-      else
-        haml(page, options.merge(:layout => false))
-      end
-    end
-
-    def stylesheet_link_tag(sheet, media = 'screen,projection')
-      link = sheet.include?('http://') ? sheet : "/stylesheets/#{sheet}.css"
-      partial("%link{ :type => 'text/css', :href => '#{link}', :rel => 'stylesheet', :media => '#{media}' }")
-    end
-
-    def javascript_include_tag(js)
-      link = js.include?('http://') ? js : "/javascripts/#{js}.js"
-      partial("%script{ :type => 'text/javascript', :src => '#{link}' }")
-    end
-
-    def image_tag(img, alt = img.split('/').last)
-      link = img.include?('http://') ? img : "/images/#{img}"
-      partial("%img{ :src => '#{link}', :alt => '#{alt}' }")
     end
 
     def title(t = nil, page = 1)

@@ -6,8 +6,7 @@
 %div.grid_8.omega.content{ :id => "post-#{post.id}-content" }
   .border
     %div{ :id => "post-#{post.id}", :class => post_class(post) }
-      %h2.post-title
-        %a{ :href => post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}" }= h(post.title)
+      %h2.post-title= link_to(h(post.title), post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}")
       .entry= post.body_html
       - if sharing && !request.xhr?
         .spacer
@@ -20,7 +19,7 @@
           %a.addthis_button_linkedin
           %a.addthis_button_delicious
           %span.addthis_separator |
-          %a.addthis_button_compact{ :href => 'http://www.addthis.com/bookmark.php?v=250&amp;username=darkhelmetlive' } Share
+          = link_to('Share', 'http://www.addthis.com/bookmark.php?v=250&amp;username=darkhelmetlive', :class => 'addthis_button_compact')
         = javascript_include_tag('http://s7.addthis.com/js/250/addthis_widget.js#username=darkhelmetlive')
       - unless request.xhr? || user_agent?(/thunderbird/i)
         .spacer

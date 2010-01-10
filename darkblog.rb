@@ -66,26 +66,26 @@ end
 
 require 'middleware'
 
-named_routes[:index] = %r|^/(?:page/(\d+))?$|
-named_routes[:search] = %r|^/search(?:/page/(\d+))?$|
-named_routes[:monthly] = %r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|
-named_routes[:category] = %r|^/category/(\w+)(?:/page/(\d+))?$|
-named_routes[:feed] = %r|^/feed.*|
-named_routes[:sitemap] = %r|^/sitemap.xml(.gz)?$|
-named_routes[:google] = '/google-search'
-named_routes[:permalink] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)$|
-named_routes[:short_permalink] = %r|^/([\w\d\-+ ]+)$|
-named_routes[:tag] = %r|^/tag/([\w\-.]+)(?:/page/(\d+))?$|
-named_routes[:edit_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/edit$|
-named_routes[:preview_post] = %r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/preview$|
-named_routes[:posts] = '/posts'
-named_routes[:redirections] = '/redirections'
-named_routes[:announce] = '/announce'
-named_routes[:admin_index] = '/index'
-named_routes[:twitter] = '/twitter/:status'
+map(:index).to(%r|^/(?:page/(\d+))?$|)
+map(:search).to(%r|^/search(?:/page/(\d+))?$|)
+map(:monthly).to(%r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|)
+map(:category).to(%r|^/category/(\w+)(?:/page/(\d+))?$|)
+map(:feed).to(%r|^/feed.*|)
+map(:sitemap).to(%r|^/sitemap.xml(.gz)?$|)
+map(:google).to('/google-search')
+map(:permalink).to(%r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)$|)
+map(:short_permalink).to(%r|^/([\w\d\-+ ]+)$|)
+map(:tag).to(%r|^/tag/([\w\-.]+)(?:/page/(\d+))?$|)
+map(:edit_post).to(%r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/edit$|)
+map(:preview_post).to(%r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)/preview$|)
+map(:posts).to('/posts')
+map(:redirections).to('/redirections')
+map(:announce).to('/announce')
+map(:admin_index).to('/index')
+map(:twitter).to('/twitter/:status')
 
 # main index with pagination
-named_route(:get, :index) do |page|
+get(:index) do |page|
   page ||= '1'
   page = page.to_i
   setup_top_panel
@@ -97,7 +97,7 @@ named_route(:get, :index) do |page|
 end
 
 # monthly archive with pagination
-named_route(:get, :monthly) do |year,month,page|
+get(:monthly) do |year,month,page|
   page ||= '1'
   page = page.to_i
   setup_top_panel
@@ -109,7 +109,7 @@ named_route(:get, :monthly) do |year,month,page|
 end
 
 # category index with pagination
-named_route(:get, :category) do |category,page|
+get(:category) do |category,page|
   page ||= '1'
   page = page.to_i
   setup_top_panel
@@ -120,7 +120,7 @@ named_route(:get, :category) do |category,page|
 end
 
 # rss feed
-named_route(:get, :feed) do
+get(:feed) do
   no_cache
   if user_agent?(/feedburner/i) || development?
     @posts = Post.published.all(:limit => 10)
@@ -132,7 +132,7 @@ named_route(:get, :feed) do
 end
 
 # search with pagination
-named_route(:get, :search) do |page|
+get(:search) do |page|
   page ||= '1'
   page = page.to_i
   setup_top_panel
@@ -147,22 +147,21 @@ named_route(:get, :search) do |page|
 end
 
 # sitemap
-named_route(:get, :sitemap) do |gzip|
+get(:sitemap) do |gzip|
   @posts = Post.published
   content_type('application/xml', :charset => 'utf-8')
   builder(:sitemap)
 end
 
 # google search
-named_route(:get, :google) do
+get(:google) do
   setup_top_panel
   haml(:page, :locals => { :page => :google })
 end
 
 # information pages
 %w(about contact disclaimer).each do |page|
-  named_routes[page.intern] = "/#{page}"
-  named_route(:get, page.intern) do
+  get("/#{page}") do
     setup_top_panel
     title(page.capitalize)
     haml(:page, :locals => { :page => page.intern })
@@ -170,7 +169,7 @@ end
 end
 
 # permalinks
-named_route(:get, :permalink) do |permalink|
+get(:permalink) do |permalink|
   no_cache if request.xhr?
   setup_top_panel
   @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
@@ -191,7 +190,7 @@ named_route(:get, :permalink) do |permalink|
 end
 
 # tags with pagination
-named_route(:get, :tag) do |tag,page|
+get(:tag) do |tag,page|
   page ||= '1'
   page = page.to_i
   setup_top_panel
@@ -202,7 +201,7 @@ named_route(:get, :tag) do |tag,page|
 end
 
 # edit post
-named_route(:get, :edit_post) do |permalink|
+get(:edit_post) do |permalink|
   no_cache
   require_administrative_privileges
   @post = Post.perma(permalink).first
@@ -211,7 +210,7 @@ named_route(:get, :edit_post) do |permalink|
 end
 
 # preview post
-named_route(:get, :preview_post) do |permalink|
+get(:preview_post) do |permalink|
   no_cache
   require_administrative_privileges
   @posts = Post.perma(permalink).paginate(:page => 1, :per_page => Blog.per_page)
@@ -221,7 +220,7 @@ named_route(:get, :preview_post) do |permalink|
 end
 
 # new post
-named_route(:get, :posts) do
+get(:posts) do
   no_cache
   require_administrative_privileges
   @post = Post.new
@@ -230,7 +229,7 @@ named_route(:get, :posts) do
 end
 
 # create new post
-named_route(:post, :posts) do
+post(:posts) do
   no_cache
   require_administrative_privileges
   published = params['post']['published']
@@ -243,7 +242,7 @@ named_route(:post, :posts) do
 end
 
 # update existing post
-named_route(:put, :posts) do
+put(:posts) do
   no_cache
   require_administrative_privileges
   published = params['post']['published']
@@ -257,14 +256,14 @@ named_route(:put, :posts) do
 end
 
 # redirection form
-named_route(:get, :redirections) do
+get(:redirections) do
   no_cache
   require_administrative_privileges
   haml(:edit_redirection, :layout => :admin)
 end
 
 # create redirection
-named_route(:post, :redirections) do
+post(:redirections) do
   no_cache
   require_administrative_privileges
   r = Redirection.create(params['redirection'])
@@ -272,7 +271,7 @@ named_route(:post, :redirections) do
   r.to_xml
 end
 
-named_route(:post, :announce) do
+post(:announce) do
   no_cache
   require_administrative_privileges
   announce unless Post.published.unannounced.all.each(&:announce).empty?
@@ -280,21 +279,22 @@ named_route(:post, :announce) do
 end
 
 # admin index
-named_route(:get, :admin_index) do
+get(:admin_index) do
   no_cache
   require_administrative_privileges
   @posts = Post.unpublished.all
   haml(:admin_index, :layout => :admin)
 end
 
-named_route(:get, :short_permalink) do |title|
+get(:short_permalink) do |title|
   @posts = Post.published.ptitle(title)
   not_found if @posts.empty?
   redirect(@posts.first.permalink, 301)
 end
 
 # get twitter statuses
-named_route(:get, :twitter) do |status_id|
+
+get(:twitter) do |status_id|
   expires_in(1.day)
   content_type('text/plain')
   individual_tweet(status_id).text

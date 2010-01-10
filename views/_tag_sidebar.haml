@@ -1,5 +1,5 @@
 - tags = Array.new
 - tag_cloud(Post.published.tag_counts, %w(tag1 tag2 tag3 tag4 tag5)) do |tag,css|
-  - tags << [tag, ".#{css}"]
+  - tags << [tag, css]
 - tags.sort { |l,r| l.first.to_s <=> r.first.to_s }.each do |tag,css|
   = tag_link(tag, css)
