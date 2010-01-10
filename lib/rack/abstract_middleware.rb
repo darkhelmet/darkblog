@@ -17,5 +17,13 @@ module Rack
     def path
       Rack::Utils.unescape(@env['PATH_INFO'])
     end
+
+    def host
+      @env['HTTP_HOST']
+    end
+
+    def protocol
+      @env['rack.url_scheme']
+    end
   end
 end
