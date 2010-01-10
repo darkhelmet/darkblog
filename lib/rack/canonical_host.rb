@@ -1,6 +1,6 @@
 module Rack
   class CanonicalHost
-    def initialize(app, host=nil, &block)
+    def initialize(app, host = nil, &block)
       @app = app
       @host = (block_given? && block.call) || host
     end

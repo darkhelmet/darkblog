@@ -4,7 +4,7 @@ module Rack
   class InlineCompress < AbstractMiddleware
     def initialize(app, options)
       @app = app
-      @ignore = options[:ignore]
+      @ignore = options[:ignore] || []
     end
 
     def call(env)
@@ -13,22 +13,45 @@ module Rack
       status, headers, body = @app.call(env)
       if body.is_a?(String) || body.is_a?(Array)
         doc = Hpricot(body.to_s)
-        elements = doc.search('script').select do |elem|
-          elem.attributes['src'].blank?
-        end
-        unless elements.empty?
-          elements.each { |elem| elem.innerHTML = "//<![CDATA[\n#{Packr.pack(elem.innerHTML)}\n//]]>" }
-        end
-        elements = doc.search('style')
-        unless elements.empty?
-          elements.each { |elem| elem.innerHTML = Rainpress.compress(elem.innerHTML) }
-        end
+        pack(doc)
         body = [doc.to_s]
-        if headers['Content-Length']
-          headers['Content-Length'] = body.to_s.size.to_s
-        end
+        AbstractMiddleware::update_content_length(headers, body.to_s.size)
       end
       [status, headers, body]
+    end
+
+  private
+
+    def pack(doc)
+      pack_script(doc)
+      pack_css(doc)
+    end
+
+    def pack_css(doc)
+      elements = select(doc, 'style')
+      unless elements.empty?
+        elements.each do |elem|
+          elem.innerHTML = Rainpress.compress(elem.innerHTML)
+        end
+      end
+    end
+
+    def pack_script(doc)
+      elements = select(doc, 'script') { |elem| elem.attributes['src'].blank? }
+      unless elements.empty?
+        elements.each do |elem|
+          elem.innerHTML = "//<![CDATA[\n#{Packr.pack(elem.innerHTML)}\n//]]>"
+        end
+      end
+    end
+
+    def select(doc, tag)
+      elements = doc.search(tag)
+      if block_given?
+        elements.select(&Proc.new)
+      else
+        elements
+      end
     end
   end
 end

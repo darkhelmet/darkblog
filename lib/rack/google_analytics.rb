@@ -22,17 +22,13 @@ EOCODE
 
     def call(env)
       super(env)
+      return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
-      if (body.is_a?(String) || body.is_a?(Array)) && !@ignore.any? { |url| path.match(url) }
-        body = [body].flatten
-        body.each do |part|
-          if part =~ /<\/body>/
-            part.sub!(/<\/body>/, "#{tracking_code}</body>")
-            if headers['Content-Length']
-              headers['Content-Length'] = body.to_s.size.to_s
-            end
-            break
-          end
+      body.each do |part|
+        if part =~ /<\/body>/
+          part.sub!(/<\/body>/, "#{tracking_code}</body>")
+          AbstractMiddleware::update_content_length(headers, body.to_s.size)
+          break
         end
       end
       [status, headers, body]

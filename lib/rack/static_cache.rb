@@ -57,23 +57,44 @@ module Rack
       if @urls.any? { |url| path.match(url) }
         status, headers, body = @file_server.call(env)
         return @app.call(env) unless body.respond_to?(:path)
-        headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public"
-        headers['Expires'] = duration_in_words
-        %w(Etag Pragma Last-Modified).each { |key| headers.delete(key) }
+        update_headers(headers)
         if @compress
-          case ::File.extname(body.path)
-          when '.css'
-            body = [Rainpress.compress(::File.read(body.path))]
-            headers['Content-Length'] = body.to_s.size.to_s
-          when '.js'
-            body = [Packr.pack(::File.read(body.path), :shrink_vars => true)]
-            headers['Content-Length'] = body.to_s.size.to_s
-          end
+          body = compress(body, headers)
         end
         [status, headers, body]
       else
         @app.call(env)
       end
+    end
+
+  protected
+
+    def compress(body, headers)
+      case ::File.extname(body.path)
+      when '.css'
+        pack(headers, body) do |path|
+          Rainpress.compress(::File.read(path))
+        end
+      when '.js'
+        pack(headers, body) do |path|
+          Packr.pack(::File.read(path), :shrink_vars => true)
+        end
+      else
+        body
+      end
+    end
+
+    def pack(headers, body)
+      returning([]) do |bd|
+        bd << yield(body.path)
+        AbstractMiddleware::update_content_length(headers, bd.to_s.size)
+      end
+    end
+
+    def update_headers(headers)
+      headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public"
+      headers['Expires'] = duration_in_words
+      %w(Etag Pragma Last-Modified).each { |key| headers.delete(key) }
     end
 
     def duration_in_words
