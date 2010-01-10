@@ -35,7 +35,7 @@ module BlogHelper
           scout.body = "Remote host: #{remote_hostname} (#{env['REMOTE_ADDR']})"
         end
       end
-    rescue Exception => e
+    rescue Exception
     end
 
     def announce
