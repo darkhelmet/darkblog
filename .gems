@@ -17,5 +17,5 @@ darkhelmet-sanitize
 hashie
 yard
 tilt
-darkhelmet-sinatra_more
+darkhelmet-sinatra_more --version '>= 0.3.34'
 httparty
