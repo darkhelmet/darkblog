@@ -86,13 +86,13 @@ module Sinatra
 
       app.get('/stylesheets/bundle_:bundle.css') do |bundle|
         content_type('text/css')
-        expires(1.year, :public) if options.cache_bundles
+        expires(1.year.to_i, :public) if options.cache_bundles
         options.stylesheet_bundles[bundle.intern]
       end
 
       app.get('/javascripts/bundle_:bundle.js') do |bundle|
         content_type('text/javascript; charset=utf-8')
-        expires(1.year, :public) if options.cache_bundles
+        expires(1.year.to_i, :public) if options.cache_bundles
         options.javascript_bundles[bundle.intern]
       end
     end
