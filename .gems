@@ -15,5 +15,6 @@ term_extraction
 addressable
 darkhelmet-sanitize
 hashie
+tilt
 httparty
 gibbler
