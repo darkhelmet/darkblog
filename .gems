@@ -16,4 +16,6 @@ addressable
 darkhelmet-sanitize
 hashie
 httparty
-darkhelmet-sinatra_more --version '0.3.35'
+tilt
+thor --version '>= 0.11.8'
+pony
