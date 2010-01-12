@@ -18,3 +18,4 @@ hashie
 tilt
 httparty
 gibbler
+thor --version 0.11.8
