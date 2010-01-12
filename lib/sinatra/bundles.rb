@@ -79,6 +79,7 @@ module Sinatra
     def self.registered(app)
       app.set(:javascript_bundles, {})
       app.set(:stylesheet_bundles, {})
+      app.set(:bundle_cache_time, 60 * 60 * 24 * 365)
       app.disable(:compress_bundles)
       app.disable(:cache_bundles)
 
@@ -87,14 +88,14 @@ module Sinatra
       app.get('/stylesheets/bundle_:bundle.css') do |bundle|
         content_type('text/css')
         headers['Vary'] = 'Accept-Encoding'
-        expires(1.year.to_i, :public) if options.cache_bundles
+        expires(options.bundle_cache_time, :public) if options.cache_bundles
         options.stylesheet_bundles[bundle.intern]
       end
 
       app.get('/javascripts/bundle_:bundle.js') do |bundle|
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
-        expires(1.year.to_i, :public) if options.cache_bundles
+        expires(bundle_cache_time, :public) if options.cache_bundles
         options.javascript_bundles[bundle.intern]
       end
     end
