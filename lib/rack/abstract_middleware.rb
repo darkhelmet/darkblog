@@ -7,9 +7,13 @@ module Rack
   protected
 
     class << self
-      def update_content_length(headers, length)
+      def update_content_length(headers, body)
         if headers['Content-Length']
-          headers['Content-Length'] = length.to_s
+          if body.respond_to?(:to_ary)
+            headers['Content-Length'] = body.to_ary.inject(0) do |len,part|
+              len + Rack::Utils.bytesize(part)
+            end.to_s
+          end
         end
       end
     end

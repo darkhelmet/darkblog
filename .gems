@@ -15,5 +15,5 @@ term_extraction
 addressable
 darkhelmet-sanitize
 hashie
-darkhelmet-sinatra_more --version '>= 0.3.34'
 httparty
+gibbler

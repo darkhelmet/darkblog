@@ -5,6 +5,12 @@ $KCODE = 'u' if RUBY_VERSION.match(/1\.8/)
 $: << File.expand_path(File.join('.', 'lib'))
 
 require 'rubygems'
+
+# Load our own gems
+Gem.clear_paths
+ENV['GEM_HOME'] = File.expand_path(File.join(File.dirname(__FILE__), 'vendor'))
+
+gem 'sinatra', '= 0.10.1'
 require 'sinatra'
 require 'blog_helper'
 
@@ -43,28 +49,27 @@ configure :production do
     not_found_notification
     haml(:not_found)
   end
-end
 
-before do
-  unless env['PATH_INFO'].matches_any_of?(*STATIC_PATHS)
-    if production?
-      expires_in(10.minutes) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+  before do
+    unless env['PATH_INFO'].matches_any_of?(*STATIC_PATHS)
+      expires(10.minutes, :public, :must_revalidate) if env['REQUEST_METHOD'] =~ /GET|HEAD/
     end
   end
+
+  enable(:compress_bundles)
+  enable(:cache_bundles)
 end
 
 require 'models'
+require 'middleware'
 
 helpers do
-  include Sinatra::Authorization
   include TagsHelper
   include WillPaginate::ViewHelpers::Base
   include BlogHelper::ViewHelpers
   include BlogHelper::Utilities
   include BlogHelper::Caching
 end
-
-require 'middleware'
 
 map(:index).to(%r|^/(?:page/(\d+))?$|)
 map(:search).to(%r|^/search(?:/page/(\d+))?$|)
@@ -83,6 +88,9 @@ map(:redirections).to('/redirections')
 map(:announce).to('/announce')
 map(:admin_index).to('/index')
 map(:twitter).to('/twitter/:status')
+
+stylesheet_bundle(:all, %w(darkblog panel jquery.lightbox tipsy))
+javascript_bundle(:all, %w(panel jquery.lightbox swfobject flowplayer jquery.tipsy jquery.darkhax))
 
 # main index with pagination
 get(:index) do |page|
@@ -295,7 +303,7 @@ end
 # get twitter statuses
 
 get(:twitter) do |status_id|
-  expires_in(1.day)
+  expires(1.day, :public, :must_revalidate)
   content_type('text/plain')
   individual_tweet(status_id).text
 end

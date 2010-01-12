@@ -27,7 +27,7 @@ EOCODE
       body.each do |part|
         if part =~ /<\/body>/
           part.sub!(/<\/body>/, "#{tracking_code}</body>")
-          AbstractMiddleware::update_content_length(headers, body.to_s.size)
+          AbstractMiddleware::update_content_length(headers, body)
           break
         end
       end

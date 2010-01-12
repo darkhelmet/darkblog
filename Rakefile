@@ -94,3 +94,10 @@ if runcoderun?
 else
   task :default => %w(local db:migrate spec)
 end
+
+desc 'Install gem locally'
+task :gem,:name do |task, args|
+  if args.name
+    system("gem i #{args.name} -i vendor --ignore-dependencies")
+  end
+end

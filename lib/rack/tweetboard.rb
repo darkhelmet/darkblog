@@ -1,5 +1,5 @@
 module Rack
-  class Tweetboard
+  class Tweetboard < AbstractMiddleware
     def initialize(app, username, options = {})
       @app = app
       @username = username
@@ -7,19 +7,17 @@ module Rack
     end
 
     def call(env)
+      super(env)
       status, headers, body = @app.call(env)
-      if (body.is_a?(String) || body.is_a?(Array)) && !@ignore.any? { |url| env['PATH_INFO'].match(url) }
-        body = [body].flatten
+      unless @ignore.any? { |url| env['PATH_INFO'].match(url) }
         body.each do |part|
           if part =~ /<\/body>/
             part.sub!(/<\/body>/, "#{code}</body>")
-            if headers['Content-Length']
-              headers['Content-Length'] = body.to_s.size.to_s
-            end
             break
           end
         end
       end
+      AbstractMiddleware::update_content_length(headers, body)
       [status, headers, body]
     end
 

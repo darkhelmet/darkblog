@@ -1,4 +1,6 @@
 require 'rack/abstract_middleware'
+require 'packr'
+require 'rainpress'
 
 module Rack
   class InlineCompress < AbstractMiddleware
@@ -11,12 +13,12 @@ module Rack
       super(env)
       return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
-      if body.is_a?(String) || body.is_a?(Array)
-        doc = Hpricot(body.to_s)
-        pack(doc)
-        body = [doc.to_s]
-        AbstractMiddleware::update_content_length(headers, body.to_s.size)
+      body.map do |part|
+        returning(Hpricot(part)) do |doc|
+          pack(doc)
+        end
       end
+      AbstractMiddleware::update_content_length(headers, body)
       [status, headers, body]
     end
 

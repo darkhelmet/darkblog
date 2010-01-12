@@ -3,6 +3,8 @@ require 'builder'
 require 'active_record'
 require 'active_support'
 
+gem 'darkhelmet-sinatra_more', '>= 0.3.35'
+
 %w(markup render routing).each do |plugin|
   require "sinatra/#{plugin}_plugin"
 end
@@ -11,6 +13,8 @@ require 'will_paginate'
 require 'will_paginate/finders/active_record'
 require 'will_paginate/view_helpers/base'
 require 'will_paginate/view_helpers/link_renderer'
+
+gem 'acts_as_taggable_on_steroids', '>= 1.2'
 
 require 'acts_as_taggable_on_steroids'
 require 'tag'
@@ -33,6 +37,7 @@ require 'social'
 require 'archive_date'
 
 require 'sinatra/authorization'
+require 'sinatra/bundles'
 
 %w(etag static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard).each do |ext|
   require "rack/#{ext}"
