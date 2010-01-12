@@ -50,7 +50,7 @@ module Sinatra
     protected
 
       def compress(js)
-        Packr.pack(js, :shrink_vars => true)
+        Packr.pack(js)
       end
 
       def path(filename)

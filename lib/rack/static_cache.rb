@@ -37,7 +37,7 @@ module Rack
         end
       when '.js'
         pack(headers, body) do |path|
-          Packr.pack(::File.read(path), :shrink_vars => true)
+          Packr.pack(::File.read(path))
         end
       else
         body
