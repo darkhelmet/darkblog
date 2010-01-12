@@ -95,7 +95,7 @@ module Sinatra
       app.get('/javascripts/bundle_:bundle.js') do |bundle|
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
-        expires(bundle_cache_time, :public) if options.cache_bundles
+        expires(options.bundle_cache_time, :public) if options.cache_bundles
         options.javascript_bundles[bundle.intern]
       end
     end
