@@ -110,7 +110,7 @@ function zoomPreload(from) {
 
 		imgPreload.onload = function() {
 			preloadActive = false;
-		}
+		};
 
 		// Load it!
 		imgPreload.src = theimage;
