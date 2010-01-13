@@ -5,7 +5,8 @@
         scale = 600 / width;
         w = '600px';
         h = (height * scale) + 'px';
-        swfobject.embedSWF(movie, this.id, w, h, '9.0.124', '/swf/expressInstall.swf', null, { wmode: 'opaque', allowFullscreen: true });
+        swfobject.embedSWF(movie, this.id, w, h, '9.0.124', '/swf/expressInstall.swf',
+                           null, { wmode: 'opaque', allowFullscreen: true });
       });
     }
   });

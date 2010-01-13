@@ -13,12 +13,14 @@ module Rack
       super(env)
       return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
-      body.map! do |part|
-        returning(Hpricot(part)) do |doc|
-          pack(doc)
-        end.to_s
+      if headers['Content-Type'].match(/html/)
+        body.map! do |part|
+          returning(Hpricot(part)) do |doc|
+            pack(doc)
+          end.to_s
+        end
+        AbstractMiddleware::update_content_length(headers, body)
       end
-      AbstractMiddleware::update_content_length(headers, body)
       [status, headers, body]
     end
 
