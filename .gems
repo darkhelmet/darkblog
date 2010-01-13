@@ -19,3 +19,4 @@ httparty
 tilt
 thor --version '>= 0.11.8'
 pony
+sinatra-bundles --version '>= 0.0.2'
