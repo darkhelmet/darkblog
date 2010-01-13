@@ -89,8 +89,8 @@ map(:announce).to('/announce')
 map(:admin_index).to('/index')
 map(:twitter).to('/twitter/:status')
 
-stylesheet_bundle(:all, %w(darkblog panel jquery.lightbox tipsy))
-javascript_bundle(:all, %w(panel jquery.lightbox swfobject flowplayer jquery.tipsy jquery.darkhax))
+stylesheet_bundle(:all, %w(darkblog panel tipsy))
+javascript_bundle(:all, %w(panel swfobject flowplayer jquery.tipsy FancyZoom FancyZoomHTML jquery.darkhax))
 
 # main index with pagination
 get(:index) do |page|

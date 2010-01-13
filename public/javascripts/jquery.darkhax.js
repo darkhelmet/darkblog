@@ -12,12 +12,6 @@
   });
 })(jQuery);
 
-var lightboxVars = { imageLoading: 'http://s3.blog.darkhax.com/lightbox-ico-loading.gif',
-                     imageBtnClose: 'http://s3.blog.darkhax.com/lightbox-btn-close.gif',
-                     imageBtnPrev: 'http://s3.blog.darkhax.com/lightbox-btn-prev.gif',
-                     imageBtnNext: 'http://s3.blog.darkhax.com/lightbox-btn-next.gif',
-                     imageBlank: 'http://s3.blog.darkhax.com/lightbox-blank.gif' };
-
 $(document).ready(function() {
   $('a.remote-inline').live('click', function() {
     var link = $(this);
@@ -36,7 +30,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('a.lightbox').lightBox(lightboxVars);
+  setupZoom();
 
   $('.swfembed').each(function() {
     t = $(this);
