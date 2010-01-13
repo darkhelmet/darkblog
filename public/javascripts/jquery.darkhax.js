@@ -13,6 +13,8 @@
 })(jQuery);
 
 $(document).ready(function() {
+  setupZoom();
+
   $('a.remote-inline').live('click', function() {
     var link = $(this);
     var b = link.closest('.content').prev();
@@ -29,8 +31,6 @@ $(document).ready(function() {
             }});
     return false;
   });
-
-  setupZoom();
 
   $('.swfembed').each(function() {
     t = $(this);
