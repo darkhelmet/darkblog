@@ -58,6 +58,8 @@ configure :production do
 
   enable(:compress_bundles)
   enable(:cache_bundles)
+
+  set(:haml, { :ugly => true })
 end
 
 require 'models'
