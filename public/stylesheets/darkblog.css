@@ -259,7 +259,7 @@ blockquote > p {
 
 pre {
   color: black;
-  background-color: white;
+  background-color: #f8f8ff;
   border: 1px solid #dddddd;
   font-family: Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
   padding: 5px;
