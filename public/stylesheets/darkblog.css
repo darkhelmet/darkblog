@@ -256,3 +256,9 @@ blockquote {
 blockquote > p {
   margin-bottom: 0px;
 }
+
+pre {
+  background-color: white;
+  border: 1px solid #dddddd;
+  font-family: Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
+}
