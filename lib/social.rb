@@ -12,7 +12,7 @@ class Social
     def repositories(username, max = 12)
       resp = RestClient.get("http://github.com/api/v1/json/#{username}")
       resp = Hashie::Mash.new(Crack::JSON.parse(resp))
-      resp.user.repositories.reject { |r| r.fork }.sort_by { rand }[0..4]
+      resp.user.repositories.reject { |r| r.fork }.sort_by { rand }[0..max]
     end
 
     # Gets shared Google Reader items for an id
