@@ -265,3 +265,19 @@ pre {
   padding: 5px;
   overflow: auto;
 }
+
+#tooltip {
+  -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.6);
+  -moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.6);
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.6);
+  border: 2px solid #a69b03;
+  background-color: #252625;
+  color: #a69b03;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  position: absolute;
+  padding: 5px;
+  max-width: 400px;
+  z-index: 10000;
+}

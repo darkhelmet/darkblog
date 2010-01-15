@@ -8,6 +8,38 @@
         swfobject.embedSWF(movie, this.id, w, h, '9.0.124', '/swf/expressInstall.swf',
                            null, { wmode: 'opaque', allowFullscreen: true });
       });
+    },
+    tooltip: function(options) {
+      settings = $.extend({
+        xOffset: -20,
+        yOffset: 25
+      }, options);
+
+      this.each(function() {
+        $(this).hover(function(e) {
+          this.t = this.title;
+          this.title = '';
+          $('body').append($('<p>', {
+            id: 'tooltip',
+            text: this.t,
+            css: {
+              position: 'absolute'
+            }
+          }));
+          $('#tooltip').css({
+            top: (e.pageY + settings.yOffset) + 'px',
+            left: (e.pageX + settings.xOffset) + 'px'
+          }).fadeIn('fast');
+        }, function() {
+          this.title = this.t;
+          $('#tooltip').remove();
+        }).mousemove(function(e) {
+          $('#tooltip').css({
+            top: (e.pageY + settings.yOffset) + 'px',
+            left: (e.pageX + settings.xOffset) + 'px'
+          });
+        })
+      });
     }
   });
 })(jQuery);
@@ -42,10 +74,9 @@ $(document).ready(function() {
   }).join('&');
   $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
 
-  $('a.github').tipsy({
-    gravity: 'e',
-    fade: true
-  });
+  if (!$.browser.msie) {
+    $('a.github').tooltip();
+  }
 
   $('#posts-container a').each(function() {
     var re = /http:\/\/twitter\.com\/\w+\/status\/(\d+)/;
@@ -54,10 +85,10 @@ $(document).ready(function() {
       var id = matches[1];
       var link = this;
       $.get('/twitter/' + id, null, function(data) {
-        $(link).attr('title', data).tipsy({
-          gravity: $.fn.tipsy.autoNS,
-          fade: true
-        });
+        $(link).attr('title', data);
+        if (!$.browser.msie) {
+          $(link).tooltip();
+        }
       }, 'text');
     }
   });
