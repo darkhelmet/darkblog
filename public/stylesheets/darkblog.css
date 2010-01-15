@@ -80,7 +80,7 @@ a:hover {
 
 .content a {
   color: #593202;
-  padding: 2px;
+  padding: 2px !important;
 }
 
 .entry a, .dsq-comment-message a {
