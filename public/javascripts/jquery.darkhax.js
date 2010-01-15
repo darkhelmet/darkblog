@@ -11,7 +11,7 @@
     },
     tooltip: function(options) {
       settings = $.extend({
-        xOffset: -20,
+        xOffset: -40,
         yOffset: 25
       }, options);
 

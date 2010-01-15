@@ -278,6 +278,6 @@ pre {
   border-radius: 10px;
   position: absolute;
   padding: 5px;
-  max-width: 400px;
+  max-width: 300px;
   z-index: 10000;
 }
