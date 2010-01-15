@@ -58,7 +58,7 @@ html {
 }
 
 html, body, .wufoo {
-  font-family: Helvetica,Arial,'Liberation Sans',FreeSans,sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;
 }
 
 body a {
@@ -261,7 +261,7 @@ pre {
   color: black;
   background-color: #f8f8ff;
   border: 1px solid #dddddd;
-  font-family: Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
+  font-family: Monaco,'Courier New','DejaVu Sans Mono','Bitstream Vera Sans Mono',monospace;
   padding: 5px;
   overflow: auto;
 }
