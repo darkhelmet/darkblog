@@ -281,15 +281,3 @@ pre {
   max-width: 300px;
   z-index: 10000;
 }
-
-a.dsq-avatar {
-  padding: 0px !important;
-}
-
-a.dsq-avatar:hover {
-  padding: 0px !important;
-}
-
-.dsq-avatar img {
-  padding: 0px !important;
-}
