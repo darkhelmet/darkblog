@@ -83,16 +83,16 @@ a:hover {
   padding: 2px;
 }
 
-.entry a {
+.entry a, .dsq-comment-message a {
   text-decoration: underline;
 }
 
 .content a:hover {
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  background-color: #252625;
-  color: #a69b03;
+  -moz-border-radius: 2px !important;
+  -webkit-border-radius: 2px !important;
+  border-radius: 2px !important;
+  background-color: #252625 !important;
+  color: #a69b03 !important;
 }
 
 .addthis_toolbox a {
