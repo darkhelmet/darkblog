@@ -45,5 +45,9 @@ class Social
     def bookmarks(username, password, num = 8)
       Hashie::Mash.new(Crack::XML.parse(RestClient.get("https://#{username}:#{password}@api.del.icio.us/v1/posts/recent?count=#{num}", 'User-Agent' => Blog.user_agent))).posts.post
     end
+
+    def where
+      @@where ||= Hashie::Mash.new(YAML.load_file(File.join('config', 'where.yml')))
+    end
   end
 end

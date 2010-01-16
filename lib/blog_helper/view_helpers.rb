@@ -161,5 +161,10 @@ module BlogHelper
         end
       end
     end
+
+    def where_link(k)
+      item = Social.where[k]
+      link_to(image_tag("/images/icons/#{k}.png", :class => 'where', :alt => item.title), item.link, :title => item.title)
+    end
   end
 end

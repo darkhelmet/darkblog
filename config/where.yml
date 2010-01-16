@@ -1,0 +1,36 @@
+delicious:
+  title: 'Bookmark me on Delicious'
+  link: 'http://delicious.com/darkhelmetlive'
+digg:
+  title: 'Digg me on Digg'
+  link: 'http://digg.com/users/darkhelmetlive'
+facebook:
+  title: 'Face me...on Facebook?'
+  link: 'http://www.facebook.com/darkhelmetlive'
+flickr:
+  title: 'My pictures on Flickr'
+  link: 'http://www.flickr.com/photos/darkhelmetlive/'
+google:
+  title: "I'm on the Google"
+  link: 'http://www.google.com/profiles/voodoo.rage'
+lastfm:
+  title: 'Listen to my radio station on last.fm'
+  link: 'http://www.last.fm/user/darkhelmetlive'
+linkedin:
+  title: 'Connect with me on Linkedin'
+  link: 'http://ca.linkedin.com/in/darkhelmetlive'
+openid:
+  title: 'ID me with OpenID'
+  link: 'http://darkhelmet.myopenid.com/'
+posterous:
+  title: 'Read my stupid things on Posterous'
+  link: 'http://blog.darkhelmetlive.com/'
+readernaut:
+  title: "See what I'm reading on Readernaut"
+  link: 'http://readernaut.com/darkhelmetlive/'
+skype:
+  title: 'Call me on Skype'
+  link: 'skype:darkhelmetlive?call'
+twitter:
+  title: 'Follow me on Twitter'
+  link: 'http://twitter.com/darkhelmetlive'

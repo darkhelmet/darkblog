@@ -9,7 +9,9 @@
     %input{ :type => 'submit', :value => 'Search' }
 .sidebar-item
   %h2 Author
-  = image_tag(gravatar_url(Blog.email))
+  = image_tag(gravatar_url(Blog.email), :class => 'gravatar')
+  - %w(twitter linkedin facebook skype delicious readernaut lastfm flickr).each do |n|
+    = where_link(n)
   = Blog.author
   = Blog.bio
 .sidebar-item
