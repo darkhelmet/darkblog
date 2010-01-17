@@ -307,5 +307,6 @@ end
 get(:twitter) do |status_id|
   expires(1.day, :public, :must_revalidate)
   content_type('text/plain')
-  individual_tweet(status_id).text
+  tweet = individual_tweet(status_id)
+  "@#{tweet.user.screen_name} said: #{tweet.text}"
 end
