@@ -312,3 +312,12 @@ get(:twitter) do |status_id|
   tweet = individual_tweet(status_id)
   "@#{tweet.user.screen_name} said: #{tweet.text}"
 end
+
+delete(:permalink) do |permalink|
+  no_cache
+  require_administrative_privileges
+  post = Post.perma(permalink).first
+  post.destroy
+  content_type('application/javascript')
+  "window.location = '#{Blog.index}index'"
+end

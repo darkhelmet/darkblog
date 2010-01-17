@@ -172,5 +172,15 @@ module BlogHelper
       item = Social.where[k]
       link_to(image_tag("/images/icons/#{k}.png", :class => 'where', :alt => item.title), item.link, :title => item.title)
     end
+
+    def delete_link(url)
+      content_tag(:a, 'delete', :href => "javascript:if (confirm('Really delete this?')) {
+  $.ajax({
+    url: '#{url}',
+    dataType: 'script',
+    type: 'DELETE'
+  });
+}")
+    end
   end
 end

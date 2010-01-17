@@ -1,7 +1,7 @@
 require 'term_extraction'
 
 class Post < ActiveRecord::Base
-  has_many :redirections
+  has_many :redirections, :dependent => :destroy
   has_many :keywordings, :dependent => :destroy, :include => :keyword
   has_many :keywords, :through => :keywordings, :uniq => true
 

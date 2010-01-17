@@ -1,4 +1,7 @@
 = link_to('New Post', '/posts')
 %ul
   - @posts.each do |p|
-    %li= link_to(h(p.title), "#{p.permalink}/edit")
+    %li
+      = link_to(h(p.title), "#{p.permalink}/edit")
+      |
+      = delete_link(post_permaurl(p))
