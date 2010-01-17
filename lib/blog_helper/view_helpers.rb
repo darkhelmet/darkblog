@@ -143,7 +143,8 @@ module BlogHelper
     end
 
     def archive_link(date)
-      link_to(date.strftime('%B %Y'), "/#{date.strftime('%Y/%m')}")
+      count = Post.published.monthly(DateTime.strptime("#{date.year}-#{date.month}-1 #{Blog.tz_display}", '%F %Z')).count
+      link_to(date.strftime("%B %Y (#{count})"), "/#{date.strftime('%Y/%m')}")
     end
 
     def monthly_archive_links
@@ -151,7 +152,6 @@ module BlogHelper
       return Array.new if newest.nil?
       newest = newest.published_on_local
       oldest = Post.published.last.published_on_local
-
       (ArchiveDate.new(oldest.year, oldest.month, 1)..ArchiveDate.new(newest.year, newest.month, 1)).map do |date|
         archive_link(date)
       end
