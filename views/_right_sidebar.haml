@@ -26,3 +26,7 @@
   .sidebar-item
     %h2 Archives
     = cached_partial(:monthly_archives)
+.sidebar-item
+  Hosting by:
+  %br
+  = link_to(image_tag('/images/heroku.png'), 'http://heroku.com/')
