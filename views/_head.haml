@@ -21,3 +21,14 @@
 - if development? || env['REQUEST_PATH'] =~ %r{/preview$}
   :javascript
     var disqus_developer = 1;
+
+%noscript
+  %style
+    :plain
+      .content a:hover {
+        -moz-border-radius: 2px !important;
+        -webkit-border-radius: 2px !important;
+        border-radius: 2px !important;
+        background-color: #252625 !important;
+        color: #a69b03 !important;
+      }

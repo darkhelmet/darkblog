@@ -78,6 +78,8 @@ $(document).ready(function() {
     $('a.github').tooltip();
   }
 
+  $('.content a:not(:has(img))').addClass('hover');
+
   $('#posts-container a').each(function() {
     var re = /http:\/\/twitter\.com\/\w+\/status\/(\d+)/;
     var matches = re.exec($(this).attr('href'));

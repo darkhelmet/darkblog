@@ -87,12 +87,18 @@ a:hover {
   text-decoration: underline;
 }
 
-.content a:hover {
+.content a.hover:hover {
   -moz-border-radius: 2px !important;
   -webkit-border-radius: 2px !important;
   border-radius: 2px !important;
   background-color: #252625 !important;
   color: #a69b03 !important;
+}
+
+.content img:hover {
+  -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
 }
 
 .addthis_toolbox a {
