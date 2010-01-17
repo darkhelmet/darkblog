@@ -83,6 +83,10 @@ a:hover {
   padding: 2px !important;
 }
 
+.content img {
+  padding: 0px;
+}
+
 .entry a, .dsq-comment-message a {
   text-decoration: underline;
 }
@@ -115,6 +119,14 @@ a:hover {
 
 .border {
   margin: 10px;
+}
+
+.bright {
+  margin-right: 10px;
+}
+
+.bbottom {
+  margin-bottom: 10px;
 }
 
 .post-title {
