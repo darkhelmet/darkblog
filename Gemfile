@@ -1,7 +1,7 @@
 source 'http://gemcutter.org'
 
 gem 'rack', '1.1.0'
-gem 'sinatra', '0.10.1', :git => 'git://github.com/sinatra/sinatra.git'
+# gem 'sinatra', '0.10.1', :git => 'git://github.com/sinatra/sinatra.git'
 gem 'haml'
 gem 'builder'
 gem 'activerecord', :require_as => 'active_record'
