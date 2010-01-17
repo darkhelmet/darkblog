@@ -139,6 +139,7 @@ a:hover {
 
 .post-title {
   margin-bottom: 0px;
+  /* need relative and left to counteract the padding for link highlight */
   position: relative;
   left: -2px;
 }
@@ -255,10 +256,6 @@ img.pimg {
 .form textarea {
   width: 600px;
   height: 350px;
-}
-
-.tweet-date {
-  font-size: 10px;
 }
 
 form#search input#query {
