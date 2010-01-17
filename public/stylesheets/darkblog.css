@@ -129,6 +129,14 @@ a:hover {
   margin-bottom: 10px;
 }
 
+.bleft {
+  margin-left: 10px;
+}
+
+.btop {
+  margin-top: 10px;
+}
+
 .post-title {
   margin-bottom: 0px;
   position: relative;
@@ -209,11 +217,6 @@ blockquote {
 
 #footer p {
   margin: 0px;
-}
-
-img.alignright {
-  float: right;
-  margin-left: 5px;
 }
 
 img.pimg {
