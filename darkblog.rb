@@ -149,8 +149,12 @@ get(:search) do |page|
   if query = params['q']
     @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
     return haml(:empty_search) if @posts.empty?
-    title("Search '#{query}'")
-    haml(:posts)
+    if 1 == @posts.size && 1 == page
+      redirect(@posts.first.permalink, 302)
+    else
+      title("Search '#{query}'")
+      haml(:posts)
+    end
   else
     redirect('/')
   end
