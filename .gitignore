@@ -4,3 +4,6 @@ db.log
 .DS_Store
 doc/
 .yardoc/
+vendor/gems
+bin/
+!bin/*.rb

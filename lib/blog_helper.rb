@@ -1,10 +1,3 @@
-require 'haml'
-require 'builder'
-require 'active_record'
-require 'active_support'
-
-gem 'darkhelmet-sinatra_more', '>= 0.3.35'
-
 %w(markup render routing).each do |plugin|
   require "sinatra/#{plugin}_plugin"
 end
@@ -14,8 +7,6 @@ require 'will_paginate/finders/active_record'
 require 'will_paginate/view_helpers/base'
 require 'will_paginate/view_helpers/link_renderer'
 
-gem 'acts_as_taggable_on_steroids', '>= 1.2'
-
 require 'acts_as_taggable_on_steroids'
 require 'tag'
 require 'tag_list'
@@ -23,16 +14,7 @@ require 'tagging'
 require 'tags_helper'
 
 require 'ostruct'
-require 'RedCloth'
-require 'crack'
-require 'restclient'
-require 'tzinfo'
-require 'rainpress'
-require 'packr'
-require 'hpricot'
 require 'bugzscout'
-# require 'newrelic_rpm'
-require 'sanitize'
 require 'social'
 require 'archive_date'
 

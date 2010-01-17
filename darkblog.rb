@@ -4,14 +4,9 @@ $KCODE = 'u' if RUBY_VERSION.match(/1\.8/)
 
 $: << File.expand_path(File.join('.', 'lib'))
 
-require 'rubygems'
-
-# Load our own gems
-Gem.clear_paths
-ENV['GEM_HOME'] = File.expand_path(File.join(File.dirname(__FILE__), 'vendor'))
-
-gem 'sinatra', '= 0.10.1'
+require File.join(File.dirname(__FILE__), 'vendor/gems/environment')
 require 'sinatra'
+Bundler.require_env
 require 'blog_helper'
 
 configure do
