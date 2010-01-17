@@ -165,6 +165,7 @@ end
 
 # google search
 get(:google) do
+  minimal_sidebar(true)
   setup_top_panel
   haml(:page, :locals => { :page => :google })
 end
@@ -172,6 +173,7 @@ end
 # information pages
 %w(about contact disclaimer).each do |page|
   get("/#{page}") do
+    minimal_sidebar(true)
     setup_top_panel
     title(page.capitalize)
     haml(:page, :locals => { :page => page.intern })

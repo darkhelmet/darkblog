@@ -14,14 +14,13 @@
     = where_link(n)
   = Blog.author
   = Blog.bio
-.sidebar-item
-  %h2 Tags
-  = partial(:tag_sidebar)
-.sidebar-item
-  %h2 Categories
-  = partial(:category_sidebar)
-.sidebar-item
-  %h2 Archives
-  %ul
-    - monthly_archive_links.reverse_each do |l|
-      %li= l
+- unless minimal_sidebar
+  .sidebar-item
+    %h2 Tags
+    = cached_partial(:tag_sidebar)
+  .sidebar-item
+    %h2 Categories
+    = partial(:category_sidebar)
+  .sidebar-item
+    %h2 Archives
+    = cached_partial(:monthly_archives)

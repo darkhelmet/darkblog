@@ -1,11 +1,17 @@
 module BlogHelper
   # View related helpers
   module ViewHelpers
-    def sidebar
-      if production?
-        Cache.get('right_sidebar_partial', 1.hour) { partial(:right_sidebar) }
+    def minimal_sidebar(on = nil)
+      if on.nil?
+        @minimal_sidebar || false
       else
-        partial(:right_sidebar)
+        @minimal_sidebar = on
+      end
+    end
+
+    def cached_partial(key, time = 1.hour)
+      Cache.get("#{key}_partial", time) do
+        partial(key)
       end
     end
 
