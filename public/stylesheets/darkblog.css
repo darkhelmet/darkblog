@@ -73,13 +73,12 @@ a:hover {
   text-decoration: underline;
 }
 
-.content {
+.content, .content a {
   background-color: #7da5a5;
   color: #593202;
 }
 
 .content a.hover {
-  color: #593202;
   padding: 2px !important;
 }
 
