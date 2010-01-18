@@ -80,6 +80,11 @@ $(document).ready(function() {
 
   $('.content a:not(:has(img))').addClass('hover');
 
+  $('#show-tags').click(function() {
+    $('.tag1').fadeIn('slow');
+    return false;
+  });
+
   $('#posts-container a').each(function() {
     var re = /http:\/\/twitter\.com\/\w+\/status\/(\d+)/;
     var matches = re.exec($(this).attr('href'));

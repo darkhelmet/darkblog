@@ -325,3 +325,7 @@ pre {
 .small {
   font-size: 10px;
 }
+
+.pagination {
+  margin-bottom: 15px;
+}
