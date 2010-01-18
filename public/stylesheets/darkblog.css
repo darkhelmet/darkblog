@@ -229,6 +229,7 @@ img.pimg {
 
 .tag1 {
   font-size: 10px;
+  display: none;
 }
 
 .tag2 {
@@ -320,4 +321,8 @@ pre {
 
 #skribitNewSuggestion {
   height: 75px;
+}
+
+.small {
+  font-size: 10px;
 }

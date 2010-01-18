@@ -18,7 +18,8 @@
   .sidebar-item
     <div id="writeSkribitHere"></div><script src="http://assets.skribit.com/javascripts/SkribitWidget.js?renderTo=writeSkribitHere&amp;blog=5e91fca2cf7d25b4d74b682aa37d0908&amp;cnt=5"></script><noscript>Sorry, but the <a href="http://skribit.com" title="Skribit - Cure Writer's Block">Skribit</a> widget only works on browsers with JavaScript support.  <a href="http://skribit.com/blogs/verbose-logging" title="Skribit Suggestions for verbose logging">View suggestions for this blog here.</a></noscript>
   .sidebar-item
-    %h2 Tags
+    %h2{ :style => 'display: inline-block' } Tags
+    %span.small= link_to('(show all tags)', "javascript:$('.tag1').fadeIn('slow');")
     = cached_partial(:tag_sidebar)
   .sidebar-item
     %h2 Categories
