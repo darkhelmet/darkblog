@@ -1,7 +1,11 @@
 - if @future_post
   = partial(:future_post, :locals => { :post => @future_post })
 - if @posts && 0 < @posts.size
-  = partial(:post, :collection => @posts)
+  - if preview_posts
+    - @posts.each do |post|
+      = partial(:preview_post, :locals => { :post => post })
+  - else
+    = partial(:post, :collection => @posts)
   - if keywords_post && 0 < (related_posts = (Post.find_by_keywords(keywords_post) - [keywords_post])[0,10]).size
     %div.grid_2.alpha{ :id => 'related-sidebar' }
       %p <!-- take up space -->

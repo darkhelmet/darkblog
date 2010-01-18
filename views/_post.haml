@@ -1,12 +1,12 @@
 %div.grid_2.leftbar.right.alpha{ :id => "post-#{post.id}-sidebar" }
-  %h1.date= post.published_on_local.strftime('%d%b%y')
+  %h3.date= post.published_on_local.strftime('%d %b %y')
   %p.time= post.published_on_local.strftime("%I:%M %p #{Blog.tz_display}")
   %p.category= "Posted in #{category_link(post.category)}"
   %p.tags= tag_links(post)
 %div.grid_8.omega.content{ :id => "post-#{post.id}-content" }
   .border
     %div{ :id => "post-#{post.id}", :class => post_class(post) }
-      %h1.post-title= link_to(h(post.title), post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}")
+      = post_title_link(post)
       .entry= post.body_html
       - if sharing && !request.xhr?
         .spacer

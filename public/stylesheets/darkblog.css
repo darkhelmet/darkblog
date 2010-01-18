@@ -90,7 +90,7 @@ a:hover {
   padding: 0px;
 }
 
-.entry a, .dsq-comment-message a {
+.entry a, .dsq-comment-message a, .readmore {
   text-decoration: underline;
 }
 
@@ -157,7 +157,6 @@ hr.end {
 
 .date {
   margin-top: 10px;
-  text-decoration: underline;
   text-transform: uppercase;
 }
 

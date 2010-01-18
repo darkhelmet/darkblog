@@ -183,6 +183,7 @@ end
 get(:permalink) do |permalink|
   no_cache if request.xhr?
   setup_top_panel
+  preview_posts(false)
   @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => permalink })
@@ -223,6 +224,7 @@ end
 # preview post
 get(:preview_post) do |permalink|
   no_cache
+  preview_posts(false)
   require_administrative_privileges
   @posts = Post.perma(permalink).paginate(:page => 1, :per_page => Blog.per_page)
   title(@posts.first.title)

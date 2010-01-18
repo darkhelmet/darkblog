@@ -1,0 +1,14 @@
+%div.grid_2.leftbar.right.alpha{ :id => "post-#{post.id}-sidebar" }
+  %h3.date= post.published_on_local.strftime('%d %b %y')
+  %p.time= post.published_on_local.strftime("%I:%M %p #{Blog.tz_display}")
+  %p.category= "Posted in #{category_link(post.category)}"
+%div.grid_8.omega.content{ :id => "post-#{post.id}-content" }
+  .border
+    %div{ :id => "post-#{post.id}", :class => post_class(post) }
+      = post_title_link(post)
+      .entry= truncate(post.body_clean, :length => 450)
+      %br
+      = link_to('Read the full article', post.permalink, :class => 'readmore')
+      - unless request.xhr? || user_agent?(/thunderbird/i)
+        .spacer
+        = partial(disqus_part, :locals => { :post => post })

@@ -9,6 +9,14 @@ module BlogHelper
       end
     end
 
+    def preview_posts(on = nil)
+      if on.nil?
+        @preview_posts.nil? ? true : @preview_posts
+      else
+        @preview_posts = on
+      end
+    end
+
     def cached_partial(key, time = 1.hour)
       Cache.get("#{key}_partial", time) do
         partial(key)
@@ -181,6 +189,32 @@ module BlogHelper
     type: 'DELETE'
   });
 }")
+    end
+
+    # Stolen from rails
+    def truncate(text, *args)
+      options = args.extract_options!
+      unless args.empty?
+        ActiveSupport::Deprecation.warn('truncate takes an option hash instead of separate ' +
+          'length and omission arguments', caller)
+
+        options[:length] = args[0] || 30
+        options[:omission] = args[1] || "..."
+      end
+      options.reverse_merge!(:length => 30, :omission => '...')
+
+      if text
+        l = options[:length] - options[:omission].mb_chars.length
+        chars = text.mb_chars
+        stop = options[:separator] ? (chars.rindex(options[:separator].mb_chars, l) || l) : l
+        (chars.length > options[:length] ? chars[0...stop] + options[:omission] : text).to_s
+      end
+    end
+
+    def post_title_link(post)
+      content_tag(:h1, :class => 'post-title') do
+        link_to(h(post.title), post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}")
+      end
     end
   end
 end
