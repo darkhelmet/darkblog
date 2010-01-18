@@ -73,8 +73,12 @@ a:hover {
   text-decoration: underline;
 }
 
-.content, .content a {
+.content {
   background-color: #7da5a5;
+  color: #593202;
+}
+
+.content a {
   color: #593202;
 }
 
