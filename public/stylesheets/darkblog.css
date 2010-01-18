@@ -78,7 +78,7 @@ a:hover {
   color: #593202;
 }
 
-.content a {
+.content a.hover {
   color: #593202;
   padding: 2px !important;
 }
