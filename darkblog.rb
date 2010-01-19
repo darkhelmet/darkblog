@@ -47,9 +47,7 @@ configure :production do
   end
 
   before do
-    unless env['PATH_INFO'].matches_any_of?(*STATIC_PATHS)
-      expires(10.minutes, :public, :must_revalidate) if env['REQUEST_METHOD'] =~ /GET|HEAD/
-    end
+    expires(10.minutes, :public, :must_revalidate) if env['REQUEST_METHOD'] =~ /GET|HEAD/
   end
 
   enable(:compress_bundles)

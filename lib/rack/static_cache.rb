@@ -6,21 +6,18 @@ module Rack
   class StaticCache < AbstractMiddleware
     def initialize(app, options = { })
       @app = app
-      @urls = options[:urls]
       @file_server = Rack::File.new(options[:root] || Dir.pwd)
-      @cache_duration = options[:duration] || 1
+      @cache_duration = options[:duration] || 365
       @compress = options[:compress] || false
     end
 
     def call(env)
       super(env)
-      if @urls.any? { |url| path.match(url) }
-        status, headers, body = @file_server.call(env)
+      status, headers, body = @file_server.call(env)
+      if 200 == status
         return @app.call(env) unless body.respond_to?(:path)
+        body = compress(body, headers) if @compress
         update_headers(headers)
-        if @compress
-          body = compress(body, headers)
-        end
         [status, headers, body]
       else
         @app.call(env)
@@ -52,7 +49,7 @@ module Rack
     end
 
     def update_headers(headers)
-      headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public"
+      headers['Cache-Control'] = "max-age=#{duration_in_seconds}, public, must-revalidate"
       headers['Expires'] = duration_in_words
       %w(Etag Pragma Last-Modified).each { |key| headers.delete(key) }
     end

@@ -20,7 +20,7 @@ require 'archive_date'
 
 require 'sinatra/authorization'
 
-%w(etag static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard).each do |ext|
+%w(etag head static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard).each do |ext|
   require "rack/#{ext}"
 end
 
@@ -29,8 +29,6 @@ require 'monkey_patch'
 %w(view_helpers utilities caching test).each do |helper|
   require "blog_helper/#{helper}"
 end
-
-STATIC_PATHS = %w(image javascripts stylesheets favicon.ico sitemap.xsl swf).map { |p| "^/#{p}" }
 
 if development?
   require 'ruby-debug'
