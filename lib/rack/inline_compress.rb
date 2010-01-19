@@ -4,16 +4,14 @@ require 'rainpress'
 
 module Rack
   class InlineCompress < AbstractMiddleware
-    def initialize(app, options)
+    def initialize(app)
       @app = app
-      @ignore = options[:ignore] || []
     end
 
     def call(env)
       super(env)
-      return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
-      if headers['Content-Type'].match(/html/)
+      if html?(headers)
         body.map! do |part|
           returning(Hpricot(part)) do |doc|
             pack(doc)

@@ -24,12 +24,14 @@ EOCODE
       super(env)
       return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
-      body.each do |part|
-        if part =~ /<\/body>/
-          part.sub!(/<\/body>/, "#{tracking_code}</body>")
-          AbstractMiddleware::update_content_length(headers, body)
-          break
+      if html?(headers)
+        body.each do |part|
+          if part =~ /<\/body>/
+            part.sub!(/<\/body>/, "#{tracking_code}</body>")
+            break
+          end
         end
+        AbstractMiddleware::update_content_length(headers, body)
       end
       [status, headers, body]
     end

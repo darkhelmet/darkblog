@@ -9,17 +9,19 @@ module Rack
       super(env)
       t0 = Time.now
       status, headers, body = @app.call(env)
-      body.each do |part|
-        part.gsub!('{{responsetime}}') do
-          diff = Time.now - t0
-          if @format.respond_to? :call
-            @format.call(diff)
-          else
-            @format % diff
+      if html?(headers)
+        body.each do |part|
+          part.gsub!('{{responsetime}}') do
+            diff = Time.now - t0
+            if @format.respond_to? :call
+              @format.call(diff)
+            else
+              @format % diff
+            end
           end
         end
+        AbstractMiddleware::update_content_length(headers, body)
       end
-      AbstractMiddleware::update_content_length(headers, body)
       [status, headers, body]
     end
   end

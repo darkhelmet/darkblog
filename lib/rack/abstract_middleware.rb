@@ -18,6 +18,10 @@ module Rack
       end
     end
 
+    def html?(headers)
+      headers['Content-Type'].try(:match, /html/)
+    end
+
     def path
       Rack::Utils.unescape(@env['PATH_INFO'])
     end

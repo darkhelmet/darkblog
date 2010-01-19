@@ -9,15 +9,15 @@ module Rack
     def call(env)
       super(env)
       status, headers, body = @app.call(env)
-      unless @ignore.any? { |url| env['PATH_INFO'].match(url) }
+      if html?(headers)
         body.each do |part|
           if part =~ /<\/body>/
             part.sub!(/<\/body>/, "#{code}</body>")
             break
           end
         end
+        AbstractMiddleware::update_content_length(headers, body)
       end
-      AbstractMiddleware::update_content_length(headers, body)
       [status, headers, body]
     end
 

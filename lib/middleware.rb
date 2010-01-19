@@ -6,6 +6,6 @@ use Rack::Head
 use Rack::ETag
 use Rack::StaticCache, :root => 'public', :compress => true if production?
 use Rack::ResponseTimeInjector, :format => '%.3f'
-use Rack::InlineCompress, :ignore => ['/feed'] if production?
+use Rack::InlineCompress if production?
 use Rack::GoogleAnalytics, Blog.google_analytics, :ignore => ignore if production?
 use Rack::Tweetboard, Blog.twitter, :ignore => ignore
