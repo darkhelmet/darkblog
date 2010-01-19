@@ -36,7 +36,8 @@ configure do
                         :fogbugz_area => ENV['BLOG_FOGBUZ_AREA'] || 'Blog',
                         :yahoo_api_key => ENV['BLOG_YAHOO_API_KEY'] || nil,
                         :zemanta_api_key => ENV['BLOG_ZEMANTA_API_KEY'] || nil,
-                        :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/')
+                        :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/',
+                        :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4')
 end
 
 configure :production do
