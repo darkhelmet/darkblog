@@ -24,11 +24,11 @@ require 'sinatra/authorization'
   require "rack/#{ext}"
 end
 
-require 'monkey_patch'
-
 %w(view_helpers utilities caching test).each do |helper|
   require "blog_helper/#{helper}"
 end
+
+require 'monkey_patch'
 
 if development?
   require 'ruby-debug'
