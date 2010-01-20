@@ -1,6 +1,6 @@
 %title= h(title)
 %link{ :rel => 'index', :title => Blog.title, :href => Blog.index }
-= meta_tag('text/html; charset=UTF-8', 'http-equiv' => 'Content-Type')
+= meta_tag('text/html; charset=utf-8', 'http-equiv' => 'Content-Type')
 = meta_tag(Blog.tagline, :name => 'description')
 - unless keywords_post.nil?
   = meta_tag(keywords_post.keywords.join(','), :name => 'keywords')
