@@ -7,7 +7,7 @@ module Rack
     def initialize(app, options = { })
       @app = app
       @file_server = Rack::File.new(options[:root] || Dir.pwd)
-      @cache_duration = options[:duration] || 365
+      @cache_duration = options[:duration] || 60
       @compress = options[:compress] || false
     end
 
