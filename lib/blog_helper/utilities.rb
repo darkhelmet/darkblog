@@ -15,7 +15,6 @@ module BlogHelper
     def setup_top_panel
       unless user_agent?(/google/i)
         @repos = Cache.get('github', 1.day) { Social.repositories(Blog.github) }
-        @bookmarks = Cache.get('delicious', 1.day) { Social.bookmarks(Blog.delicious_user, Blog.delicious_password) }
         @shared_items = Cache.get('reader', 1.day) { Social.shared_items(Blog.reader_id) }
       end
     end

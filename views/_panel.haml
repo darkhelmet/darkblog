@@ -2,20 +2,13 @@
   #panel
     .container_12
       #toppanel-extras.grid_12
-        .grid_4.left.alpha
-          %h2.center What I'm Keeping
-          - if @bookmarks
-            %ul
-              - @bookmarks.each do |b|
-                %li= delicious(b)
-              %li= delicious_link
-        .grid_4.left
+        .grid_6.left.alpha
           %h2.center What I'm Reading
           - if @shared_items
             %ul
               - @shared_items.each do |s|
                 %li= reader(s)
-        .grid_4.left.omega
+        .grid_6.left.omega
           %h2.center What I'm Hacking
           - if @repos
             %ul
