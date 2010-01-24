@@ -114,7 +114,7 @@ class Uploader
           pp upload(path)
         end
 
-        img.thumbnail(600) do |med|
+        img.thumbnail(300) do |med|
           path = "#{basename}_medium#{ext}"
           med.save(path)
           pp upload(path)
