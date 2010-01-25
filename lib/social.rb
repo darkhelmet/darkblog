@@ -9,10 +9,9 @@ class Social
     # @param [String] username The Github username
     # @param [Float] prob The probability of including any given repository
     # @return [Array] An array of Hashie::Mash object of all the repositories the user has that made the cut
-    def repositories(username, max = 12)
-      resp = RestClient.get("http://github.com/api/v1/json/#{username}")
-      resp = Hashie::Mash.new(Crack::JSON.parse(resp))
-      resp.user.repositories.reject { |r| r.fork }.sort_by { rand }[0,max]
+    def repositories(username, num = 12)
+      resp = Hashie::Mash.new(Crack::JSON.parse(RestClient.get("http://github.com/api/v1/json/#{username}")))
+      resp.user.repositories.reject { |r| r.fork }.sort_by { rand }[0,num]
     end
 
     # Gets shared Google Reader items for an id
