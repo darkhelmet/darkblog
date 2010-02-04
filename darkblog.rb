@@ -4,7 +4,14 @@ $KCODE = 'u' if RUBY_VERSION.match(/1\.8/)
 
 $: << File.expand_path(File.join('.', 'lib'))
 
-require File.join(File.dirname(__FILE__), 'vendor/gems/environment')
+begin
+  require File.join(File.dirname(__FILE__), 'vendor/gems/environment')
+rescue LoadError
+  require 'rubygems'
+  require 'bundler'
+  Bundler.setup
+end
+
 require 'sinatra'
 Bundler.require_env
 require 'blog_helper'
