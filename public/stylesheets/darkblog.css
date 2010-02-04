@@ -77,6 +77,14 @@ a:hover {
   background-color: #7da5a5;
   color: #593202;
   font-size: 14px;
+  margin-bottom: 20px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.content:last-child {
+  margin-bottom: 0px;
 }
 
 .content a {
@@ -306,6 +314,10 @@ pre {
 
 .sidebar-item .gravatar {
   margin: 5px auto;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  margin-left: 0px;
 }
 
 .where {
@@ -328,5 +340,5 @@ pre {
 }
 
 .pagination {
-  margin-bottom: 15px;
+  margin: 10px 0px;
 }

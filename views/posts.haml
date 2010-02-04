@@ -17,7 +17,7 @@
             - related_posts.each do |post|
               %li= link_to(h(post.title), post.permalink)
 
-  - unless request.xhr?
+  - unless request.xhr? || 1 == @posts.total_pages
     = partial(:pagination)
 - else
   = partial(:not_found)
