@@ -22,7 +22,7 @@ require 'tzinfo'
 require 'sinatra/authorization'
 require 'sinatra/bundles'
 
-%w(etag head static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard).each do |ext|
+%w(etag head static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard typekit).each do |ext|
   require "rack/#{ext}"
 end
 

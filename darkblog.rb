@@ -14,7 +14,7 @@ Bundler.require_env
 require 'blog_helper'
 
 configure do
-  Blog = OpenStruct.new(:title => ENV['BLOG_TITLE'] || 'verbose logging',
+  Blog = OpenStruct.new(:title => ENV['BLOG_TITLE'] || 'Verbose Logging',
                         :tagline => ENV['BLOG_TAGLINE'] || 'programming, software development, and code',
                         :index => ENV['BLOG_INDEX'] || 'http://localhost:8080/',
                         :host => ENV['BLOG_HOST'] || 'blog.darkhax.com',
@@ -41,7 +41,8 @@ configure do
                         :yahoo_api_key => ENV['BLOG_YAHOO_API_KEY'] || nil,
                         :zemanta_api_key => ENV['BLOG_ZEMANTA_API_KEY'] || nil,
                         :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/',
-                        :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4')
+                        :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4',
+                        :typekit_id => ENV['BLOG_TYPEKIT_ID'] || 'lml6ico')
 end
 
 configure :production do

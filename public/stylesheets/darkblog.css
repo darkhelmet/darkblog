@@ -160,8 +160,12 @@ hr.end {
   margin-bottom: 5px;
 }
 
-#top-title h1 {
+h1#title {
   margin-bottom: 0px;
+}
+
+h1#title a:hover {
+  text-decoration: none;
 }
 
 .date {
