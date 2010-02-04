@@ -17,8 +17,10 @@ require 'ostruct'
 require 'bugzscout'
 require 'social'
 require 'archive_date'
+require 'tzinfo'
 
 require 'sinatra/authorization'
+require 'sinatra/bundles'
 
 %w(etag head static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard).each do |ext|
   require "rack/#{ext}"
@@ -31,7 +33,10 @@ end
 require 'monkey_patch'
 
 if development?
-  require 'ruby-debug'
+  begin
+    require 'ruby-debug'
+  rescue LoadError
+  end
   ActiveRecord::Base.logger = Logger.new(STDOUT)
 end
 

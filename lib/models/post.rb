@@ -1,4 +1,6 @@
 require 'term_extraction'
+require 'sanitize'
+require 'RedCloth'
 
 class Post < ActiveRecord::Base
   has_many :redirections, :dependent => :destroy

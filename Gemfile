@@ -1,9 +1,10 @@
 source 'http://gemcutter.org'
 
 gem 'rack', '1.1.0'
-gem 'sinatra', '1.0.a'
+gem 'sinatra', '1.0.a', :require_as => 'sinatra/base'
 gem 'haml'
 gem 'builder'
+gem 'i18n'
 gem 'activerecord', '2.3.5', :require_as => 'active_record'
 gem 'activesupport', '2.3.5', :require_as => 'active_support'
 gem 'sinatra-bundles', :require_as => 'sinatra/bundles'

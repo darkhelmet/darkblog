@@ -1,3 +1,4 @@
+require 'active_record'
 require 'texticle'
 
 ActiveRecord::Base.extend(Texticle)
