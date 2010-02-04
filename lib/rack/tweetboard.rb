@@ -8,6 +8,7 @@ module Rack
 
     def call(env)
       super(env)
+      return @app.call(env) if @ignore.any? { |url| path.match(url) }
       status, headers, body = @app.call(env)
       if html?(headers)
         body.each do |part|
