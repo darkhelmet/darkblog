@@ -350,3 +350,7 @@ pre {
 .pagination {
   margin: 10px 0px;
 }
+
+#bio {
+  font-size: 12px;
+}
