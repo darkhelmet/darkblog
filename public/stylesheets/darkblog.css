@@ -177,6 +177,10 @@ h1#title a:hover {
   margin-bottom: 0px;
 }
 
+.leftbar p {
+  font-size: 12px;
+}
+
 #toppanel-extras ul {
   list-style-type: square;
 }
