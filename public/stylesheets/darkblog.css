@@ -278,9 +278,24 @@ img.pimg {
   height: 350px;
 }
 
+form#search {
+  height: 15px;
+}
+
 form#search input#query {
-  width: 99%;
+  width: 110px;
   border-width: 1px;
+  padding: 2px 24px 2px 2px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 2px solid white;
+}
+
+form#search input#submit {
+  position: relative;
+  top: -18px;
+  left: 118px;
 }
 
 .sidebar-item {
