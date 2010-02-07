@@ -6,8 +6,7 @@
 # Copyright:: Copyright (c) 2009 Michael Gorsuch
 # License:: Distributed under the same terms as Ruby
 
-require 'rubygems'
-require 'httpclient'
+require 'restclient'
 require 'uri'
 
 module FogBugz
@@ -39,8 +38,8 @@ module FogBugz
         :ScoutDefaultMessage => "",
         :FriendlyResponse => 0
       }
-      client = HTTPClient.new
-      response = client.post(url, body).content
+
+      response = RestClient.post(url, body)
 
       if response =~ /<Error>(.*)<\/Error>/
         # if we see an error response, we know that we fudged some of our input values to BugzScout

@@ -17,7 +17,6 @@ require 'ostruct'
 require 'bugzscout'
 require 'social'
 require 'archive_date'
-require 'tzinfo'
 
 require 'sinatra/authorization'
 require 'sinatra/bundles'
