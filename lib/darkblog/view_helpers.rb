@@ -1,4 +1,4 @@
-module BlogHelper
+class Darkblog < Sinatra::Base
   # View related helpers
   module ViewHelpers
     def minimal_sidebar(on = nil)
@@ -233,4 +233,6 @@ module BlogHelper
       end
     end
   end
+
+  helpers(ViewHelpers)
 end

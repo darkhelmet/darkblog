@@ -1,4 +1,4 @@
-module BlogHelper
+class Darkblog < Sinatra::Base
   module Utilities
     def sharing(on = nil)
       @sharing ||= on
@@ -46,4 +46,6 @@ module BlogHelper
       Cache.get("twitter:status:#{id}", 1.year) { Social.tweet(id, Blog.twitter, Blog.twitter_password) }
     end
   end
+
+  helpers(Utilities)
 end

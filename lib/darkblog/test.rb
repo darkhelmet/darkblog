@@ -1,4 +1,4 @@
-module BlogHelper
+class Darkblog < Sinatra::Base
   module Test
     def good_get(*args)
       get(*args)
@@ -10,4 +10,6 @@ module BlogHelper
       last_response.should_not be_ok
     end
   end
+
+  helpers(Test)
 end

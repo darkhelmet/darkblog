@@ -27,17 +27,19 @@ require 'sinatra/bundles'
 end
 
 %w(view_helpers utilities caching test).each do |helper|
-  require "blog_helper/#{helper}"
+  require "darkblog/#{helper}"
 end
 
 require 'monkey_patch'
 
-if development?
-  begin
-    require 'ruby-debug'
-  rescue LoadError
+class Darkblog < Sinatra::Base
+  if development?
+    begin
+      require 'ruby-debug'
+    rescue LoadError
+    end
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
-  ActiveRecord::Base.logger = Logger.new(STDOUT)
 end
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
