@@ -286,9 +286,9 @@ form#search input#query {
   width: 110px;
   border-width: 1px;
   padding: 2px 24px 2px 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
   border: 2px solid white;
 }
 
