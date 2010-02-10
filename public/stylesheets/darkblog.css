@@ -304,6 +304,9 @@ form#search input#submit {
 
 blockquote {
   margin-bottom: 20px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 blockquote > p {
