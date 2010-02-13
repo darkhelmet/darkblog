@@ -1,3 +1,5 @@
+require 'rack'
+
 class String
   # Encodes the string for use in a URL
   #

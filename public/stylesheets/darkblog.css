@@ -372,3 +372,7 @@ pre {
 #bio {
   font-size: 12px;
 }
+
+.entry > object, .entry > embed {
+    margin-bottom: 20px;
+}
