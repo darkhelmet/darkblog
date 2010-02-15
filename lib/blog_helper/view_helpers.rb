@@ -21,7 +21,7 @@ module BlogHelper
       content_tag(:a, text, options.merge(:href => href))
     end
 
-    def meta_tag(content, options)
+    def meta_tag(content, options = { })
       tag(:meta, options.merge(:content => content))
     end
 
@@ -31,6 +31,18 @@ module BlogHelper
         javascript = "/javascripts/#{javascript}.js"
       end
       tag(:script, :src => javascript, :type => 'text/javascript')
+    end
+
+    def javascript_include_tags(*scripts)
+      scripts.map do |script|
+        javascript_include_tag(script)
+      end.join("\n")
+    end
+
+    def stylesheet_link_tags(*sheets)
+      sheets.map do |sheet|
+        stylesheet_link_tag(sheet)
+      end.join("\n")
     end
 
     def stylesheet_link_tag(stylesheet, media = 'screen')

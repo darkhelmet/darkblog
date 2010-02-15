@@ -10,8 +10,8 @@
 = stylesheet_bundle_link_tag(:all)
 
 - if env['REQUEST_PATH'] =~ %r{/(edit|posts)$}
-  = stylesheet_link_tag(*%w(markitup/style markitup/set))
-  = javascript_include_tag(*%w(jquery.markitup set))
+  = stylesheet_link_tags(*%w(markitup/style markitup/set))
+  = javascript_include_tags(*%w(jquery.markitup set))
   :javascript
     $(document).ready(function() { $('textarea').markItUp(mySettings); });
 
