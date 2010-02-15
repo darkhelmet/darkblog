@@ -4,18 +4,23 @@ $KCODE = 'u' if RUBY_VERSION.match(/1\.8/)
 
 $: << File.expand_path(File.join('.', 'lib'))
 
-begin
-  # Require the preresolved locked set of gems.
-  require File.expand_path('../.bundle/environment', __FILE__)
-rescue LoadError
-  # Fallback on doing the resolve at runtime.
-  require 'rubygems'
-  require 'bundler'
-  Bundler.setup
-end
+# begin
+#   # Require the preresolved locked set of gems.
+#   require File.expand_path('../.bundle/environment', __FILE__)
+# rescue LoadError
+#   # Fallback on doing the resolve at runtime.
+#   require 'rubygems'
+#   require 'bundler'
+#   Bundler.setup
+# end
+#
+# require 'sinatra'
+# Bundler.require
 
+# Bundler 0.8
+require File.join(File.dirname(__FILE__), 'vendor/gems/environment')
 require 'sinatra'
-Bundler.require
+Bundler.require_env
 
 require 'blog_helper'
 
