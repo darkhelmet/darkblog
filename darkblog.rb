@@ -26,7 +26,7 @@ require 'blog_helper'
 
 configure do
   Blog = OpenStruct.new(:title => ENV['BLOG_TITLE'] || 'Verbose Logging',
-                        :tagline => ENV['BLOG_TAGLINE'] || 'programming, software development, and code',
+                        :tagline => ENV['BLOG_TAGLINE'] || 'software development with some really amazing hair',
                         :index => ENV['BLOG_INDEX'] || 'http://localhost:8080/',
                         :host => ENV['BLOG_HOST'] || 'blog.darkhax.com',
                         :email => ENV['BLOG_EMAIL'] || 'darkhelmet@darkhelmetlive.com',
