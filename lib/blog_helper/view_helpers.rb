@@ -54,6 +54,9 @@ module BlogHelper
     end
 
     def image_tag(image, options = { })
+      unless image.match(/^\//)
+        image = "/images/#{image}"
+      end
       tag(:img, options.merge(:src => image.to_s))
     end
 
@@ -226,7 +229,7 @@ module BlogHelper
 
     def where_link(k)
       item = Social.where[k]
-      link_to(image_tag("/images/icons/#{k}.png",
+      link_to(image_tag("icons/#{k}.png",
                         :class => 'where',
                         :alt => item.title),
               item.link,
