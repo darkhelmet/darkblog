@@ -88,7 +88,7 @@ module BlogHelper
     # @param [Integer] size The size of the image
     # @return [String] The url to the Gravatar png image
     def gravatar_url(email, size = 120)
-      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.jpg?s=#{size}"
+      "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png?s=#{size}"
     end
 
     # Get the Gravatar HTML for the value of Blog.email
