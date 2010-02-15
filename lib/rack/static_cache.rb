@@ -29,11 +29,11 @@ module Rack
     def compress(body, headers)
       case ::File.extname(body.path)
       when '.css'
-        pack(headers, body) do |path|
+        pack(body, headers) do |path|
           Rainpress.compress(::File.read(path))
         end
       when '.js'
-        pack(headers, body) do |path|
+        pack(body, headers) do |path|
           Packr.pack(::File.read(path))
         end
       else
@@ -41,7 +41,7 @@ module Rack
       end
     end
 
-    def pack(headers, body)
+    def pack(body, headers)
       returning([]) do |bd|
         bd << yield(body.path)
         AbstractMiddleware::update_content_length(headers, bd)

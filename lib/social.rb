@@ -1,4 +1,3 @@
-require 'feedzirra'
 require 'hashie'
 
 # Helper class to get certain social web things, like Delicious bookmarks and Twitter stuff
@@ -12,17 +11,6 @@ class Social
     def repositories(username, num = 12)
       resp = Hashie::Mash.new(Crack::JSON.parse(RestClient.get("http://github.com/api/v1/json/#{username}")))
       resp.user.repositories.reject { |r| r.fork }.sort_by { rand }[0,num]
-    end
-
-    # Gets shared Google Reader items for an id
-    #
-    # @see http://github.com/pauldix/feedzirra feedzirra gem
-    # @param [Integer] id The id of the Google Reader feed
-    # @param [Integer] num The max number of items to include
-    # @return [Array] An array of Feedzirra items
-    def shared_items(id, num = 13)
-      url = "http://www.google.com/reader/public/atom/user/#{id}/state/com.google/broadcast"
-      Feedzirra::Feed.fetch_and_parse(url).entries[0,num]
     end
 
     # Gets a single tweet using authentication for rate limit purposes

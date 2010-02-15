@@ -23,31 +23,9 @@ module BlogHelper
       end
     end
 
-    # Turns a Delicious bookmark into a link for insertion into the page
-    #
-    # @see http://github.com/weppos/www-delicious www-delicious gem
-    # @param [WWW::Delicious::Post] b A bookmark/post from the www-delicious gem
-    # @return [String] HTML link to the bookmark
-    def delicious(b)
-      link_to(h(b.description), b.href)
-    end
-
-    # Get the link to the author's Delicious profile and to add to your network
-    #
-    # @return [String] The HTML insertion-ready string with the relevant links
-    def delicious_link
-      profile_link = link_to(Blog.delicious_user, "http://delicious.com/#{Blog.delicious_user}")
-      add_link = link_to('Add me to your network', "http://delicious.com/network?add=#{Blog.delicious_user}")
-      "I'm #{profile_link} on Delicious.<br />#{add_link}"
-    end
-
-    # Turns a shared RSS item into a link for insertion into the page
-    #
-    # @see http://github.com/pauldix/feedzirra feedzirra gem
-    # @param [Object] item An RSS item from the Feedzirra gem
-    # @return [String] HTML link to the shared item
-    def reader(item)
-      link_to(h(item.title), item.url)
+    # TODO: pull out title to param
+    def reader_widget_tag(num = 6)
+      javascript_include_tag("http://www.google.com/reader/public/javascript/user/#{Blog.reader_id}/state/com.google/broadcast?n=#{num}&callback=GRC_p(%7Bc%3A%22-%22%2Ct%3A%22darkhelmetlive%5C's%20shared%20items%22%2Cs%3A%22true%22%2Cn%3A%22true%22%2Cb%3A%22false%22%7D)%3Bnew%20GRC")
     end
 
     # Turns a Github repo from the Github API into a link to it

@@ -1,7 +1,18 @@
 require 'active_record'
+
+if development?
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+end
+
 require 'texticle'
 
 ActiveRecord::Base.extend(Texticle)
+
+require 'acts_as_taggable_on_steroids'
+require 'tag'
+require 'tag_list'
+require 'tagging'
+require 'tags_helper'
 
 %w(post cache redirection keyword keywording).each do |model|
   require "models/#{model}"

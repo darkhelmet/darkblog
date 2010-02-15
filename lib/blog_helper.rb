@@ -7,12 +7,6 @@ require 'will_paginate/finders/active_record'
 require 'will_paginate/view_helpers/base'
 require 'will_paginate/view_helpers/link_renderer'
 
-require 'acts_as_taggable_on_steroids'
-require 'tag'
-require 'tag_list'
-require 'tagging'
-require 'tags_helper'
-
 require 'ostruct'
 require 'bugzscout'
 require 'social'
@@ -37,7 +31,6 @@ if development?
     require 'ruby-debug'
   rescue LoadError
   end
-  ActiveRecord::Base.logger = Logger.new(STDOUT)
 end
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do

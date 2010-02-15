@@ -1,5 +1,4 @@
 require 'term_extraction'
-require 'sanitize'
 require 'RedCloth'
 
 class Post < ActiveRecord::Base
@@ -46,7 +45,7 @@ class Post < ActiveRecord::Base
   end
 
   def body_clean
-    Sanitize.clean(body_html)
+    Hpricot(body_html).innerText
   end
 
   def published_on_local

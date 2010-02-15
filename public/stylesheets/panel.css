@@ -123,10 +123,14 @@ Version: 1.0
 	margin: 0;
 }
 
-#panel h2{
+#panel h2 {
 	font-size: 1.2em;
 	padding: 10px 0 5px;
 	margin: 0;
+}
+
+#panel h3 {
+    display: none;
 }
 
 #panel p {
