@@ -1,4 +1,4 @@
-%w(markup render routing).each do |plugin|
+%w(render routing).each do |plugin|
   require "sinatra/#{plugin}_plugin"
 end
 

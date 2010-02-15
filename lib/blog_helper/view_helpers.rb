@@ -1,6 +1,50 @@
 module BlogHelper
   # View related helpers
   module ViewHelpers
+    def content_tag(tag, *args)
+      content = block_given? ? yield : args.shift
+      options = args.shift || { }
+      builder do |xml|
+        if options.delete(:no_escape)
+          xml.tag!(tag, options) { |tag| tag << content }
+        else
+          xml.tag!(tag, content, options)
+        end
+      end
+    end
+
+    def tag(tag, options = { })
+      content_tag(tag, '', options)
+    end
+
+    def link_to(text, href, options = { })
+      content_tag(:a, text, options.merge(:href => href))
+    end
+
+    def meta_tag(content, options)
+      tag(:meta, options.merge(:content => content))
+    end
+
+    def javascript_include_tag(javascript)
+      javascript = javascript.to_s
+      unless javascript.match(/^http/)
+        javascript = "/javascripts/#{javascript}.js"
+      end
+      tag(:script, :src => javascript, :type => 'text/javascript')
+    end
+
+    def stylesheet_link_tag(stylesheet, media = 'screen')
+      stylesheet = stylesheet.to_s
+      unless stylesheet.match(/^http/)
+        stylesheet = "/stylesheets/#{stylesheet}.css"
+      end
+      tag(:link, :href => stylesheet, :type => 'text/css', :rel => 'stylesheet', :media => media)
+    end
+
+    def image_tag(image, options = { })
+      tag(:img, options.merge(:src => image.to_s))
+    end
+
     def minimal_sidebar(on = nil)
       if on.nil?
         @minimal_sidebar || false
@@ -18,9 +62,7 @@ module BlogHelper
     end
 
     def cached_partial(key, time = 1.hour)
-      Cache.get("#{key}_partial", time) do
-        partial(key)
-      end
+      Cache.get("#{key}_partial", time) { partial(key) }
     end
 
     # TODO: pull out title to param
@@ -33,7 +75,7 @@ module BlogHelper
     # @param [Hashie::Mash] r A repository
     # @return [String] HTML link to the Github repo
     def repo(r)
-      link_to(h(r.name), r.url, :title => h(r.description), :class => 'github')
+      link_to(r.name, r.url, :title => h(r.description), :class => 'github')
     end
 
     # Get the author's Github profile link
@@ -103,7 +145,7 @@ module BlogHelper
       }.to_a.map do |key,value|
         "#{key.to_s.gsub('_', '-')}:#{value}"
       end.join(';')
-      content_tag(:div, '', :class => 'gravatar', :style => style)
+      tag(:div, :class => 'gravatar', :style => style)
     end
 
     # Generate a link to a tag
@@ -113,7 +155,7 @@ module BlogHelper
     # @return [String] A partial that can be fed to HAML using {#partial}
     def tag_link(tag, css = '')
       tag = tag.to_s
-      link_to(h(tag), "/tag/#{tag.url_encode}", :rel => 'tag', :class => css)
+      link_to(tag, "/tag/#{tag.url_encode}", :rel => 'tag', :class => css)
     end
 
     # Creates the HTML links for all the tags in a post
@@ -141,7 +183,7 @@ module BlogHelper
     end
 
     def category_link(cat)
-      link_to(h(cat.capitalize), "/category/#{cat.url_encode}")
+      link_to(cat.capitalize, "/category/#{cat.url_encode}")
     end
 
     def archive_link(date)
@@ -172,11 +214,16 @@ module BlogHelper
 
     def where_link(k)
       item = Social.where[k]
-      link_to(image_tag("/images/icons/#{k}.png", :class => 'where', :alt => item.title), item.link, :title => item.title)
+      link_to(image_tag("/images/icons/#{k}.png",
+                        :class => 'where',
+                        :alt => item.title),
+              item.link,
+              :title => item.title,
+              :no_escape => true)
     end
 
     def delete_link(url)
-      content_tag(:a, 'delete', :href => "javascript:if (confirm('Really delete this?')) {
+      link_to('delete', "javascript:if (confirm('Really delete this?')) {
   $.ajax({
     url: '#{url}',
     dataType: 'script',
@@ -206,8 +253,8 @@ module BlogHelper
     end
 
     def post_title_link(post)
-      content_tag(:h1, :class => 'post-title') do
-        link_to(h(post.title), post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}")
+      content_tag(:h1, :class => 'post-title', :no_escape => true) do
+        link_to(post.title, post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}")
       end
     end
   end
