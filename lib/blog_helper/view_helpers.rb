@@ -95,7 +95,7 @@ module BlogHelper
     #
     # @param [Integer] size The size of the image
     # @return [String] The HTML for the document
-    def gravatar_html(size = 120)
+    def gravatar_html(size = 140)
       style = {
         :height => "#{size}px",
         :width => "#{size}px",
