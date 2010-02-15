@@ -87,7 +87,7 @@ module BlogHelper
     # @param [String] email The email to use
     # @param [Integer] size The size of the image
     # @return [String] The url to the Gravatar png image
-    def gravatar_url(email, size = 120)
+    def gravatar_url(email, size = 140)
       "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.png?s=#{size}"
     end
 
@@ -101,7 +101,7 @@ module BlogHelper
         :width => "#{size}px",
         :background_image => "url(#{gravatar_url(Blog.email, size)})"
       }.to_a.map do |key,value|
-        "#{key.to_s.gsub('_', '-')}: #{value}"
+        "#{key.to_s.gsub('_', '-')}:#{value}"
       end.join(';')
       content_tag(:div, '', :class => 'gravatar', :style => style)
     end
