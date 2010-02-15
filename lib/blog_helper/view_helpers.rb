@@ -27,7 +27,7 @@ module BlogHelper
 
     def javascript_include_tag(javascript)
       javascript = javascript.to_s
-      unless javascript.match(/^http/)
+      unless javascript.match(/^(\/|http)/)
         javascript = "/javascripts/#{javascript}.js"
       end
       tag(:script, :src => javascript, :type => 'text/javascript')
@@ -47,14 +47,14 @@ module BlogHelper
 
     def stylesheet_link_tag(stylesheet, media = 'screen')
       stylesheet = stylesheet.to_s
-      unless stylesheet.match(/^http/)
+      unless stylesheet.match(/^(\/|http)/)
         stylesheet = "/stylesheets/#{stylesheet}.css"
       end
       tag(:link, :href => stylesheet, :type => 'text/css', :rel => 'stylesheet', :media => media)
     end
 
     def image_tag(image, options = { })
-      unless image.match(/^\//)
+      unless image.match(/^(\/|http)/)
         image = "/images/#{image}"
       end
       tag(:img, options.merge(:src => image.to_s))

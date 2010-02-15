@@ -2,11 +2,9 @@
   %div{ :style => 'height: 10px;' }
   .center
     %p
-      %span{ 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/', :href => 'http://purl.org/dc/dcmitype/Text', :property => 'dc:title', :rel => 'dc:type' } verbose logging
-      by
-      = link_to('Daniel Huckstep', 'http://darkhax.com/', 'xmlns:cc' => 'http://creativecommons.org/ns#', :property => 'cc:attributionName', :rel => 'cc:attributionURL')
-      is licensed under a
-      = link_to('Creative Commons Attribution-Share Alike 2.5 Canada License', 'http://creativecommons.org/licenses/by-sa/2.5/ca/', :rel => 'license')
+      = link_to(image_tag('http://i.creativecommons.org/l/by-sa/2.5/ca/80x15.png', :alt => 'Creative Commons License'), 'http://creativecommons.org/licenses/by-sa/2.5/ca/', :no_escape => true, :rel => 'license')
+      This work is licensed under a
+      = link_to('Creative Commons Licence', 'http://creativecommons.org/licenses/by-sa/2.5/ca/')
       |
       = link_to('Disclaimer', '/disclaimer')
       |
