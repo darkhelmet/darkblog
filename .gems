@@ -4,7 +4,7 @@ haml --version 2.2.19
 builder --version 2.1.2
 activesupport --version 2.3.5
 activerecord --version 2.3.5
-sinatra-bundles --version
+sinatra-bundles --version 0.1.2
 darkhelmet-sinatra_more --version 0.3.36
 acts_as_taggable_on_steroids --version 1.2
 RedCloth --version 4.2.2
