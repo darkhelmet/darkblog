@@ -69,8 +69,8 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
+a.hover:hover {
+  border-bottom: 1px dotted;
 }
 
 .content {
@@ -100,7 +100,7 @@ a:hover {
 }
 
 .entry a, .dsq-comment-message a, .readmore {
-  text-decoration: underline;
+  border-bottom: 1px dotted;
 }
 
 .content a.hover:hover {
@@ -108,6 +108,8 @@ a:hover {
   -webkit-border-radius: 2px !important;
   border-radius: 2px !important;
   background-color: #252625 !important;
+  border-bottom: 0px;
+  text-decoration: underline;
   color: #a69b03 !important;
 }
 

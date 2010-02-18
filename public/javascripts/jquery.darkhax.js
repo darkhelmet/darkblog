@@ -74,11 +74,9 @@ $(document).ready(function() {
   }).join('&');
   $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
 
-  if (!$.browser.msie) {
-    $('a.github').tooltip();
-  }
+  if (!$.browser.msie) { $('a.github').tooltip(); }
 
-  $('.content a:not(:has(img))').addClass('hover');
+  $('a:not(:has(img))').addClass('hover');
 
   $('#show-tags').click(function() {
     $('.tag1').fadeIn('slow');
@@ -93,9 +91,7 @@ $(document).ready(function() {
       var link = this;
       $.get('/twitter/' + id, null, function(data) {
         $(link).attr('title', data);
-        if (!$.browser.msie) {
-          $(link).tooltip();
-        }
+        if (!$.browser.msie) { $(link).tooltip(); }
       }, 'text');
     }
   });
