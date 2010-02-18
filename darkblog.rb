@@ -17,9 +17,6 @@ end
 require 'sinatra'
 Bundler.require
 
-# require 'rubygems'
-# require 'sinatra'
-
 require 'blog_helper'
 
 configure do
