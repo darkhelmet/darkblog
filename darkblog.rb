@@ -179,6 +179,7 @@ get(:sitemap) do |gzip|
 end
 
 get(:open_search) do
+  content_type('application/opensearchdescription+xml', :charset => 'utf-8')
   builder(:open_search)
 end
 
