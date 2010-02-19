@@ -2,6 +2,8 @@
 %html{ :xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en' }
   %head= partial(:head)
   %body
+    /[if lt IE 7]
+      = partial(:ie6nomore)
     - unless user_agent?(/google/i)
       = partial(:panel)
       .spacer
