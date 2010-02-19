@@ -68,6 +68,10 @@ module BlogHelper
       tag(:img, options.merge(:src => image.to_s))
     end
 
+    def asset_url(path, host = Blog.asset_host)
+      "http://#{host}#{path}"
+    end
+
     def minimal_sidebar(on = nil)
       if on.nil?
         @minimal_sidebar || false
@@ -237,7 +241,7 @@ module BlogHelper
 
     def where_link(k)
       item = Social.where[k]
-      link_to(image_tag("icons/#{k}.png",
+      link_to(image_tag(asset_url("/images/icons/#{k}.png"),
                         :class => 'where',
                         :alt => item.title),
               item.link,

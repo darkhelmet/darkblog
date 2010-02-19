@@ -48,7 +48,8 @@ configure do
                         :zemanta_api_key => ENV['BLOG_ZEMANTA_API_KEY'] || nil,
                         :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/',
                         :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4',
-                        :typekit_id => ENV['BLOG_TYPEKIT_ID'] || 'lml6ico')
+                        :typekit_id => ENV['BLOG_TYPEKIT_ID'] || 'lml6ico',
+                        :asset_host => ENV['BLOG_ASSET_HOST'] || 's3.blog.darkhax.com')
 end
 
 configure :production do
@@ -97,7 +98,7 @@ map(:admin_index).to('/index')
 map(:twitter).to('/twitter/:status')
 
 stylesheet_bundle(:all, %w(darkblog panel))
-javascript_bundle(:all, %w(panel swfobject flowplayer FancyZoom FancyZoomHTML jquery.darkhax))
+javascript_bundle(:all, %w(panel swfobject FancyZoom FancyZoomHTML jquery.darkhax))
 
 # main index with pagination
 get(:index) do |page|
