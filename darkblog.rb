@@ -130,9 +130,13 @@ get(:category) do |category,page|
   page = page.to_i
   setup_top_panel
   @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
-  not_found if @posts.empty?
-  title(category.capitalize, page)
-  haml(:posts)
+  if 1 == @posts.size && 1 == page
+    redirect(@posts.first.permalink, 302)
+  else
+    not_found if @posts.empty?
+    title(category.capitalize, page)
+    haml(:posts)
+  end
 end
 
 # rss feed
@@ -218,9 +222,13 @@ get(:tag) do |tag,page|
   page = page.to_i
   setup_top_panel
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
-  not_found if @posts.empty?
-  title(tag, page)
-  haml(:posts)
+  if 1 == @posts.size && 1 == page
+    redirect(@posts.first.permalink, 302)
+  else
+    not_found if @posts.empty?
+    title(tag, page)
+    haml(:posts)
+  end
 end
 
 # edit post
