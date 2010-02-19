@@ -25,12 +25,20 @@ module BlogHelper
       tag(:meta, options.merge(:content => content))
     end
 
-    def javascript_include_tag(javascript)
+    def javascript_include_tag(javascript, defer = false)
       javascript = javascript.to_s
       unless javascript.match(/^(\/|http)/)
         javascript = "/javascripts/#{javascript}.js"
       end
-      tag(:script, :src => javascript, :type => 'text/javascript')
+      options = {
+        :src => javascript,
+        :type => 'text/javascript'
+      }
+      if defer
+        options[:defer] = true
+        options[:async] = true
+      end
+      tag(:script, options)
     end
 
     def javascript_include_tags(*scripts)
@@ -82,7 +90,7 @@ module BlogHelper
 
     # TODO: pull out title to param
     def reader_widget_tag(num = 6)
-      javascript_include_tag("http://www.google.com/reader/public/javascript/user/#{Blog.reader_id}/state/com.google/broadcast?n=#{num}&callback=GRC_p(%7Bc%3A%22-%22%2Ct%3A%22darkhelmetlive%5C's%20shared%20items%22%2Cs%3A%22true%22%2Cn%3A%22true%22%2Cb%3A%22false%22%7D)%3Bnew%20GRC")
+      javascript_include_tag("http://www.google.com/reader/public/javascript/user/#{Blog.reader_id}/state/com.google/broadcast?n=#{num}&callback=GRC_p(%7Bc%3A%22-%22%2Ct%3A%22darkhelmetlive%5C's%20shared%20items%22%2Cs%3A%22true%22%2Cn%3A%22true%22%2Cb%3A%22false%22%7D)%3Bnew%20GRC", true)
     end
 
     # Turns a Github repo from the Github API into a link to it

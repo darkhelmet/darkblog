@@ -237,6 +237,10 @@ blockquote {
   margin: 0px;
 }
 
+#footer > .spacer {
+  height: 10px;
+}
+
 img.pimg {
   width: 100%;
 }
