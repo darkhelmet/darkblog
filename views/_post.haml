@@ -10,17 +10,7 @@
       .entry= post.body_html
       - if sharing && !request.xhr?
         .spacer
-        .addthis_toolbox.addthis_default_style
-          %a.addthis_button_twitter
-          %a.addthis_button_slashdot
-          %a.addthis_button_digg
-          %a.addthis_button_hackernews
-          %a.addthis_button_reddit
-          %a.addthis_button_linkedin
-          %a.addthis_button_delicious
-          %span.addthis_separator |
-          = link_to('Share', 'http://www.addthis.com/bookmark.php?v=250&amp;username=darkhelmetlive', :class => 'addthis_button_compact')
-        = javascript_include_tag('http://s7.addthis.com/js/250/addthis_widget.js#username=darkhelmetlive')
+        = partial(:add_to_any)
       - unless request.xhr? || user_agent?(/thunderbird/i)
         .spacer
         = partial(disqus_part, :locals => { :post => post })
