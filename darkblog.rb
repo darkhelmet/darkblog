@@ -85,6 +85,7 @@ map(:monthly).to(%r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|)
 map(:category).to(%r|^/category/(\w+)(?:/page/(\d+))?$|)
 map(:feed).to(%r|^/feed.*|)
 map(:sitemap).to(%r|^/sitemap.xml(.gz)?$|)
+map(:open_search).to('/opensearch.xml')
 map(:google).to('/google-search')
 map(:permalink).to(%r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)$|)
 map(:short_permalink).to(%r|^/([\w\d\-+ ]+)$|)
@@ -175,6 +176,10 @@ get(:sitemap) do |gzip|
   @posts = Post.published
   content_type('application/xml', :charset => 'utf-8')
   builder(:sitemap)
+end
+
+get(:open_search) do
+  builder(:open_search)
 end
 
 # google search
