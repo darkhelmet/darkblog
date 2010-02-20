@@ -48,6 +48,10 @@ body{font:13px/1.5 Helvetica,Arial,'Liberation Sans',FreeSans,sans-serif}a:focus
   text-align: center;
 }
 
+.mcenter {
+  margin: 0px auto;
+}
+
 .showgrid {
   background: #fff url(/images/12_col.gif) repeat-y;
 }
