@@ -191,7 +191,7 @@ get(:google) do
 end
 
 # information pages
-%w(about contact disclaimer).each do |page|
+%w(about contact disclaimer talks).each do |page|
   get("/#{page}") do
     minimal_sidebar(true)
     setup_top_panel
