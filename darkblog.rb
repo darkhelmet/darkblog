@@ -110,7 +110,7 @@ map(:admin_index).to('/index')
 map(:twitter).to('/twitter/:status')
 
 stylesheet_bundle(:all, %w(panel darkblog))
-javascript_bundle(:all, %w(panel swfobject FancyZoom FancyZoomHTML jaml underscore darkblog))
+javascript_bundle(:all, %w(panel swfobject FancyZoom FancyZoomHTML underscore darkblog))
 
 # main index with pagination
 get(:index) do |page|
