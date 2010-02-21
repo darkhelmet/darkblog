@@ -17,7 +17,7 @@ function GithubBadge(json) {
     var badge = new Object();
     badge['username'] = json.user.login;
     badge['repos'] = _.select(json.user.repositories, function(r) {
-      return !r.fork;
+      return !r.fork && '' != r.description;
     }).sort(function() {
       return (Math.round(Math.random())-0.5);
     }).slice(0, 12);
