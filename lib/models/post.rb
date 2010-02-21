@@ -1,5 +1,7 @@
 require 'term_extraction'
 require 'RedCloth'
+require 'hpricot'
+require 'sanitize'
 
 class Post < ActiveRecord::Base
   has_many :redirections, :dependent => :destroy
@@ -45,7 +47,7 @@ class Post < ActiveRecord::Base
   end
 
   def body_clean
-    Hpricot(body_html).innerText
+    Sanitize.clean(body_html)
   end
 
   def published_on_local

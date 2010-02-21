@@ -25,3 +25,15 @@ DB_CONFIG_FILE = File.expand_path(File.join(File.dirname(__FILE__), '..', 'confi
 DB_CONFIG = YAML.load_file(DB_CONFIG_FILE)
 ActiveRecord::Base.establish_connection(DB_CONFIG[RACK_ENV])
 ActiveRecord::Base.default_timezone = :utc
+
+ActiveRecord::Base.send(:subclasses).each do |klass|
+  klass.columns_hash.each do |column_name,column|
+    if [:string, :text].include?(column.type)
+      klass.send(:define_method, column_name) do
+        returning(read_attribute(column_name)) do |value|
+          value.force_encoding('utf-8') if value.respond_to?(:force_encoding)
+        end
+      end
+    end
+  end
+end

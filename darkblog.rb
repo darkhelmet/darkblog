@@ -1,6 +1,14 @@
 #!/usr/bin/env ruby
 
-$KCODE = 'u' if RUBY_VERSION.match(/1\.8/)
+E = 'utf-8'
+
+case RUBY_VERSION
+when /1\.8/
+  $KCODE = E
+when /1\.9/
+  Encoding.default_external = E
+  Encoding.default_internal = E
+end
 
 $: << File.expand_path(File.join('.', 'lib'))
 
