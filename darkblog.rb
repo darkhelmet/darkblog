@@ -47,7 +47,6 @@ configure do
                         :twitter_password => ENV['BLOG_TWITTER_PASSWORD'] || 'secret',
                         :delicious_user => ENV['BLOG_DELICIOUS_USER'] || 'darkhelmetlive',
                         :delicious_password => ENV['BLOG_DELICIOUS_PASSWORD'] || 'secret',
-                        :reader_id => ENV['BLOG_READER_ID'] || '13098793136980097600',
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10,
                         :tz => TZInfo::Timezone.get('America/Edmonton'),

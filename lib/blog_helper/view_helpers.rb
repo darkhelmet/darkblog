@@ -92,11 +92,6 @@ module BlogHelper
       Cache.get("#{key}_partial", time) { partial(key) }
     end
 
-    # TODO: pull out title to param
-    def reader_widget_tag(num = 6)
-      javascript_include_tag("http://www.google.com/reader/public/javascript/user/#{Blog.reader_id}/state/com.google/broadcast?n=#{num}&callback=GRC_p(%7Bc%3A%22-%22%2Ct%3A%22darkhelmetlive%5C's%20shared%20items%22%2Cs%3A%22true%22%2Cn%3A%22true%22%2Cb%3A%22false%22%7D)%3Bnew%20GRC", true)
-    end
-
     # Setup or get the disqus part to include after a post
     #
     # @overload disqus_part(nil)

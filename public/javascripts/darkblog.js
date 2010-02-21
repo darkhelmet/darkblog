@@ -2,12 +2,26 @@ Jaml.register('repo', function(repo) {
   li(a({ title: repo.description, cls: 'github', href: repo.url }, repo.name));
 });
 
-Jaml.register('badge', function(badge) {
+Jaml.register('github-badge', function(badge) {
   div({ cls: 'github-badge' },
     h1({ cls: 'center' }, "What I'm Hacking"),
     ul(
       Jaml.render('repo', badge.repos),
       li(a({ href: 'http://github.com/' + badge.username }, 'Fork me on Github, and see the rest of my code'))
+    )
+  );
+});
+
+Jaml.register('feed-item', function(item) {
+  li(a({ title: item.title, href: item.alternate.href }, item.title));
+});
+
+Jaml.register('reader-badge', function(badge) {
+  div({ cls: 'reader-badge' },
+    h1({ cls: 'center' }, "What I'm Reading"),
+    ul(
+      Jaml.render('feed-item', badge.items),
+      li(a({ href: 'http://www.google.com/reader/shared/' + badge.id }, 'View all'))
     )
   );
 });
@@ -21,9 +35,13 @@ function GithubBadge(json) {
     }).sort(function() {
       return (Math.round(Math.random())-0.5);
     }).slice(0, 12);
-    $('#github-badge').html(Jaml.render('badge', badge));
+    $('#github-badge').html(Jaml.render('github-badge', badge));
     if (!$.browser.msie) { $('a.github').tooltip(); }
   }
+}
+
+function ReaderBadge(json) {
+  $('#reader-badge').html(Jaml.render('reader-badge', json));
 }
 
 (function($) {
@@ -129,4 +147,5 @@ $(document).ready(function() {
   });
 
   $.githubBadge('darkhelmet');
+  $.getScript("http://www.google.com/reader/public/javascript/user/13098793136980097600/state/com.google/broadcast?n=12&callback=ReaderBadge");
 });
