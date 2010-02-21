@@ -1,8 +1,9 @@
 module Rack
   class CanonicalHost
-    def initialize(app, host = nil, &block)
+    def initialize(app, host, port = 80)
       @app = app
-      @host = (block_given? && block.call) || host
+      @host = host
+      @port = port
     end
 
     def call(env)
