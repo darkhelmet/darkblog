@@ -10,6 +10,10 @@ begin
 rescue LoadError
   # Fallback on doing the resolve at runtime.
   require 'rubygems'
+  begin
+    require 'ruby-debug'
+  rescue LoadError
+  end
   require 'bundler'
   Bundler.setup
 end
@@ -73,7 +77,7 @@ require 'middleware'
 
 helpers do
   include TagsHelper
-  include WillPaginate::ViewHelpers::Base
+  include WillPaginate::ViewHelpers
   include BlogHelper::ViewHelpers
   include BlogHelper::Utilities
   include BlogHelper::Caching

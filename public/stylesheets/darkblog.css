@@ -371,8 +371,12 @@ pre {
   font-size: 10px;
 }
 
-.pagination {
+#pagination {
   margin: 10px 0px;
+}
+
+#pagination .current {
+  font-style: italic;
 }
 
 #bio {

@@ -1,17 +1,21 @@
+# encoding: utf-8
+
 %w(render routing).each do |plugin|
   require "sinatra/#{plugin}_plugin"
 end
-
-require 'will_paginate'
-require 'will_paginate/finders/active_record'
-require 'will_paginate/view_helpers/base'
-require 'will_paginate/view_helpers/link_renderer'
 
 require 'ostruct'
 require 'bugzscout'
 require 'social'
 require 'archive_date'
 require 'tzinfo'
+
+require 'will_paginate'
+require 'will_paginate/view_helpers'
+
+WillPaginate::ViewHelpers.pagination_options[:container] = false
+WillPaginate::ViewHelpers.pagination_options[:previous_label] = '← Previous'
+WillPaginate::ViewHelpers.pagination_options[:next_label] = 'Next →'
 
 require 'sinatra/authorization'
 require 'sinatra/bundles'
@@ -33,10 +37,12 @@ if development?
   end
 end
 
-WillPaginate::ViewHelpers::LinkRenderer.class_eval do
+WillPaginate.enable_activerecord
+
+WillPaginate::LinkRenderer.class_eval do
 protected
 
-  def url(page)
+  def url_for(page)
     path = @template.request.path
     params = @template.request.params
     case path
