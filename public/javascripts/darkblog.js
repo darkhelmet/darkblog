@@ -12,11 +12,11 @@ Jaml.register('badge', function(badge) {
   );
 });
 
-function GithubBadge(data) {
-  if (data) {
+function GithubBadge(json) {
+  if (json) {
     var badge = new Object();
-    badge['username'] = data.user.login;
-    badge['repos'] = _.select(data.user.repositories, function(r) {
+    badge['username'] = json.user.login;
+    badge['repos'] = _.select(json.user.repositories, function(r) {
       return !r.fork;
     }).sort(function() {
       return (Math.round(Math.random())-0.5);
