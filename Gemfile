@@ -6,7 +6,7 @@ gem 'haml', '2.2.19'
 gem 'builder', '2.1.2'
 gem 'activesupport', '2.3.5', :require => 'active_support'
 gem 'activerecord', '2.3.5', :require => 'active_record'
-gem 'sinatra-bundles', '0.1.2', :require => 'sinatra/bundles'
+gem 'sinatra-bundles', '0.1.3', :require => 'sinatra/bundles'
 gem 'darkhelmet-sinatra_more', '0.3.36', :require => nil
 gem 'acts_as_taggable_on_steroids', '1.2', :require => nil
 gem 'RedCloth', '4.2.2'
