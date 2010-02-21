@@ -1,4 +1,36 @@
+Jaml.register('repo', function(repo) {
+  li(a({ title: repo.description, cls: 'github', href: repo.url }, repo.name));
+});
+
+Jaml.register('badge', function(badge) {
+  div({ cls: 'github-badge' },
+    h1({ cls: 'center' }, "What I'm Hacking"),
+    ul(
+      Jaml.render('repo', badge.repos),
+      li(a({ href: 'http://github.com/' + badge.username }, 'Fork me on Github, and see the rest of my code'))
+    )
+  );
+});
+
+function GithubBadge(data) {
+  var badge = new Object();
+  badge['username'] = data.user.login;
+  badge['repos'] = _.select(data.user.repositories, function(r) {
+    return !r.fork;
+  }).sort(function() {
+    return (Math.round(Math.random())-0.5);
+  }).slice(0, 12);
+  $('#github-badge').html(Jaml.render('badge', badge));
+  if (!$.browser.msie) { $('a.github').tooltip(); }
+}
+
 (function($) {
+  $.extend(jQuery, {
+    githubBadge: function(username) {
+      $.getScript('http://github.com/api/v1/json/' + username + '?callback=GithubBadge');
+    }
+  });
+
   $.fn.extend({
     swfembed: function(movie, width, height) {
       this.each(function() {
@@ -74,8 +106,6 @@ $(document).ready(function() {
   }).join('&');
   $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
 
-  if (!$.browser.msie) { $('a.github').tooltip(); }
-
   $('a:not(:has(img))').addClass('hover');
 
   $('#show-tags').click(function() {
@@ -95,4 +125,6 @@ $(document).ready(function() {
       }, 'text');
     }
   });
+
+  $.githubBadge('darkhelmet');
 });

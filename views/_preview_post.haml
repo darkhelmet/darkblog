@@ -6,7 +6,8 @@
   .border
     %div{ :id => "post-#{post.id}", :class => post_class(post) }
       = post_title_link(post)
-      .entry= truncate(post.body_clean, :length => 450)
+      .entry
+        %p= truncate(post.body_clean, :length => 450)
       %br
       = link_to('Read the full article', post.permalink, :class => 'readmore')
       - unless request.xhr? || user_agent?(/thunderbird/i)

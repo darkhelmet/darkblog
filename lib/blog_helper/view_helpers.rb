@@ -97,21 +97,6 @@ module BlogHelper
       javascript_include_tag("http://www.google.com/reader/public/javascript/user/#{Blog.reader_id}/state/com.google/broadcast?n=#{num}&callback=GRC_p(%7Bc%3A%22-%22%2Ct%3A%22darkhelmetlive%5C's%20shared%20items%22%2Cs%3A%22true%22%2Cn%3A%22true%22%2Cb%3A%22false%22%7D)%3Bnew%20GRC", true)
     end
 
-    # Turns a Github repo from the Github API into a link to it
-    #
-    # @param [Hashie::Mash] r A repository
-    # @return [String] HTML link to the Github repo
-    def repo(r)
-      link_to(r.name, r.url, :title => h(r.description), :class => 'github')
-    end
-
-    # Get the author's Github profile link
-    #
-    # @return [String] The HTML insertion-ready string with the link to the Github profile
-    def github_link
-      link_to('Fork me on Github, and see the rest of my code', "https://github.com/#{Blog.github}")
-    end
-
     # Setup or get the disqus part to include after a post
     #
     # @overload disqus_part(nil)

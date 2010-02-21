@@ -6,13 +6,7 @@
           %h2.center What I'm Reading
           = javascript_include_tag('http://www.google.com/reader/ui/publisher-en.js', true)
           = reader_widget_tag
-        .grid_6.left.omega
-          %h2.center What I'm Hacking
-          - if @repos
-            %ul
-              - @repos.each do |r|
-                %li= repo(r)
-              %li= github_link
+        #github-badge.grid_6.left.omega
   .tab
     %ul.login
       %li.left
