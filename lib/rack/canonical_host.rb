@@ -17,10 +17,12 @@ module Rack
   private
 
     def url(env)
-      if @host && env['SERVER_NAME'] != @host
-        url = Rack::Request.new(env).url
-        url.sub(%r{\A(https?://)(.*?)(:\d+)?(/|$)}, "\\1#{@host}\\3/")
-      end
+      server = env['SERVER_NAME']
+      return if server.match(/localhost|127\.0\.0\.1/) || server == @host
+      returning(URI(Rack::Request.new(env).url)) do |uri|
+        uri.host = @host
+        uri.port = @port
+      end.to_s
     end
   end
 end

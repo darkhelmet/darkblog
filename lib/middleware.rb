@@ -1,6 +1,6 @@
 ignore = %w(posts index preview edit redirections announce).map { |url| "/#{url}$" }
 use Rack::BugzScout, "https://#{Blog.fogbugz_host}/scoutsubmit.asp", Blog.fogbugz_user, Blog.fogbugz_project, Blog.fogbugz_area if production?
-use Rack::CanonicalHost, Blog.host if production?
+use Rack::CanonicalHost, Blog.host
 use Rack::RemoveSlash
 use Rack::Head
 use Rack::ETag

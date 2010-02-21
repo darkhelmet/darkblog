@@ -69,7 +69,7 @@ module BlogHelper
     end
 
     def asset_url(path, host = Blog.asset_host)
-      "http://#{host}#{path}"
+      development? ? path : "http://#{host}#{path}"
     end
 
     def minimal_sidebar(on = nil)
