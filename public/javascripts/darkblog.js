@@ -13,15 +13,17 @@ Jaml.register('badge', function(badge) {
 });
 
 function GithubBadge(data) {
-  var badge = new Object();
-  badge['username'] = data.user.login;
-  badge['repos'] = _.select(data.user.repositories, function(r) {
-    return !r.fork;
-  }).sort(function() {
-    return (Math.round(Math.random())-0.5);
-  }).slice(0, 12);
-  $('#github-badge').html(Jaml.render('badge', badge));
-  if (!$.browser.msie) { $('a.github').tooltip(); }
+  if (data) {
+    var badge = new Object();
+    badge['username'] = data.user.login;
+    badge['repos'] = _.select(data.user.repositories, function(r) {
+      return !r.fork;
+    }).sort(function() {
+      return (Math.round(Math.random())-0.5);
+    }).slice(0, 12);
+    $('#github-badge').html(Jaml.render('badge', badge));
+    if (!$.browser.msie) { $('a.github').tooltip(); }
+  }
 }
 
 (function($) {
