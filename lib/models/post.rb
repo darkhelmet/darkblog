@@ -59,7 +59,6 @@ class Post < ActiveRecord::Base
   end
 
   def extract_keywords!
-    # @zemanta_keywords ||= TermExtraction::Zemanta.new(:api_key => Blog.zemanta_api_key, :context => body_clean).terms
     @yahoo_keywords ||= TermExtraction::Yahoo.new(:api_key => Blog.yahoo_api_key, :context => body_clean).terms
   end
 

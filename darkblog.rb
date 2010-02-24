@@ -1,14 +1,8 @@
 #!/usr/bin/env ruby
 
-E = 'utf-8'
-
-case RUBY_VERSION
-when /1\.8/
-  $KCODE = E
-when /1\.9/
-  Encoding.default_external = E
-  Encoding.default_internal = E
-end
+# We are ruby 1.9 only
+Encoding.default_external = 'utf-8'
+Encoding.default_internal = 'utf-8'
 
 $: << File.expand_path(File.join('.', 'lib'))
 
@@ -42,11 +36,8 @@ configure do
                         :bio => ENV['BLOG_BIO'] || 'is a software engineer (EIT) in Edmonton, Alberta, Canada',
                         :feedburner => ENV['BLOG_FEEDBURNER'] || 'VerboseLogging',
                         :password => ENV['BLOG_PASSWORD'] || 'password',
-                        :github => ENV['BLOG_GITHUB'] || 'darkhelmet',
                         :twitter => ENV['BLOG_TWITTER'] || 'darkhelmetlive',
                         :twitter_password => ENV['BLOG_TWITTER_PASSWORD'] || 'secret',
-                        :delicious_user => ENV['BLOG_DELICIOUS_USER'] || 'darkhelmetlive',
-                        :delicious_password => ENV['BLOG_DELICIOUS_PASSWORD'] || 'secret',
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10,
                         :tz => TZInfo::Timezone.get('America/Edmonton'),
@@ -56,7 +47,6 @@ configure do
                         :fogbugz_project => ENV['BLOG_FOGBUZ_PROJECT'] || 'darkhax',
                         :fogbugz_area => ENV['BLOG_FOGBUZ_AREA'] || 'Blog',
                         :yahoo_api_key => ENV['BLOG_YAHOO_API_KEY'] || nil,
-                        :zemanta_api_key => ENV['BLOG_ZEMANTA_API_KEY'] || nil,
                         :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/',
                         :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4',
                         :typekit_id => ENV['BLOG_TYPEKIT_ID'] || 'lml6ico',
@@ -70,7 +60,7 @@ configure :production do
   end
 
   before do
-    expires(10.minutes, :public, :must_revalidate) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+    expires(30.minutes, :public, :must_revalidate) if env['REQUEST_METHOD'] =~ /GET|HEAD/
   end
 
   enable(:compress_bundles)
