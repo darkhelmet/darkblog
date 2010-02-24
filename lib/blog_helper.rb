@@ -20,7 +20,7 @@ WillPaginate::ViewHelpers.pagination_options[:next_label] = 'Next →'
 require 'sinatra/authorization'
 require 'sinatra/bundles'
 
-%w(etag head static_cache remove_slash inline_compress canonical_host google_analytics response_time_injector bugzscout tweetboard typekit).each do |ext|
+%w(etag head static_cache remove_slash inline_compress canonical_host response_time_injector bugzscout insert).each do |ext|
   require "rack/#{ext}"
 end
 
