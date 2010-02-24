@@ -23,6 +23,8 @@ module Rack
         uri.host = @host
         uri.port = @port
       end.to_s
+    rescue
+      nil
     end
   end
 end
