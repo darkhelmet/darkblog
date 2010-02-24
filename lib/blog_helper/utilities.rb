@@ -1,7 +1,16 @@
 module BlogHelper
   module Utilities
-    def sharing(on = nil)
-      @sharing ||= on
+    def panel_and_page(page)
+      setup_top_panel
+      (page || 1).to_i
+    end
+
+    def enable_sharing
+      @sharing = true
+    end
+
+    def sharing?
+      @sharing || false
     end
 
     def user_agent

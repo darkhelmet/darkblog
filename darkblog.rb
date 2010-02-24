@@ -115,10 +115,8 @@ get(:index) do |page|
 end
 
 # monthly archive with pagination
-get(:monthly) do |year,month,page|
-  page ||= '1'
-  page = page.to_i
-  setup_top_panel
+get(:monthly) do |year, month, page|
+  page = panel_and_page(page)
   date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
@@ -127,49 +125,34 @@ get(:monthly) do |year,month,page|
 end
 
 # category index with pagination
-get(:category) do |category,page|
-  page ||= '1'
-  page = page.to_i
-  setup_top_panel
+get(:category) do |category, page|
+  page = panel_and_page(page)
   @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
-  if 1 == @posts.size && 1 == page
-    redirect(@posts.first.permalink, 302)
-  else
-    not_found if @posts.empty?
-    title(category.capitalize, page)
-    haml(:posts)
-  end
+  not_found if @posts.empty?
+  redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
+  title(category.capitalize, page)
+  haml(:posts)
 end
 
 # rss feed
 get(:feed) do
   no_cache
-  if user_agent?(/feedburner/i) || development?
-    @posts = Post.published.all(:limit => 10)
-    content_type('application/rss+xml', :charset => 'utf-8')
-    builder(:feed)
-  else
-    redirect(fb_url, 301)
-  end
+  redirect(fb_url, 301) unless user_agent?(/feedburner/i) || development?
+  @posts = Post.published.all(:limit => 10)
+  content_type('application/rss+xml', :charset => 'utf-8')
+  builder(:feed)
 end
 
 # search with pagination
 get(:search) do |page|
-  page ||= '1'
-  page = page.to_i
-  setup_top_panel
-  if query = params['q']
-    @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
-    return haml(:empty_search) if @posts.empty?
-    if 1 == @posts.size && 1 == page
-      redirect(@posts.first.permalink, 302)
-    else
-      title("Search '#{query}'")
-      haml(:posts)
-    end
-  else
-    redirect('/')
-  end
+  page = panel_and_page(page)
+  query = params['q']
+  redirect('/') unless query
+  @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
+  return haml(:empty_search) if @posts.empty?
+  redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
+  title("Search '#{query}'")
+  haml(:posts)
 end
 
 # sitemap
@@ -186,7 +169,7 @@ end
 
 # google search
 get(:google) do
-  minimal_sidebar(true)
+  enable_minimal_sidebar
   setup_top_panel
   haml(:page, :locals => { :page => :google })
 end
@@ -194,7 +177,7 @@ end
 # information pages
 %w(about contact disclaimer talks).each do |page|
   get("/#{page}") do
-    minimal_sidebar(true)
+    enable_minimal_sidebar
     setup_top_panel
     title(page.capitalize)
     haml(:page, :locals => { :page => page.intern })
@@ -205,37 +188,27 @@ end
 get(:permalink) do |permalink|
   no_cache if request.xhr?
   setup_top_panel
-  preview_posts(false)
+  disable_post_preview
   @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => permalink })
-    if r.nil?
-      not_found
-    else
-      redirect(r.post.permalink, 301)
-      return
-    end
+    r.nil? ? not_found : redirect(r.post.permalink, 301)
   end
   keywords_post(@posts.first)
   title(@posts.first.title)
-  disqus_part('disqus_single')
-  sharing(true)
+  disqus_single
+  enable_sharing
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
 # tags with pagination
-get(:tag) do |tag,page|
-  page ||= '1'
-  page = page.to_i
-  setup_top_panel
+get(:tag) do |tag, page|
+  page = panel_and_page(page)
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
-  if 1 == @posts.size && 1 == page
-    redirect(@posts.first.permalink, 302)
-  else
-    not_found if @posts.empty?
-    title(tag, page)
-    haml(:posts)
-  end
+  not_found if @posts.empty?
+  redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
+  title(tag, page)
+  haml(:posts)
 end
 
 # edit post
@@ -250,11 +223,11 @@ end
 # preview post
 get(:preview_post) do |permalink|
   no_cache
-  preview_posts(false)
+  disable_post_preview
   require_administrative_privileges
   @posts = Post.perma(permalink).paginate(:page => 1, :per_page => Blog.per_page)
   title(@posts.first.title)
-  disqus_part('disqus_single')
+  disqus_single
   haml(:posts)
 end
 

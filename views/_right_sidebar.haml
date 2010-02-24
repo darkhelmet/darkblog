@@ -14,7 +14,7 @@
   %p#bio
     = Blog.author
     = Blog.bio
-- unless minimal_sidebar
+- unless minimal_sidebar?
   .sidebar-item
     #writeSkribitHere
     = javascript_include_tag('http://assets.skribit.com/javascripts/SkribitWidget.js?renderTo=writeSkribitHere&amp;blog=5e91fca2cf7d25b4d74b682aa37d0908&amp;cnt=5', true)

@@ -72,40 +72,32 @@ module BlogHelper
       development? ? path : "http://#{host}#{path}"
     end
 
-    def minimal_sidebar(on = nil)
-      if on.nil?
-        @minimal_sidebar || false
-      else
-        @minimal_sidebar = on
-      end
+    def enable_minimal_sidebar
+      @minimal_sidebar = true
     end
 
-    def preview_posts(on = nil)
-      if on.nil?
-        @preview_posts.nil? ? true : @preview_posts
-      else
-        @preview_posts = on
-      end
+    def minimal_sidebar?
+      @minimal_sidebar || false
+    end
+
+    def preview_posts?
+      @preview_posts.nil? ? true : @preview_posts
+    end
+
+    def disable_post_preview
+      @preview_posts = false
     end
 
     def cached_partial(key, time = 1.hour)
       Cache.get("#{key}_partial", time) { partial(key) }
     end
 
-    # Setup or get the disqus part to include after a post
-    #
-    # @overload disqus_part(nil)
-    #   Retrieve the Disqus partial to use
-    #   @return [Symbol] :disqus_index unless it has been previously set
-    # @overload disqus_part(part)
-    #   Set the disqus_part to use
-    #   @param [String] part The part to use, 'disqus_single' or 'disqus_index'
-    def disqus_part(part = nil)
-      if part.nil?
-        (@disqus_part || 'disqus_index').intern
-      else
-        @disqus_part = part
-      end
+    def disqus_single
+      @disqus_part = :disqus_single
+    end
+
+    def disqus_part
+      @disqus_part || :disqus_index
     end
 
     # Setup or get the post to use for keywords

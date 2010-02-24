@@ -1,7 +1,7 @@
 - if @future_post
   = partial(:future_post, :locals => { :post => @future_post })
 - if @posts && 0 < @posts.size
-  - if preview_posts
+  - if preview_posts?
     - @posts.each do |post|
       = partial(:preview_post, :locals => { :post => post })
   - else
