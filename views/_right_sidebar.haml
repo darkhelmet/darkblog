@@ -5,7 +5,7 @@
 .sidebar-item
   %form#search{ :action => '/search', :method => 'GET' }
     %input#query{ :type => 'text', :name => 'q' }
-    %input#submit{ :type => 'image', :value => 'Search', :src => '/images/magnifier.png' }
+    %input#submit{ :type => 'image', :value => 'Search', :src => asset_url('/images/magnifier.png') }
 .sidebar-item
   %h3 Author
   = gravatar_html
