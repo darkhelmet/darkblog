@@ -15,25 +15,7 @@
     = Blog.author
     = Blog.bio
 - unless minimal_sidebar?
-  .sidebar-item
-    #writeSkribitHere
-    = javascript_include_tag('http://assets.skribit.com/javascripts/SkribitWidget.js?renderTo=writeSkribitHere&amp;blog=5e91fca2cf7d25b4d74b682aa37d0908&amp;cnt=5', true)
-    %noscript
-      Sorry, but the
-      = link_to('Skribit', 'http://skribit.com/', :title => "Skribit - Cure Writer's Block")
-      widget only works on browsers with JavaScript support.
-      = link_to('View suggestions for this blog here.', 'http://skribit.com/blogs/verbose-logging', :title => 'Skribit Suggestions for verbose logging')
-  .sidebar-item
-    %h3{ :style => 'display: inline-block' } Tags
-    %span.small= link_to('(show all tags)', '#', :id => 'show-tags')
-    %br
-    = cached_partial(:tag_sidebar)
-  .sidebar-item
-    %h3 Categories
-    = partial(:category_sidebar)
-  .sidebar-item
-    %h3 Archives
-    = cached_partial(:monthly_archives)
+  = cached_partial(:extra_sidebar, 1.year) # this gets rebuilt
 .sidebar-item
   Hosting by:
   %br

@@ -24,7 +24,7 @@ class Cache < ActiveRecord::Base
       end
     end
 
-    def put(key,value)
+    def put(key, value)
       c = Cache.find_or_create_by_key(key)
       c.value = value
       c.save

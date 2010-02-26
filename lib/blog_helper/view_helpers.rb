@@ -92,6 +92,10 @@ module BlogHelper
       Cache.get("#{key}_partial", time) { partial(key) }
     end
 
+    def wipe_cached_partial(key)
+      Cache.purge("#{key}_partial")
+    end
+
     def disqus_single
       @disqus_part = :disqus_single
     end

@@ -104,9 +104,7 @@ javascript_bundle(:all, %w(panel swfobject FancyZoom FancyZoomHTML jaml undersco
 
 # main index with pagination
 get(:index) do |page|
-  page ||= '1'
-  page = page.to_i
-  setup_top_panel
+  page = get_page(page)
   @posts = Post.published.paginate(:page => page, :per_page => Blog.per_page)
   not_found('Not Found') if @posts.empty?
   @future_post = Post.future.last if 1 == page
@@ -116,7 +114,7 @@ end
 
 # monthly archive with pagination
 get(:monthly) do |year, month, page|
-  page = panel_and_page(page)
+  page = get_page(page)
   date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
@@ -126,7 +124,7 @@ end
 
 # category index with pagination
 get(:category) do |category, page|
-  page = panel_and_page(page)
+  page = get_page(page)
   @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
@@ -145,7 +143,7 @@ end
 
 # search with pagination
 get(:search) do |page|
-  page = panel_and_page(page)
+  page = get_page(page)
   query = params['q']
   redirect('/') unless query
   @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
@@ -170,7 +168,6 @@ end
 # google search
 get(:google) do
   enable_minimal_sidebar
-  setup_top_panel
   haml(:page, :locals => { :page => :google })
 end
 
@@ -178,7 +175,6 @@ end
 %w(about contact disclaimer talks).each do |page|
   get("/#{page}") do
     enable_minimal_sidebar
-    setup_top_panel
     title(page.capitalize)
     haml(:page, :locals => { :page => page.intern })
   end
@@ -187,7 +183,6 @@ end
 # permalinks
 get(:permalink) do |permalink|
   no_cache if request.xhr?
-  setup_top_panel
   disable_post_preview
   @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
   if @posts.empty?
@@ -203,7 +198,7 @@ end
 
 # tags with pagination
 get(:tag) do |tag, page|
-  page = panel_and_page(page)
+  page = get_page(page)
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
@@ -247,6 +242,7 @@ post(:posts) do
   published = params['post']['published']
   params['post']['published'] = (published.nil? || 'false' == published) ? false : true
   if post = Post.create(params['post'])
+    rebuild_sidebar
     redirect("#{post.permalink}/edit")
   else
     redirect('/posts')
@@ -264,6 +260,7 @@ put(:posts) do
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
   post.update_attributes(params['post'])
+  rebuild_sidebar
   redirect("#{post.permalink}/edit")
 end
 
@@ -318,6 +315,7 @@ delete(:permalink) do |permalink|
   require_administrative_privileges
   post = Post.perma(permalink).first
   post.destroy
+  rebuild_sidebar
   content_type('application/javascript')
   "window.location = '#{Blog.index}index'"
 end
