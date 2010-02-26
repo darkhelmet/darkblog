@@ -20,4 +20,8 @@
       Theme
       %em darkhax
       by Daniel Huckstep
+      %br
+      Generated in {{responsetime}}s
+      - t = Time.now.utc
+      %abbr.timeago{ :title => t.iso8601 }= Blog.tz.utc_to_local(t).strftime("%I:%M %p %B %d, %Y #{Blog.tz_display}")
   .spacer

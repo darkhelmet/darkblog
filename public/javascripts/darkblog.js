@@ -147,5 +147,7 @@ $(document).ready(function() {
   });
 
   $.githubBadge('darkhelmet');
+
+  $('abbr.timeago').timeago();
   $.getScript("http://www.google.com/reader/public/javascript/user/13098793136980097600/state/com.google/broadcast?n=12&callback=ReaderBadge");
 });
