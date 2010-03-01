@@ -1,3 +1,5 @@
+require 'yaml'
+
 def runcoderun?
   ENV['RUN_CODE_RUN']
 end

@@ -35,8 +35,8 @@ module BlogHelper
         :type => 'text/javascript'
       }
       if defer
-        options[:defer] = true
-        options[:async] = true
+        options[:defer] = 'defer'
+        options[:async] = 'async'
       end
       tag(:script, options)
     end
