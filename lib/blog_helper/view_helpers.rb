@@ -119,7 +119,7 @@ module BlogHelper
     def build_can(suffix, page = '1')
       page = page.to_i
       page_suffix = if 1 < page
-        "/page/#{page}"
+        "#{suffix.empty? ? '' : '/' }page/#{page}"
       else
         ''
       end
