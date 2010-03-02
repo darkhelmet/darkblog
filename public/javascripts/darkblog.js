@@ -26,6 +26,14 @@ Jaml.register('reader-badge', function(badge) {
   );
 });
 
+Jaml.register('commit', function(commit) {
+  div(a({ href: commit.url }, commit.id), pre(commit.message));
+});
+
+function ShowCommits(json) {
+  $('#commits').html(Jaml.render('commit', json.commits));
+}
+
 function GithubBadge(json) {
   if (json) {
     var badge = new Object();
@@ -147,7 +155,10 @@ $(document).ready(function() {
   });
 
   $.githubBadge('darkhelmet');
-
   $('abbr.timeago').timeago();
   $.getScript("http://www.google.com/reader/public/javascript/user/13098793136980097600/state/com.google/broadcast?n=12&callback=ReaderBadge");
+
+  if (0 < $('#commits').length) {
+    $.getScript('http://github.com/api/v2/json/commits/list/darkhelmet/darkblog/master?callback=ShowCommits');
+  }
 });

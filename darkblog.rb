@@ -193,7 +193,8 @@ end
   'about' => "About #{Blog.title}",
   'contact' => "Contact #{Blog.author}, the author of #{Blog.title}",
   'disclaimer' => "Disclaimer for #{Blog.title}",
-  'talks' => "Talks the author, #{Blog.author} has done"
+  'talks' => "Talks the author, #{Blog.author} has done",
+  'changelog' => "Recent commits to the source of of #{Blog.title}"
 }.each do |page, desc|
   get("/#{page}") do
     enable_minimal_sidebar
