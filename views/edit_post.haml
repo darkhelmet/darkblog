@@ -13,6 +13,10 @@
     :javascript
       $('#post_category').autocomplete("#{Post.all(:select => :category).map(&:category).uniq.map { |c| h(c) }.join(' ')}".split(' '));
     %br
+    %label Description
+    %br
+    %input.max{ :type => 'text', :id => 'post_description', :name => 'post[description]', :value => @post.description }
+    %br
     %label Body
     %br
     %textarea{ :name => 'post[body]' }= h(@post.body)

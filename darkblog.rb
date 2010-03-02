@@ -114,6 +114,7 @@ get(:index) do |page|
   @future_post = Post.future.last if 1 == page
   title("Page #{page}") if 1 < page
   canonical(build_can('', page))
+  description(Blog.tagline, page)
   haml(:posts)
 end
 
@@ -127,6 +128,7 @@ get(:monthly) do |year, month, page|
   not_found if @posts.empty?
   title(date.strftime('%B %Y'), page)
   canonical(can)
+  description("#{Blog.title} archives for #{date.strftime('%B')} #{year}", page)
   haml(:posts)
 end
 
@@ -140,6 +142,7 @@ get(:category) do |category, page|
   redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title(category.capitalize, page)
   canonical(can)
+  description("#{Blog.title} archives in the #{category.capitalize} category", page)
   haml(:posts)
 end
 
@@ -158,6 +161,7 @@ get(:search) do |page|
   query = params['q']
   redirect('/') unless query
   @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
+  description("#{Blog.title} search results for '#{query}'", page)
   return haml(:empty_search) if @posts.empty?
   redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title("Search '#{query}'")
@@ -180,15 +184,22 @@ end
 get(:google) do
   enable_minimal_sidebar
   canonical(build_can('google-search'))
+  description("Google Search for #{Blog.title}")
   haml(:page, :locals => { :page => :google })
 end
 
 # information pages
-%w(about contact disclaimer talks).each do |page|
+{
+  'about' => "About #{Blog.title}",
+  'contact' => "Contact #{Blog.author}, the author of #{Blog.title}",
+  'disclaimer' => "Disclaimer for #{Blog.title}",
+  'talks' => "Talks the author, #{Blog.author} has done"
+}.each do |page, desc|
   get("/#{page}") do
     enable_minimal_sidebar
     title(page.capitalize)
     canonical(build_can(page))
+    description(desc)
     haml(:page, :locals => { :page => page.intern })
   end
 end
@@ -207,6 +218,7 @@ get(:permalink) do |permalink|
   disqus_single
   enable_sharing
   canonical(post_permaurl(@posts.first))
+  description(@posts.first.description)
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
@@ -220,6 +232,7 @@ get(:tag) do |tag, page|
   redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title(tag, page)
   canonical(can)
+  description("#{Blog.title} archives tagged with '#{tag}'", page)
   haml(:posts)
 end
 
@@ -319,7 +332,6 @@ get(:short_permalink) do |title|
 end
 
 # get twitter statuses
-
 get(:twitter) do |status_id|
   expires(1.day, :public, :must_revalidate)
   content_type('text/plain')

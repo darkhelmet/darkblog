@@ -116,6 +116,18 @@ module BlogHelper
       @keywords_post.try(:keywords) || []
     end
 
+    def description(desc = nil, page = 1)
+      if desc.nil?
+        @description || Blog.tagline
+      else
+        @description = desc + if 1 < page
+          ", page #{page}"
+        else
+          ''
+        end
+      end
+    end
+
     def build_can(suffix, page = '1')
       page = page.to_i
       page_suffix = if 1 < page
