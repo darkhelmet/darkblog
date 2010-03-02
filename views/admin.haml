@@ -1,9 +1,13 @@
 !!!
 %html{ :xmlns => 'http://www.w3.org/1999/xhtml', 'xml:lang' => 'en' }
   %head
+    %title= h(title)
+    %link{ :rel => 'index', :title => Blog.title, :href => Blog.index }
+    %link{ :rel => 'icon', :type => 'image/png', :href => asset_url('/images/favicon.png') }
+    = meta_tag('text/html; charset=utf-8', 'http-equiv' => 'Content-Type')
     = javascript_include_tag('http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js')
-    = partial(:head)
-    = javascript_bundle_include_tag(:all)
-    = stylesheet_link_tag('jquery.autocomplete')
-    = javascript_include_tag('jquery.autocomplete')
+    = javascript_bundle_include_tag(:admin)
+    = stylesheet_bundle_link_tag(:admin)
+    :javascript
+      $(document).ready(function() { $('textarea').markItUp(mySettings); });
   %body= yield

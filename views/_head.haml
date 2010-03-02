@@ -1,21 +1,15 @@
 %title= h(title)
+- unless canonical.nil?
+  %link{ :rel => 'canonical', :href => canonical }
 %link{ :rel => 'index', :title => Blog.title, :href => Blog.index }
 %link{ :rel => 'icon', :type => 'image/png', :href => asset_url('/images/favicon.png') }
 %link{ :rel => 'search', :type => 'application/opensearchdescription+xml', :href => "#{Blog.index}opensearch.xml", :title => Blog.title }
+%link{ :rel => 'alternate', :type => 'application/rss+xml', :title => "#{Blog.title} RSS Feed", :href => "#{Blog.index}feed" }
 = meta_tag('text/html; charset=utf-8', 'http-equiv' => 'Content-Type')
 = meta_tag(Blog.tagline, :name => 'description')
-- unless keywords_post.nil?
-  = meta_tag(keywords_post.keywords.join(','), :name => 'keywords')
-
-%link{ :rel => 'alternate', :type => 'application/rss+xml', :title => "#{Blog.title} RSS Feed", :href => "#{Blog.index}feed" }
-
+- unless keywords.empty?
+  = meta_tag(keywords.join(','), :name => 'keywords')
 = stylesheet_bundle_link_tag(:all)
-
-- if env['REQUEST_PATH'] =~ %r{/(edit|posts)$}
-  = stylesheet_link_tags(*%w(markitup/style markitup/set))
-  = javascript_include_tags(*%w(jquery.markitup set))
-  :javascript
-    $(document).ready(function() { $('textarea').markItUp(mySettings); });
 
 :javascript
   if (top.location != self.location) { top.location = self.location.href; }

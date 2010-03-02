@@ -100,35 +100,46 @@ map(:admin_index).to('/index')
 map(:twitter).to('/twitter/:status')
 
 stylesheet_bundle(:all, %w(panel darkblog))
+stylesheet_bundle(:admin, %w(panel darkblog jquery.autocomplete markitup/style markitup/set))
+
 javascript_bundle(:all, %w(panel swfobject FancyZoom FancyZoomHTML jaml underscore jquery.timeago darkblog))
+javascript_bundle(:admin, %w(panel swfobject FancyZoom FancyZoomHTML jaml underscore jquery.timeago jquery.autocomplete jquery.markitup set darkblog))
 
 # main index with pagination
 get(:index) do |page|
+  redirect(Blog.index, 301) if 1 == page.to_s.to_i
   page = get_page(page)
   @posts = Post.published.paginate(:page => page, :per_page => Blog.per_page)
   not_found('Not Found') if @posts.empty?
   @future_post = Post.future.last if 1 == page
   title("Page #{page}") if 1 < page
+  canonical(build_can('', page))
   haml(:posts)
 end
 
 # monthly archive with pagination
 get(:monthly) do |year, month, page|
+  can = build_can("#{year}/#{month}", page)
+  redirect(can) if 1 == page.to_s.to_i
   page = get_page(page)
   date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   title(date.strftime('%B %Y'), page)
+  canonical(can)
   haml(:posts)
 end
 
 # category index with pagination
 get(:category) do |category, page|
+  can = build_can("category/#{category}", page)
+  redirect(can, 301) if 1 == page.to_s.to_i
   page = get_page(page)
   @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title(category.capitalize, page)
+  canonical(can)
   haml(:posts)
 end
 
@@ -168,6 +179,7 @@ end
 # google search
 get(:google) do
   enable_minimal_sidebar
+  canonical(build_can('google-search'))
   haml(:page, :locals => { :page => :google })
 end
 
@@ -176,6 +188,7 @@ end
   get("/#{page}") do
     enable_minimal_sidebar
     title(page.capitalize)
+    canonical(build_can(page))
     haml(:page, :locals => { :page => page.intern })
   end
 end
@@ -193,16 +206,20 @@ get(:permalink) do |permalink|
   title(@posts.first.title)
   disqus_single
   enable_sharing
+  canonical(post_permaurl(@posts.first))
   request.xhr? ? haml(:posts, :layout => false) : haml(:posts)
 end
 
 # tags with pagination
 get(:tag) do |tag, page|
+  can = build_can("tag/#{tag}", page)
+  redirect(can, 301) if 1 == page.to_s.to_i
   page = get_page(page)
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title(tag, page)
+  canonical(can)
   haml(:posts)
 end
 

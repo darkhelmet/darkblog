@@ -88,6 +88,10 @@ module BlogHelper
       @preview_posts = false
     end
 
+    def canonical(can = nil)
+      can.nil? ? @canonical : @canonical = can
+    end
+
     def cached_partial(key, time = 1.hour)
       Cache.get("#{key}_partial", time) { partial(key) }
     end
@@ -104,20 +108,22 @@ module BlogHelper
       @disqus_part || :disqus_index
     end
 
-    # Setup or get the post to use for keywords
-    #
-    # @overload keywords_post(nil)
-    #   Get the post to use for keywords
-    #   @return [Post] The post to use for keywords
-    # @overload keywords_post(post)
-    #   Set the keywords post
-    #   @param [Post] post The post to use for keywords
     def keywords_post(post = nil)
-      if post.nil?
-        @keywords_post
+      post.nil? ? @keywords_post : @keywords_post = post
+    end
+
+    def keywords
+      @keywords_post.try(:keywords) || []
+    end
+
+    def build_can(suffix, page = '1')
+      page = page.to_i
+      page_suffix = if 1 < page
+        "/page/#{page}"
       else
-        @keywords_post = post
+        ''
       end
+      "#{Blog.index}#{suffix}#{page_suffix}"
     end
 
     # Get the FeedBurner URL for the blog
@@ -182,7 +188,7 @@ module BlogHelper
     # @param [Post] post The post to create the link to
     # @return [String] The full URL including protocol and host
     def post_permaurl(post)
-      Blog.index + post.permalink[1..-1]
+      "#{Blog.index}#{post.permalink[1..-1]}"
     end
 
     def category_link(cat)
