@@ -252,6 +252,7 @@ get(:preview_post) do |permalink|
   disable_post_preview
   require_administrative_privileges
   @posts = Post.perma(permalink).paginate(:page => 1, :per_page => Blog.per_page)
+  redirect('/index') if @posts.empty?
   title(@posts.first.title)
   disqus_single
   haml(:posts)
