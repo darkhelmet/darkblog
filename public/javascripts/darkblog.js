@@ -21,7 +21,7 @@ Jaml.register('reader-badge', function(badge) {
     h1({ cls: 'center' }, "What I'm Reading"),
     ul(
       Jaml.render('feed-item', badge.items),
-      li(a({ href: 'http://www.google.com/reader/shared/' + badge.id }, 'View all'))
+      li(a({ href: 'http://www.google.com/reader/shared/' + badge.id }, 'View all my shared items on Google Reader'))
     )
   );
 });
