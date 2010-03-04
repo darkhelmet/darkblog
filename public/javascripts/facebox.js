@@ -75,7 +75,7 @@
     } else {
       $.facebox.reveal(data, klass)
     }
-  }
+  };
 
   /*
    * Public, $.facebox methods
