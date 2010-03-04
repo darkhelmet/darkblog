@@ -105,7 +105,24 @@ function ReaderBadge(json) {
 })(jQuery);
 
 $(document).ready(function() {
-  setupZoom();
+  $('#show-tags').click(function() {
+    $('.tag1').fadeIn('slow');
+    return false;
+  });
+
+  $('a:not(:has(img))').addClass('hover');
+
+  $('.entry img').each(function() {
+    $(this).closest('a').css({
+      'background-image': 'url(' + this.src + ')',
+      'background-repeat': 'no-repeat',
+      height: $(this).height(),
+      width: $(this).width()
+    }).addClass('img').addClass($(this).attr('class'));
+    $(this).remove();
+  });
+
+  $('a.img').facebox();
 
   $('a.remote-inline').live('click', function() {
     var link = $(this);
@@ -133,13 +150,6 @@ $(document).ready(function() {
     return 'url' + index + '=' + encodeURIComponent(a.href);
   }).join('&');
   $.getScript('http://disqus.com/forums/verboselogging/get_num_replies.js?' + query);
-
-  $('a:not(:has(img))').addClass('hover');
-
-  $('#show-tags').click(function() {
-    $('.tag1').fadeIn('slow');
-    return false;
-  });
 
   $('#posts-container a').each(function() {
     var re = /http:\/\/twitter\.com\/\w+\/status\/(\d+)/;

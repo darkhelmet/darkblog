@@ -99,11 +99,11 @@ map(:announce).to('/announce')
 map(:admin_index).to('/index')
 map(:twitter).to('/twitter/:status')
 
-stylesheet_bundle(:all, %w(panel darkblog))
-stylesheet_bundle(:admin, %w(panel darkblog jquery.autocomplete markitup/style markitup/set))
+stylesheet_bundle(:all, %w(panel facebox darkblog))
+stylesheet_bundle(:admin, %w(panel facebox darkblog jquery.autocomplete markitup/style markitup/set))
 
-javascript_bundle(:all, %w(panel swfobject FancyZoom FancyZoomHTML jaml underscore jquery.timeago darkblog))
-javascript_bundle(:admin, %w(panel swfobject FancyZoom FancyZoomHTML jaml underscore jquery.timeago jquery.autocomplete jquery.markitup set darkblog))
+javascript_bundle(:all, %w(panel swfobject facebox jaml underscore jquery.timeago darkblog))
+javascript_bundle(:admin, %w(panel swfobject facebox jaml underscore jquery.timeago jquery.autocomplete jquery.markitup set darkblog))
 
 # main index with pagination
 get(:index) do |page|

@@ -99,7 +99,7 @@ a.hover:hover {
   padding: 0px;
 }
 
-.entry a, .dsq-comment-message a, .readmore {
+.entry a.hover, .dsq-comment-message a, .readmore {
   border-bottom: 1px dotted;
 }
 
@@ -322,6 +322,9 @@ pre {
   font-family: Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace !important;
   padding: 5px;
   overflow: auto;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 #tooltip {
@@ -381,4 +384,17 @@ pre {
 
 .entry > object, .entry > embed {
     margin-bottom: 20px;
+}
+
+.gist .gist-file {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+a.img {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  display: block;
 }
