@@ -112,17 +112,28 @@ $(document).ready(function() {
 
   $('a:not(:has(img))').addClass('hover');
 
-  $('.entry img').each(function() {
-    $(this).closest('a').css({
-      'background-image': 'url(' + this.src + ')',
+  var backgroundImagize = function(e, i) {
+    $(e).css({
+      'background-image': 'url(' + i.attr('src') + ')',
       'background-repeat': 'no-repeat',
-      height: $(this).height(),
-      width: $(this).width()
-    }).addClass('img').addClass($(this).attr('class'));
-    $(this).remove();
+      height: i.height(),
+      width: i.width()
+    }).addClass('img').addClass(i.attr('class'));
+  };
+
+  $('.entry a:has(img)').each(function() {
+    var img = $(this).find('img');
+    backgroundImagize(this, $(img));
+    img.remove();
   });
 
   $('a.img').facebox();
+
+  $('.entry img').each(function() {
+    var div = $('<div></div>');
+    backgroundImagize(div, $(this));
+    $(this).replaceWith(div);
+  });
 
   $('a.remote-inline').live('click', function() {
     var link = $(this);

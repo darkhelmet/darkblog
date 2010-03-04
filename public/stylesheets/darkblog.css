@@ -392,7 +392,7 @@ pre {
   border-radius: 5px;
 }
 
-a.img {
+.img {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
