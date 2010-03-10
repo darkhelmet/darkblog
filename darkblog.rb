@@ -350,3 +350,14 @@ delete(:permalink) do |permalink|
   content_type('application/javascript')
   "window.location = '#{Blog.index}index'"
 end
+
+get '/dump.json' do
+  no_cache
+  require_administrative_privileges
+  content_type('application/json', :charset => 'utf-8')
+  all = {}
+  ActiveRecord::Base.send(:subclasses).each do |klass|
+    all.merge!({ klass.table_name => klass.all })
+  end
+  all.to_json
+end
