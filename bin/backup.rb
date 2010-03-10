@@ -47,7 +47,7 @@ end
 
 def backup_json!
   user, pass = YAML.load_file(HTTP_CREDENTIALS)
-  json = RestClient.get("http://#{user}:#{pass}@blog.darkhax.com/dump.json")
+  json = RestClient.get("http://#{user}:#{pass}@blog.darkhax.com/dump.json").body
   AWS::S3::S3Object.store("/backups/#{key('json')}", json, BUCKET)
 end
 
