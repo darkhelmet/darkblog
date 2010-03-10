@@ -111,7 +111,7 @@ begin
   BUCKET = 's3.blog.darkhax.com'
 
   desc 'Upload images and swf to S3'
-  task :upload_assets do
+  task :upload_assets => :env do
     path = File.expand_path(File.join('~', '.s3', 'auth.yml'))
     if File.exists?(path)
       AWS::S3::Base.establish_connection!(YAML.load_file(path))
@@ -125,7 +125,9 @@ begin
                                     f,
                                     BUCKET,
                                     :content_type => MIME::Types.type_for(path).first.to_s,
-                                    :access => :public_read)
+                                    :access => :public_read,
+                                    'Cache-control' => 'public, must-revalidate',
+                                    'Expires' => 6.months.from_now.utc.rfc2822)
           end
           print "done\n"
         end
