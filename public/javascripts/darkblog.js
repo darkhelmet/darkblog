@@ -129,11 +129,21 @@ $(document).ready(function() {
 
   $('a.img').facebox();
 
-  $('.entry img').each(function() {
-    var div = $('<div></div>');
-    backgroundImagize(div, $(this));
-    $(this).replaceWith(div);
-  });
+
+  var backgroundizeImages = function() {
+    var images = $('.entry img');
+    if (_.all(images, function(i) { return i.complete; })) {
+      images.each(function() {
+        var div = $('<div></div>');
+        backgroundImagize(div, $(this));
+        $(this).replaceWith(div);
+      });
+    } else {
+      setTimeout("backgroundizeImages()", 100);
+    }
+  };
+
+  backgroundizeImages();
 
   $('a.remote-inline').live('click', function() {
     var link = $(this);
