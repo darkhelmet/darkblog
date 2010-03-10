@@ -129,7 +129,6 @@ $(document).ready(function() {
 
   $('a.img').facebox();
 
-
   var backgroundizeImages = function() {
     var images = $('.entry img');
     if (_.all(images, function(i) { return i.complete; })) {
@@ -139,7 +138,7 @@ $(document).ready(function() {
         $(this).replaceWith(div);
       });
     } else {
-      setTimeout("backgroundizeImages()", 100);
+      setTimeout(backgroundizeImages, 100);
     }
   };
 
