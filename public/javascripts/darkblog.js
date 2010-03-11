@@ -121,13 +121,21 @@ $(document).ready(function() {
     }).addClass('img').addClass(i.attr('class'));
   };
 
-  $('.entry a:has(img)').each(function() {
-    var img = $(this).find('img');
-    backgroundImagize(this, $(img));
-    img.remove();
-  });
+  var backgroundizeLinkImages = function() {
+    var links = $('.entry a:has(img)');
+    if (_.all(links, function(l) { return $(l).find('img')[0].complete; })) {
+      links.each(function() {
+        var img = $(this).find('img');
+        backgroundImagize(this, $(img));
+        img.remove();
+      });
+      $('.entry a.img').facebox();
+    } else {
+      setTimeout(backgroundizeLinkImages, 100);
+    }
+  };
 
-  $('a.img').facebox();
+  backgroundizeLinkImages();
 
   var backgroundizeImages = function() {
     var images = $('.entry img');
