@@ -60,7 +60,10 @@ configure :production do
   end
 
   before do
-    expires(30.minutes, :public, :must_revalidate) if env['REQUEST_METHOD'] =~ /GET|HEAD/
+    if env['REQUEST_METHOD'] =~ /GET|HEAD/
+      expires(30.minutes, :public, :must_revalidate)
+      headers('Vary' => 'Accept-Encoding')
+    end
   end
 
   enable(:compress_bundles)
