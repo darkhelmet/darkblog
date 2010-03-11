@@ -19,6 +19,8 @@ common: &default_settings
 production:
   <<: *default_settings
   monitor_mode: true
+  transaction_trace:
+      enabled: true
 
 development:
   <<: *default_settings
