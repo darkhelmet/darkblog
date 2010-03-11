@@ -108,7 +108,7 @@ begin
   require 'aws/s3'
   require 'find'
   require 'mime/types'
-  BUCKET = 's3.blog.darkhax.com'
+  BUCKET = 'static.verboselogging.com'
 
   desc 'Upload images and swf to S3'
   task :upload_assets => :env do
@@ -121,13 +121,10 @@ begin
           key = path.gsub("#{public_dir}/", '')
           print "Uploading #{path}..."
           File.open(path, 'rb') do |f|
-            AWS::S3::S3Object.store(key,
-                                    f,
-                                    BUCKET,
+            AWS::S3::S3Object.store(key, f, BUCKET,
                                     :content_type => MIME::Types.type_for(path).first.to_s,
                                     :access => :public_read,
-                                    'Cache-control' => 'public, must-revalidate',
-                                    'Expires' => 6.months.from_now.utc.rfc2822)
+                                    'Cache-control' => "public, must-revalidate, max-age=#{6.months}")
           end
           print "done\n"
         end

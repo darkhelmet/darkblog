@@ -128,7 +128,9 @@ class Uploader
                             File.new(path),
                             Choice.choices[:bucket],
                             :content_type => `file -Ib '#{path}'`.gsub(/\n/,''),
-                            :access => :public_read)
+                            :access => :public_read,
+                            'Cache-control' => 'public, must-revalidate',
+                            'Expires' => 6.months.from_now.utc.rfc2822)
   end
 end
 
