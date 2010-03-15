@@ -236,10 +236,10 @@ module BlogHelper
     def where_link(k)
       item = Social.where[k]
       link_to(image_tag(asset_url("/images/icons/#{k}.png"),
-                        :class => 'where',
                         :alt => item.title),
               item.link,
               :title => item.title,
+              :class => 'where',
               :no_escape => true)
     end
 

@@ -110,7 +110,11 @@ $(document).ready(function() {
     return false;
   });
 
-  $('a:not(:has(img))').addClass('hover');
+  setTimeout(function() {
+    $('#disqus_thread img').each(function() {
+      $(this).closest('a').addClass('no-hover').attr('style', 'background-color: #7da5a5 !important');
+    });
+  }, 2500);
 
   var backgroundImagize = function(e, i) {
     $(e).css({

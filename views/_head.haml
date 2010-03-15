@@ -17,25 +17,3 @@
 - if development? || env['REQUEST_PATH'] =~ %r{/preview$}
   :javascript
     var disqus_developer = 1;
-
-%noscript
-  %style{ :type => 'text/css' }
-    :plain
-      a:hover {
-        border-bottom: 1px dotted;
-      }
-
-      .content a {
-        padding: 2px !important;
-        border-bottom: 1px dotted;
-      }
-
-      .content a:hover {
-        -moz-border-radius: 2px !important;
-        -webkit-border-radius: 2px !important;
-        border-radius: 2px !important;
-        background-color: #252625 !important;
-        border-bottom: 0px;
-        color: #a69b03 !important;
-        text-decoration: underline;
-      }
