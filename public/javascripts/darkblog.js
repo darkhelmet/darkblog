@@ -157,15 +157,14 @@ $(document).ready(function() {
     var b = link.closest('.content').prev();
     var r = link.parent();
     link.replaceWith('Loading...');
-    $.ajax({url: this.href,
-            type: 'GET',
-            success: function(data) {
-              r.remove();
-              b.before($(data).addClass('new-elem').css('display','none'));
-              $('.new-elem').slideDown('slow', function() {
-                $(this).removeClass('new-elem');
-              });
-            }});
+    $.get(this.href + '?t=' + (new Date()).getTime(),
+          function(data) {
+            r.remove();
+            b.before($(data).addClass('new-elem').css('display', 'none'));
+            $('.new-elem').slideDown('slow', function() {
+              $(this).removeClass('new-elem');
+            });
+          });
     return false;
   });
 

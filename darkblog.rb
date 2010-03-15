@@ -66,9 +66,6 @@ configure :production do
     end
   end
 
-  enable(:compress_bundles)
-  enable(:cache_bundles)
-
   set(:haml, { :ugly => true })
 end
 

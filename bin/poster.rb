@@ -42,7 +42,7 @@ Choice.options do
     short '-b'
     long '--bucket BUCKET'
     desc 'The S3 bucket for uploads'
-    default 's3.blog.darkhax.com'
+    default 'static.verboselogging.com'
   end
 end
 
@@ -129,8 +129,7 @@ class Uploader
                             Choice.choices[:bucket],
                             :content_type => `file -Ib '#{path}'`.gsub(/\n/,''),
                             :access => :public_read,
-                            'Cache-control' => 'public, must-revalidate',
-                            'Expires' => 6.months.from_now.utc.rfc2822)
+                            'Cache-control' => "public, must-revalidate, max-age=#{6.months}")
   end
 end
 
