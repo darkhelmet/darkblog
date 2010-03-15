@@ -107,6 +107,7 @@ a:hover {
   -moz-border-radius: 0px !important;
   -webkit-border-radius: 0px !important;
   border-radius: 0px !important;
+  padding: 0px !important;
 }
 
 .content a:hover {
@@ -116,7 +117,7 @@ a:hover {
   background-color: #252625 !important;
   border-bottom: 0px;
   text-decoration: underline;
-  color: #a69b03;
+  color: #a69b03 !important;
   -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
