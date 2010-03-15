@@ -208,7 +208,7 @@ module BlogHelper
     end
 
     def archive_link(date)
-      count = Post.published.monthly(DateTime.strptime("#{date.year}-#{date.month}-1 #{Blog.tz_display}", '%F %Z')).count
+      count = Post.published.monthly(date).count
       link_to(date.strftime("%B %Y (#{count})"), "/#{date.strftime('%Y/%m')}")
     end
 

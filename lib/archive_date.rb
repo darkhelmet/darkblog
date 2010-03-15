@@ -1,8 +1,9 @@
 require 'active_support'
 
 # Date class used to make archive links
-class ArchiveDate < Date
+class ArchiveDate < DateTime
   def succ
-    self + 1.month
+    nm = self + 1.month
+    ArchiveDate.new(nm.year, nm.month, 1)
   end
 end
