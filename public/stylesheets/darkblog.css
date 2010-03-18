@@ -369,7 +369,7 @@ pre {
   height: 75px;
 }
 
-.small {
+.small, .footnote {
   font-size: 10px;
 }
 
@@ -404,4 +404,16 @@ pre {
 
 .hosting:hover {
   border: 0px;
+}
+
+sup {
+  vertical-align: super;
+}
+
+sub {
+  vertical-align: sub;
+}
+
+sup, sub {
+  font-size: 80%;
 }
