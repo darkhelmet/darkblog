@@ -9,7 +9,7 @@
 .sidebar-item
   %h3 Author
   = gravatar_html
-  - %w(twitter linkedin facebook skype delicious readernaut lastfm flickr).each do |n|
+  - %w(twitter linkedin skype flickr).each do |n|
     = where_link(n)
   %p#bio
     = Blog.author
