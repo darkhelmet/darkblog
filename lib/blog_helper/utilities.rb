@@ -45,7 +45,7 @@ module BlogHelper
     end
 
     def rebuild_sidebar
-      Cache.put('extra_sidebar', partial(:extra_sidebar))
+      Cache.put('extra_sidebar_partial', partial(:extra_sidebar))
     end
 
     def individual_tweet(id)
