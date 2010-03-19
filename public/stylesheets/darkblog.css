@@ -123,14 +123,17 @@ a:hover {
   border-bottom: 0px;
   text-decoration: underline;
   color: #a69b03 !important;
-  -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
 }
 
 .content a.img {
   border-bottom: 0px;
   padding: 0px !important;
+}
+
+.content a.img:hover {
+  -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.75);
 }
 
 .border {
