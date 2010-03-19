@@ -139,7 +139,6 @@ get(:category) do |category, page|
   page = get_page(page)
   @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
-  redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title(category.capitalize, page)
   canonical(can)
   description("#{Blog.title} archives in the #{category.capitalize} category", page)
@@ -163,7 +162,6 @@ get(:search) do |page|
   @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
   description("#{Blog.title} search results for '#{query}'", page)
   return haml(:empty_search) if @posts.empty?
-  redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title("Search '#{query}'")
   haml(:posts)
 end
@@ -230,7 +228,6 @@ get(:tag) do |tag, page|
   page = get_page(page)
   @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
-  redirect(@posts.first.permalink, 302) if 1 == @posts.size && 1 == page
   title(tag, page)
   canonical(can)
   description("#{Blog.title} archives tagged with '#{tag}'", page)
