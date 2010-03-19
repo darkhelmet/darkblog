@@ -402,7 +402,7 @@ pre {
   display: block;
 }
 
-.hosting:hover {
+#hosting:hover, #feed:hover {
   border: 0px;
 }
 

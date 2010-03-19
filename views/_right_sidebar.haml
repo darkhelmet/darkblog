@@ -1,6 +1,6 @@
 .sidebar-item
   %h3
-    = link_to(image_tag(asset_url('/images/rss.png'), :style => 'vertical-align: bottom;'), '/feed', :no_escape => true)
+    = link_to(image_tag(asset_url('/images/rss.png'), :style => 'vertical-align: bottom;'), '/feed', :id => 'feed', :no_escape => true)
     = link_to('Subscribe', '/feed')
 .sidebar-item
   %form#search{ :action => '/search', :method => 'get' }
@@ -19,4 +19,4 @@
 .sidebar-item
   Hosting by:
   %br
-  = link_to(image_tag(asset_url('/images/heroku.png')), 'http://heroku.com/', :class => 'hosting', :no_escape => true)
+  = link_to(image_tag(asset_url('/images/heroku.png')), 'http://heroku.com/', :id => 'hosting', :no_escape => true)
