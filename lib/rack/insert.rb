@@ -5,8 +5,8 @@ module Rack
     def initialize(app, options = { })
       @app = app
       @regex = {
-        :body => /<\/body>/,
-        :head => /<\/head>/
+        :body => %r{</body>},
+        :head => %r{</head>}
       }[options[:where] || :body]
       @ignore = options[:ignore] || []
       @html = yield
@@ -27,11 +27,5 @@ module Rack
       end
       [status, headers, body]
     end
-  end
-
-private
-
-  def get_regex
-
   end
 end
