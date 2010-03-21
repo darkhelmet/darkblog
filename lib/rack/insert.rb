@@ -19,7 +19,7 @@ module Rack
       if html?(headers)
         body.each do |part|
           if part =~ @regex
-            part.sub!(@regex, "#{@html}\\1")
+            part.sub!(@regex) { |match| "#{@html}#{match}" }
             break
           end
         end
