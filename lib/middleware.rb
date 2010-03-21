@@ -14,17 +14,16 @@ use Rack::Insert, :where => :head do
   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>}
 end
 
-use Rack::Insert, :ignore => ignore do
-  %Q{<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
+if production?
+  use Rack::Insert, :ignore => ignore do
+    %Q{<script type='text/javascript' src='http://www.google-analytics.com/ga.js'></script>
 <script type="text/javascript">
 try {
-var pageTracker = _gat._getTracker("#{Blog.google_analytics}");
+var pageTracker = _gat._getTracker('#{Blog.google_analytics}');
 pageTracker._trackPageview();
 } catch(err) {}</script>}
-end if production?
+  end
+end
 
 use Rack::Insert, :ignore => ignore do
   %Q{<script type='text/javascript' src='http://tweetboard.com/#{Blog.twitter}/tb.js'></script>}
