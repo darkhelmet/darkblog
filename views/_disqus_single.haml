@@ -1,6 +1,6 @@
 %hr
 #disqus_thread
-%script{ :type => 'text/javascript', :src => "http://disqus.com/forums/#{Blog.disqus}/embed.js", :async => 'true', :defer => 'true' }
+%script{ :type => 'text/javascript', :src => "http://disqus.com/forums/#{Blog.disqus}/embed.js", :async => 'async', :defer => 'defer' }
 %noscript= link_to('View the discussion thread.', "http://#{Blog.disqus}.disqus.com/?url=ref")
 %a.dsq-brlink{ :href => "http://disqus.com" }
   blog comments powered by
