@@ -120,13 +120,13 @@ a:hover {
   -webkit-border-radius: 2px;
   border-radius: 2px;
   background-color: #252625 !important;
-  border-bottom: 0px;
+  border-bottom: none;
   text-decoration: underline;
   color: #a69b03 !important;
 }
 
 .content a.img {
-  border-bottom: 0px;
+  border-bottom: none;
   padding: 0px !important;
 }
 
@@ -375,6 +375,14 @@ pre {
 
 #pagination {
   margin: 10px 0px;
+}
+
+#pagination a {
+  border-bottom: 1px dotted;
+}
+
+#pagination a:hover {
+  border-bottom: none;
 }
 
 #pagination .current {
