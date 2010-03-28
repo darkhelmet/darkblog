@@ -75,7 +75,7 @@ class Post < ActiveRecord::Base
 
   class << self
     def find_by_keywords(*args)
-      find_by_sql(["SELECT p.*, pkw.relevance FROM (SELECT kw.post_id, COUNT(*) AS relevance FROM keywordings kw INNER JOIN keywords k ON kw.keyword_id = k.id WHERE k.name IN (?) GROUP BY kw.post_id HAVING COUNT(*) > 0) pkw INNER JOIN posts p ON pkw.post_id = p.id WHERE published = true ORDER BY pkw.relevance DESC", words(args.flatten)])
+      find_by_sql(["SELECT p.*, pkw.relevance FROM (SELECT kw.post_id, COUNT(*) AS relevance FROM keywordings kw INNER JOIN keywords k ON kw.keyword_id = k.id WHERE k.name IN (?) GROUP BY kw.post_id HAVING COUNT(*) > 0) pkw INNER JOIN posts p ON pkw.post_id = p.id WHERE published = ? AND published_on < ? ORDER BY pkw.relevance DESC", words(args.flatten), true, Time.now.utc])
     end
 
   protected
