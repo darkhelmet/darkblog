@@ -1,4 +1,5 @@
 require 'yaml'
+require 'ruby-debug'
 
 def runcoderun?
   ENV['RUN_CODE_RUN']
@@ -101,6 +102,19 @@ desc 'Install gem locally'
 task :gem,:name do |task, args|
   if args.name
     system("gem i #{args.name} -i vendor --ignore-dependencies")
+  end
+end
+
+namespace :coffee do
+  desc 'Build coffee files'
+  task :build => Dir['lib/coffee/*.coffee'] do |task|
+    File.open('public/javascripts/darkcoffee.js', 'wb') do |f|
+      task.prerequisites.each do |path|
+        IO.popen("coffee --no-wrap -p '#{path}'") do |io|
+          f.write(io.read)
+        end
+      end
+    end
   end
 end
 
