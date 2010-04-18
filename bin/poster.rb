@@ -119,6 +119,12 @@ class Uploader
           med.save(path)
           pp upload(path)
         end
+
+        img.thumbnail(600) do |max|
+          path = "#{basename}_max#{ext}"
+          max.save(path)
+          pp upload(path)
+        end
       end
     end
   end
