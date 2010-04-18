@@ -1,16 +1,17 @@
 require 'yaml'
 require 'ruby-debug'
 
-def runcoderun?
-  ENV['RUN_CODE_RUN']
-end
-
 desc 'Setup environment'
 task :env do
   require 'darkblog'
 end
 
 namespace :db do
+  desc 'start postgres'
+  task :start do
+    exec('postgres -D $HOME/opt/homebrew/var/postgres')
+  end
+
   desc 'Run database migrations'
   task :migrate => %w(env) do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
@@ -79,24 +80,12 @@ begin
 rescue LoadError
 end
 
-desc 'Setup task for runcoderun'
-task :runcoderun do
-  db = 'darkhelmet_darkblog_test'
-  user = 'build'
-  %w(drop create).each { |action| %x(#{action}db -U #{user} #{db}) }
-end
-
 desc 'Local test setup'
 task :local do
   ENV['RACK_ENV'] = 'test'
 end
 
-if runcoderun?
-  ENV['RACK_ENV'] = 'test'
-  task :default => %w(env runcoderun db:migrate spec)
-else
-  task :default => %w(local db:migrate spec)
-end
+task :default => %w(local db:migrate spec)
 
 desc 'Install gem locally'
 task :gem,:name do |task, args|
