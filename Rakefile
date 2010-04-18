@@ -1,5 +1,9 @@
 require 'yaml'
-require 'ruby-debug'
+
+begin
+  require 'ruby-debug'
+rescue LoadError
+end
 
 desc 'Setup environment'
 task :env do
