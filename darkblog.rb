@@ -41,7 +41,7 @@ configure do
                         :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
                         :per_page => ENV['BLOG_PER_PAGE'] || 10,
                         :tz => TZInfo::Timezone.get('America/Edmonton'),
-                        :tz_display => 'MDT',
+                        :tz_display => ENV['BLOG_TZ_DISPLAY'] || 'MDT',
                         :fogbugz_host => ENV['BLOG_FOGBUGZ_HOST'] || 'darkhax.fogbugz.com',
                         :fogbugz_user => ENV['BLOG_FOGBUZ_USER'] || 'Daniel Huckstep',
                         :fogbugz_project => ENV['BLOG_FOGBUZ_PROJECT'] || 'darkhax',
