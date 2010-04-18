@@ -13,12 +13,12 @@ module Rack
         body.each do |part|
           part.gsub!('{{responsetime}}') do
             diff = Time.now - t0
-            if @format.respond_to? :call
+            if @format.respond_to?(:call)
               @format.call(diff)
             else
               @format % diff
             end
-          end
+          end if part.respond_to?(:gsub!)
         end
         AbstractMiddleware::update_content_length(headers, body)
       end
