@@ -1,9 +1,5 @@
 # encoding: utf-8
 
-%w(render routing).each do |plugin|
-  require "sinatra/#{plugin}_plugin"
-end
-
 require 'ostruct'
 require 'bugzscout'
 require 'social'
@@ -18,6 +14,8 @@ WillPaginate::ViewHelpers.pagination_options[:previous_label] = '← Previous'
 WillPaginate::ViewHelpers.pagination_options[:next_label] = 'Next →'
 
 require 'sinatra/authorization'
+require 'sinatra/routing'
+require 'sinatra/render'
 require 'sinatra/bundles'
 
 %w(etag head static_cache remove_slash inline_compress canonical_host response_time_injector bugzscout insert).each do |ext|
