@@ -274,9 +274,11 @@ module BlogHelper
     end
 
     def post_title_link(post)
-      content_tag(:h1, :class => 'post-title', :no_escape => true) do
-        link_to(post.title, post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}")
-      end
+      content_tag(:h1, :class => 'post-title', :no_escape => true) { post_link(post) }
+    end
+
+    def post_link(post)
+      link_to(post.title, post.permalink, :rel => 'bookmark', :title => "Permanent Link to #{post.title}")
     end
   end
 end

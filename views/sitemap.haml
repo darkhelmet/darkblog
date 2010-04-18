@@ -1,0 +1,11 @@
+%div.grid_2.alpha{ :id => "sitemap-sidebar" }
+  %p
+    <!-- take up space -->
+%div.grid_8.omega.content{ :id => "sitemap-content" }
+  .border
+    .entry
+      %form{ :action => '/sitemap', :method => 'post' }
+        %select{ :name => 'by' }
+          - Sitemap.singleton_methods.each do |m|
+            %option{ :value => m.to_s }= m.to_s.humanize
+        %input{ :type => 'submit', :value => 'OK' }

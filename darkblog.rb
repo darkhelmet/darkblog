@@ -85,7 +85,7 @@ map(:search).to(%r|^/search(?:/page/(\d+))?$|)
 map(:monthly).to(%r|^/(\d{4})/(\d{2})(?:/page/(\d+))?$|)
 map(:category).to(%r|^/category/(\w+)(?:/page/(\d+))?$|)
 map(:feed).to(%r|^/feed.*|)
-map(:sitemap).to(%r|^/sitemap.xml(.gz)?$|)
+map(:sitemap).to(%r|^/sitemap(.xml(?:.gz)?)?$|)
 map(:open_search).to('/opensearch.xml')
 map(:google).to('/google-search')
 map(:permalink).to(%r|^(/\d{4}/\d{2}/\d{2}/[\w\d\-+ ]+)$|)
@@ -123,7 +123,7 @@ get(:monthly) do |year, month, page|
   can = build_can("#{year}/#{month}", page)
   redirect(can) if 1 == page.to_s.to_i
   page = get_page(page)
-  date = DateTime.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
+  date = Time.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   title(date.strftime('%B %Y'), page)
@@ -167,10 +167,21 @@ get(:search) do |page|
 end
 
 # sitemap
-get(:sitemap) do |gzip|
-  @posts = Post.published
-  content_type('application/xml', :charset => 'utf-8')
-  builder(:sitemap)
+get(:sitemap) do |xml|
+  if xml
+    @posts = Post.published
+    content_type('application/xml', :charset => 'utf-8')
+    builder(:sitemap)
+  else
+    enable_minimal_sidebar
+    haml(:sitemap)
+  end
+end
+
+post(:sitemap) do |xml|
+  redirect '/sitemap' unless params[:by] && Sitemap.singleton_methods.include?(params[:by].to_sym)
+  @posts = Sitemap.send(params[:by].to_sym)
+  haml(:sitemap_listing)
 end
 
 get(:open_search) do

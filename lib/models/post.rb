@@ -28,7 +28,7 @@ class Post < ActiveRecord::Base
   named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
   named_scope(:perma, lambda { |perma| { :limit => 1, :conditions => { :permalink => perma.gsub(' ', '+') } } })
   named_scope(:future, lambda { { :conditions => ['published = ? AND published_on > ?', true, Time.now.utc] } })
-  named_scope(:monthly, lambda { |date| { :conditions => { :published_on => date.beginning_of_month.beginning_of_day.utc..date.end_of_month.end_of_day.utc } } })
+  named_scope(:monthly, lambda { |date| { :conditions => { :published_on => Blog.tz.local_to_utc(date.beginning_of_month.beginning_of_day)..Blog.tz.local_to_utc(date.end_of_month.end_of_day) } } })
   named_scope(:unannounced, :conditions => { :announced => false })
   named_scope(:ptitle, lambda { |ptitle| { :conditions => { :parameterized_title => ptitle } } })
 

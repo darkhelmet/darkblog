@@ -1,0 +1,11 @@
+%div.grid_2.alpha{ :id => "sitemap-sidebar" }
+  %p
+    <!-- take up space -->
+%div.grid_8.omega.content{ :id => "sitemap-content" }
+  .border
+    .entry
+      - @posts.each do |group, posts|
+        %h1= group
+        %ul
+          - posts.each do |post|
+            %li= post_link(post)

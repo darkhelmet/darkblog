@@ -5,6 +5,7 @@ require 'bugzscout'
 require 'social'
 require 'archive_date'
 require 'tzinfo'
+require 'sitemap'
 
 require 'will_paginate'
 require 'will_paginate/view_helpers'
