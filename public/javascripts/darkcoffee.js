@@ -50,16 +50,18 @@ $(document).ready(function() {
   backgroundizeImages = function backgroundizeImages() {
     var images;
     images = $('.entry img');
-    return images.toArray().all(function(i) {
+    if (images.toArray().all(function(i) {
       return i.complete;
-    }) ? images.each(function() {
-      var div;
-      div = $('<div></div>');
-      backgroundImagize(div, $(this));
-      return $(this).replaceWith(div);
-    }) : setTimeout((function() {
-      return backgroundizeImages;
-    }), 100);
+    })) {
+      return images.each(function() {
+        var div;
+        div = $('<div></div>');
+        backgroundImagize(div, $(this));
+        return $(this).replaceWith(div);
+      });
+    } else {
+      return setTimeout(backgroundizeImages, 100);
+    }
   };
   backgroundizeLinkImages = function backgroundizeLinkImages() {
     var links;
@@ -76,9 +78,7 @@ $(document).ready(function() {
       $('.entry a:regex(href, png|jpe?g|gif).img').facebox();
       return backgroundizeImages();
     } else {
-      return setTimeout((function() {
-        return backgroundizeLinkImages;
-      }), 100);
+      return setTimeout(backgroundizeLinkImages, 100);
     }
   };
   backgroundizeLinkImages();

@@ -44,7 +44,7 @@ $(document).ready ->
         backgroundImagize(div, $(this))
         $(this).replaceWith(div))
     else
-      setTimeout((-> backgroundizeImages), 100)
+      setTimeout(backgroundizeImages, 100)
 
   backgroundizeLinkImages: ->
     links: $('.entry a:has(img)')
@@ -57,7 +57,7 @@ $(document).ready ->
       $('.entry a:regex(href, png|jpe?g|gif).img').facebox()
       backgroundizeImages()
     else
-      setTimeout((-> backgroundizeLinkImages), 100)
+      setTimeout(backgroundizeLinkImages, 100)
 
   backgroundizeLinkImages()
 
