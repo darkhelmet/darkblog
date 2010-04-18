@@ -123,7 +123,7 @@ get(:monthly) do |year, month, page|
   can = build_can("#{year}/#{month}", page)
   redirect(can) if 1 == page.to_s.to_i
   page = get_page(page)
-  date = Time.strptime("#{year}-#{month}-1 #{Blog.tz_display}", '%F %Z')
+  date = Date.new(year.to_i, month.to_i, 1)
   @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
   not_found if @posts.empty?
   title(date.strftime('%B %Y'), page)
