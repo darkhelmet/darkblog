@@ -29,6 +29,12 @@ def capture
   print "done!\n"
 end
 
+def dump
+  system("heroku pgdumps:capture --app #{APP}")
+  d = `heroku pgdumps --app #{APP}`.split("\n").last.split(' ').first
+  `heroku pgdumps:url #{d} --app #{APP}`
+end
+
 def download
   `heroku bundles:download --app #{APP}`.split(' ').last
 end
@@ -51,7 +57,12 @@ def backup_json!
   AWS::S3::S3Object.store("/backups/#{key('json')}", json, BUCKET)
 end
 
+def backup_pgdumps!
+  AWS::S3::S3Object.store("/backups/#{key('sql.gz')}", RestClient.get(dump).body, BUCKET)
+end
+
 AWS::S3::Base.establish_connection!(YAML.load_file(S3_CREDENTIALS))
 backup_bundle!
 backup_json!
+backup_pgdumps!
 print "Done!\n"
