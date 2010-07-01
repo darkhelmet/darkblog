@@ -1,14 +1,14 @@
 var GithubBadge, ReaderBadge, ShowCommits;
-String.prototype.empty = function empty() {
+String.prototype.empty = function() {
   return '' === this;
 };
-Array.prototype.all = function all(f) {
+Array.prototype.all = function(f) {
   return -1 === this.map(f).indexOf(false);
 };
-ShowCommits = function ShowCommits(json) {
+ShowCommits = function(json) {
   return $('#commits').html(Jaml.render('commit', json.commits));
 };
-GithubBadge = function GithubBadge(json) {
+GithubBadge = function(json) {
   var badge;
   if (json) {
     badge = {
@@ -25,7 +25,7 @@ GithubBadge = function GithubBadge(json) {
     }
   }
 };
-ReaderBadge = function ReaderBadge(json) {
+ReaderBadge = function(json) {
   return $('#reader-badge').html(Jaml.render('reader-badge', json));
 };
 $(document).ready(function() {
@@ -39,7 +39,7 @@ $(document).ready(function() {
       return $(this).closest('a').addClass('no-hover').attr('style', 'background-color: #7da5a5 !important');
     });
   }), 2500);
-  backgroundImagize = function backgroundImagize(e, i) {
+  backgroundImagize = function(e, i) {
     return $(e).css({
       'background-image': 'url(' + i.attr('src') + ')',
       'background-repeat': 'no-repeat',
@@ -47,7 +47,7 @@ $(document).ready(function() {
       width: i.width()
     }).addClass('img').addClass(i.attr('class'));
   };
-  backgroundizeImages = function backgroundizeImages() {
+  backgroundizeImages = function() {
     var images;
     images = $('.entry img');
     if (images.toArray().all(function(i) {
@@ -63,7 +63,7 @@ $(document).ready(function() {
       return setTimeout(backgroundizeImages, 100);
     }
   };
-  backgroundizeLinkImages = function backgroundizeLinkImages() {
+  backgroundizeLinkImages = function() {
     var links;
     links = $('.entry a:has(img)');
     if (links.toArray().all(function(l) {
