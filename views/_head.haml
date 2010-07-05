@@ -5,6 +5,7 @@
 %link{ :rel => 'icon', :type => 'image/png', :href => asset_url('/images/favicon.png') }
 %link{ :rel => 'search', :type => 'application/opensearchdescription+xml', :href => "#{Blog.index}opensearch.xml", :title => Blog.title }
 %link{ :rel => 'alternate', :type => 'application/rss+xml', :title => "#{Blog.title} RSS Feed", :href => "#{Blog.index}feed" }
+= meta_tag(Blog.author, :name => 'Author')
 = meta_tag('text/html; charset=utf-8', 'http-equiv' => 'Content-Type')
 = meta_tag(description, :name => 'description')
 - unless keywords.empty?
