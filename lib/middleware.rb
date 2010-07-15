@@ -9,11 +9,6 @@ use Rack::StaticCache, :root => 'public', :compress => true if production?
 use Rack::ResponseTimeInjector, :format => '%.3f'
 use Rack::InlineCompress if production?
 
-use Rack::Insert, :where => :head do
-  %Q{<script type="text/javascript" src="http://use.typekit.com/#{Blog.typekit_id}.js"></script>
-  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>}
-end
-
 use Rack::Insert, :ignore => ignore do
   %Q{<script type='text/javascript' src='http://www.google-analytics.com/ga.js'></script>
 <script type="text/javascript">

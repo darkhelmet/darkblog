@@ -5,11 +5,15 @@
 %link{ :rel => 'icon', :type => 'image/png', :href => asset_url('/images/favicon.png') }
 %link{ :rel => 'search', :type => 'application/opensearchdescription+xml', :href => "#{Blog.index}opensearch.xml", :title => Blog.title }
 %link{ :rel => 'alternate', :type => 'application/rss+xml', :title => "#{Blog.title} RSS Feed", :href => "#{Blog.index}feed" }
+%link{ :rel => 'sitemap', :type => 'application/xml', :title => 'Sitemap', :href => "#{Blog.index}sitemap.xml" }
 = meta_tag(Blog.author, :name => 'author')
 = meta_tag('text/html; charset=utf-8', 'http-equiv' => 'Content-Type')
 = meta_tag(description, :name => 'description')
+
 - unless keywords.empty?
   = meta_tag(keywords.join(','), :name => 'keywords')
+
+= stylesheet_link_tag('http://fonts.googleapis.com/css?family=Droid+Serif:regular,italic,bold,bolditalic')
 = stylesheet_bundle_link_tag(:all)
 
 :javascript

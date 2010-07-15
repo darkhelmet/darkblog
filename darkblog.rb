@@ -49,7 +49,6 @@ configure do
                         :yahoo_api_key => ENV['BLOG_YAHOO_API_KEY'] || nil,
                         :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/',
                         :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4',
-                        :typekit_id => ENV['BLOG_TYPEKIT_ID'] || 'lml6ico',
                         :asset_host => ENV['BLOG_ASSET_HOST'] || 'static.verboselogging.com')
 end
 
