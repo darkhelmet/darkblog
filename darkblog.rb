@@ -63,6 +63,8 @@ configure :production do
       expires(30.minutes, :public, :must_revalidate)
       headers('Vary' => 'Accept-Encoding')
     end
+
+    no_cache if user_agent?(/google/i)
   end
 
   set(:haml, { :ugly => true })
