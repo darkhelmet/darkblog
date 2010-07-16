@@ -7,8 +7,8 @@ use Rack::Head
 use Rack::ETag
 use Rack::StaticCache, :root => 'public', :compress => true if production?
 use Rack::ResponseTimeInjector, :format => '%.3f'
-use Rack::InlineCompress if production?
 use Rack::Gist, :jquery => false
+use Rack::InlineCompress if production?
 
 use Rack::Insert, :ignore => ignore do
   %Q{<script type='text/javascript' src='http://www.google-analytics.com/ga.js'></script>
