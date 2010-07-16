@@ -7,7 +7,7 @@ gem 'builder', '2.1.2'
 gem 'activesupport', '2.3.8', :require => 'active_support'
 gem 'activerecord', '2.3.8', :require => 'active_record'
 gem 'sinatra-bundles', '0.3.0', :require => 'sinatra/bundles'
-gem 'rack-gist', '1.0.4', :require => 'rack/gist'
+gem 'rack-gist', '1.0.5', :require => 'rack/gist'
 gem 'acts_as_taggable_on_steroids', '1.2', :require => nil
 gem 'RedCloth', '4.2.2'
 gem 'crack', '0.1.6'
