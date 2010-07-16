@@ -53,12 +53,12 @@ end
 
 def backup_json!
   user, pass = YAML.load_file(HTTP_CREDENTIALS)
-  json = RestClient.get("http://#{user}:#{pass}@blog.darkhax.com/dump.json").body
+  json = RestClient.get("http://#{user}:#{pass}@blog.darkhax.com/dump.json")
   AWS::S3::S3Object.store("/backups/#{key('json')}", json, BUCKET)
 end
 
 def backup_pgdumps!
-  AWS::S3::S3Object.store("/backups/#{key('sql.gz')}", RestClient.get(dump).body, BUCKET)
+  AWS::S3::S3Object.store("/backups/#{key('sql.gz')}", RestClient.get(dump), BUCKET)
 end
 
 AWS::S3::Base.establish_connection!(YAML.load_file(S3_CREDENTIALS))
