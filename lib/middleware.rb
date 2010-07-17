@@ -18,7 +18,3 @@ var pageTracker = _gat._getTracker('#{Blog.google_analytics}');
 pageTracker._trackPageview();
 } catch(err) {}</script>}
 end if production?
-
-use Rack::Insert, :ignore => ignore do
-  %Q{<script type='text/javascript' src='http://tweetboard.com/#{Blog.twitter}/tb.js'></script>}
-end

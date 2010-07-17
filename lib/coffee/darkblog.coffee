@@ -97,6 +97,8 @@ $(document).ready ->
   $('abbr.timeago').timeago()
   $.getScript("http://www.google.com/reader/public/javascript/user/13098793136980097600/state/com.google/broadcast?n=12&callback=ReaderBadge")
 
+  $.getScript('http://tweetboard.com/darkhelmetlive/tb.js')
+
   if 0 < $('#commits').length
     $.getScript('http://github.com/api/v2/json/commits/list/darkhelmet/darkblog/master?callback=ShowCommits')
 
