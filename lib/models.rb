@@ -11,7 +11,7 @@ require 'tag_list'
 require 'tagging'
 require 'tags_helper'
 
-%w(post cache redirection keyword keywording).each do |model|
+%w(post redirection keyword keywording).each do |model|
   require "models/#{model}"
 end
 

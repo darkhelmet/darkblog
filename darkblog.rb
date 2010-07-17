@@ -26,6 +26,7 @@ Bundler.require
 require 'blog_helper'
 
 configure do
+  Cache = ActiveSupport::Cache::CompressedMemCacheStore.new(Memcached::Rails.new)
   Blog = OpenStruct.new(:title => ENV['BLOG_TITLE'] || 'Verbose Logging',
                         :tagline => ENV['BLOG_TAGLINE'] || 'software development with some really amazing hair',
                         :index => ENV['BLOG_INDEX'] || 'http://localhost:8080/',
@@ -110,9 +111,9 @@ javascript_bundle(:admin, %w(panel facebox jaml jquery.timeago jquery.autocomple
 get(:index) do |page|
   redirect(Blog.index, 301) if 1 == page.to_s.to_i
   page = get_page(page)
-  @posts = Post.published.paginate(:page => page, :per_page => Blog.per_page)
+  @posts = Cache.fetch("index:#{page}") { Post.published.paginate(:page => page, :per_page => Blog.per_page) }
   not_found('Not Found') if @posts.empty?
-  @future_post = Post.future.last if 1 == page
+  @future_post = Cache.fetch("future_post") { Post.future.last } if 1 == page
   title("Page #{page}") if 1 < page
   canonical(build_can('', page))
   description(Blog.tagline, page)
@@ -125,7 +126,7 @@ get(:monthly) do |year, month, page|
   redirect(can) if 1 == page.to_s.to_i
   page = get_page(page)
   date = Date.new(year.to_i, month.to_i, 1)
-  @posts = Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page)
+  @posts = Cache.fetch("monthly:#{year}:#{month}:#{page}") { Post.published.monthly(date).paginate(:page => page, :per_page => Blog.per_page) }
   not_found if @posts.empty?
   title(date.strftime('%B %Y'), page)
   canonical(can)
@@ -138,7 +139,7 @@ get(:category) do |category, page|
   can = build_can("category/#{category}", page)
   redirect(can, 301) if 1 == page.to_s.to_i
   page = get_page(page)
-  @posts = Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page)
+  @posts = Cache.fetch("category:#{category}:#{page}") { Post.published.category(category).paginate(:page => page, :per_page => Blog.per_page) }
   not_found if @posts.empty?
   title(category.capitalize, page)
   canonical(can)
@@ -150,7 +151,7 @@ end
 get(:feed) do
   no_cache
   redirect(fb_url, 301) unless user_agent?(/feedburner/i) || development?
-  @posts = Post.published.all(:limit => 10)
+  @posts = Cache.fetch('feed') { Post.published.all(:limit => 10) }
   content_type('application/rss+xml', :charset => 'utf-8')
   builder(:feed)
 end
@@ -160,7 +161,7 @@ get(:search) do |page|
   page = get_page(page)
   query = params['q']
   redirect('/') unless query
-  @posts = Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page)
+  @posts = Cache.fetch("search:#{query.hash}:#{page}") { Post.published.search(query).paginate(:page => page, :per_page => Blog.per_page) }
   description("#{Blog.title} search results for '#{query}'", page)
   return haml(:empty_search) if @posts.empty?
   title("Search '#{query}'")
@@ -170,7 +171,7 @@ end
 # sitemap
 get(:sitemap) do |xml|
   if xml
-    @posts = Post.published
+    @posts = Cache.fetch('sitemap') { Post.published.all }
     content_type('application/xml', :charset => 'utf-8')
     builder(:sitemap)
   else
@@ -181,7 +182,7 @@ end
 
 post(:sitemap) do |xml|
   redirect '/sitemap' unless params[:by] && Sitemap.singleton_methods.include?(params[:by].to_sym)
-  @posts = Sitemap.send(params[:by].to_sym)
+  @posts = Cache.fetch('html_sitemap') { Sitemap.send(params[:by].to_sym) }
   haml(:sitemap_listing)
 end
 
@@ -219,7 +220,7 @@ end
 get(:permalink) do |permalink|
   no_cache if request.xhr?
   disable_post_preview
-  @posts = Post.published.perma(permalink).paginate(:page => 1, :per_page => 1)
+  @posts = Cache.fetch("permalink:#{permalink}") { Post.published.perma(permalink).paginate(:page => 1, :per_page => 1) }
   if @posts.empty?
     r = Redirection.first(:conditions => { :old_permalink => permalink })
     r.nil? ? not_found : redirect(r.post.permalink, 301)
@@ -238,7 +239,7 @@ get(:tag) do |tag, page|
   can = build_can("tag/#{tag}", page)
   redirect(can, 301) if 1 == page.to_s.to_i
   page = get_page(page)
-  @posts = Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page)
+  @posts = Cache.fetch("tag:#{tag}:#{page}") { Post.published.find_tagged_with(tag, :match_all => true).paginate(:page => page, :per_page => Blog.per_page) }
   not_found if @posts.empty?
   title(tag, page)
   canonical(can)
@@ -283,7 +284,6 @@ post(:posts) do
   published = params['post']['published']
   params['post']['published'] = (published.nil? || 'false' == published) ? false : true
   if post = Post.create(params['post'])
-    rebuild_sidebar
     redirect("#{post.permalink}/edit")
   else
     redirect('/posts')
@@ -301,7 +301,6 @@ put(:posts) do
     Redirection.create(:post => post, :old_permalink => post.permalink)
   end
   post.update_attributes(params['post'])
-  rebuild_sidebar
   redirect("#{post.permalink}/edit")
 end
 
@@ -355,7 +354,6 @@ delete(:permalink) do |permalink|
   require_administrative_privileges
   post = Post.perma(permalink).first
   post.destroy
-  rebuild_sidebar
   content_type('application/javascript')
   "window.location = '#{Blog.index}index'"
 end

@@ -7,7 +7,7 @@ end
 
 desc 'Setup environment'
 task :env do
-  require 'darkblog'
+  load 'darkblog.rb'
 end
 
 namespace :db do
@@ -44,7 +44,7 @@ end
 namespace :cache do
   desc 'Purge cache items'
   task :purge => %w(env) do
-    Cache.purge(nil)
+    Cache.clear
   end
 end
 

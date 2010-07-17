@@ -15,7 +15,7 @@
     = Blog.author
     = Blog.bio
 - unless minimal_sidebar?
-  = cached_partial(:extra_sidebar, 1.year) # this gets rebuilt
+  = cached_partial(:extra_sidebar) # this gets rebuilt
 .sidebar-item
   Hosting by:
   %br

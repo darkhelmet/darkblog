@@ -12,3 +12,10 @@ class String
     args.any? { |a| self.match(a) }
   end
 end
+
+class Float
+  # For the cache bullshit
+  def tv_sec
+    to_i
+  end
+end

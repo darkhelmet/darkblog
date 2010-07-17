@@ -41,15 +41,10 @@ module BlogHelper
     def announce
       RestClient.get('http://pingomatic.com/ping/?title=verbose+logging&blogurl=http%3A%2F%2Fblog.darkhax.com%2F&rssurl=http%3A%2F%2Fblog.darkhax.com%2Ffeed&chk_weblogscom=on&chk_blogs=on&chk_technorati=on&chk_feedburner=on&chk_syndic8=on&chk_newsgator=on&chk_myyahoo=on&chk_pubsubcom=on&chk_blogdigger=on&chk_blogrolling=on&chk_blogstreet=on&chk_moreover=on&chk_weblogalot=on&chk_icerocket=on&chk_newsisfree=on&chk_topicexchange=on&chk_google=on&chk_tailrank=on&chk_bloglines=on&chk_postrank=on&chk_skygrid=on&chk_collecta=on')
       RestClient.get('http://feedburner.google.com/fb/a/pingSubmit?bloglink=http://blog.darkhax.com/')
-      rebuild_sidebar
-    end
-
-    def rebuild_sidebar
-      Cache.put('extra_sidebar_partial', partial(:extra_sidebar))
     end
 
     def individual_tweet(id)
-      Cache.get("twitter:status:#{id}", 1.year) { Social.tweet(id, Blog.twitter, Blog.twitter_password) }
+      Cache.fetch("twitter:status:#{id}", :expires_in => 1.year) { Social.tweet(id, Blog.twitter, Blog.twitter_password) }
     end
   end
 end

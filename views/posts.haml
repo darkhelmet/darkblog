@@ -6,7 +6,7 @@
       = partial(:preview_post, :locals => { :post => post })
   - else
     = partial(:post, :collection => @posts)
-  - if keywords_post && 0 < (related_posts = (Post.find_by_keywords(keywords_post) - [keywords_post])[0,10]).size
+  - if keywords_post && 0 < (related_posts = (::Cache.fetch("related_posts:#{keywords_post.id}") { Post.find_by_keywords(keywords_post) } - [keywords_post])[0,10]).size
     %div.grid_2.alpha{ :id => 'related-sidebar' }
       %p <!-- take up space -->
     %div.grid_8.omega.content{ :id => 'related-content' }

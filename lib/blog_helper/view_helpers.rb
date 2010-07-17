@@ -92,12 +92,8 @@ module BlogHelper
       can.nil? ? @canonical : @canonical = can
     end
 
-    def cached_partial(key, time = 1.hour)
-      Cache.get("#{key}_partial", time) { partial(key) }
-    end
-
-    def wipe_cached_partial(key)
-      Cache.purge("#{key}_partial")
+    def cached_partial(key)
+      Cache.fetch("#{key}_partial") { partial(key) }
     end
 
     def disqus_single

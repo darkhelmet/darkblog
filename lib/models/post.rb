@@ -8,7 +8,14 @@ class Post < ActiveRecord::Base
   has_many :keywordings, :dependent => :destroy, :include => :keyword
   has_many :keywords, :through => :keywordings, :uniq => true
 
-  after_save { |post| post.update_keywords! }
+  after_save do |post|
+    post.update_keywords!
+    Cache.clear
+  end
+
+  after_destroy do |post|
+    Cache.clear
+  end
 
   index do
     title
@@ -22,7 +29,7 @@ class Post < ActiveRecord::Base
 
   acts_as_taggable
 
-  default_scope(:order => 'published_on DESC', :include => :tags, :include => :keywords)
+  default_scope(:order => 'published_on DESC')
   named_scope(:published, lambda { { :conditions => ['published = ? AND published_on < ?', true, Time.now.utc] } })
   named_scope(:unpublished, :conditions => { :published => false })
   named_scope(:category, lambda { |cat| { :conditions => { :category => cat.downcase } } })
