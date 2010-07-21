@@ -393,7 +393,7 @@ pre {
   font-size: 12px;
 }
 
-.entry > object, .entry > embed, div.rack-gist {
+.entry > object, .entry > embed, div.rack-gist, .entry > div.swfembed {
     margin-bottom: 20px;
 }
 
