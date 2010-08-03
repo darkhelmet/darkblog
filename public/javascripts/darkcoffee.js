@@ -50,18 +50,14 @@ $(document).ready(function() {
   backgroundizeImages = function() {
     var images;
     images = $('.entry img');
-    if (images.toArray().all(function(i) {
+    return images.toArray().all(function(i) {
       return i.complete;
-    })) {
-      return images.each(function() {
-        var div;
-        div = $('<div></div>');
-        backgroundImagize(div, $(this));
-        return $(this).replaceWith(div);
-      });
-    } else {
-      return setTimeout(backgroundizeImages, 100);
-    }
+    }) ? images.each(function() {
+      var div;
+      div = $('<div></div>');
+      backgroundImagize(div, $(this));
+      return $(this).replaceWith(div);
+    }) : setTimeout(backgroundizeImages, 100);
   };
   backgroundizeLinkImages = function() {
     var links;
