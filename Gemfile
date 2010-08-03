@@ -26,7 +26,7 @@ gem 'pg', '0.8.0'
 gem 'newrelic_rpm', '2.10.5'
 
 if 'darkhelmet' == ENV['USER']
-  gem 'memcached-northscale', '0.19.5.3', :require => 'memcached', :path => '~/dev/github/fauna/memcached'
+  gem 'memcached', :path => '~/dev/github/fauna/memcached'
 else
   gem 'memcached-northscale', '0.19.5.3', :require => 'memcached'
 end
