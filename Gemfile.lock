@@ -1,0 +1,77 @@
+PATH
+  remote: /Users/darkhelmet/dev/github/fauna/memcached
+  specs:
+    memcached (0.19.10)
+
+GEM
+  remote: http://gemcutter.org/
+  specs:
+    RedCloth (4.2.2)
+    activerecord (2.3.8)
+      activesupport (= 2.3.8)
+    activesupport (2.3.8)
+    acts_as_taggable_on_steroids (1.2)
+    builder (2.1.2)
+    crack (0.1.6)
+    haml (3.0.13)
+    hashie (0.1.8)
+    hpricot (0.8.2)
+    mime-types (1.16)
+    newrelic_rpm (2.10.5)
+    nokogiri (1.4.3.1)
+    oyster (0.9.4)
+    packr (3.1.0)
+      oyster
+    pg (0.8.0)
+    rack (1.2.1)
+    rack-gist (1.0.5)
+      hpricot (>= 0.8.2)
+      rest-client (>= 1.6.0)
+    rainpress (1.0)
+    rest-client (1.6.0)
+      mime-types (>= 1.16)
+    sanitize (1.2.0)
+      nokogiri (~> 1.4.1)
+    sinatra (1.0)
+      rack (>= 1.0)
+    sinatra-bundles (0.3.0)
+      packr
+      rack (>= 1.0)
+      rainpress
+      sinatra (>= 1.0)
+    term_extraction (0.1.7)
+      crack (>= 0.1.6)
+    texticle (1.0.2)
+    tilt (1.0.1)
+    tzinfo (0.3.16)
+    will_paginate (2.3.12)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  RedCloth (= 4.2.2)
+  activerecord (= 2.3.8)
+  activesupport (= 2.3.8)
+  acts_as_taggable_on_steroids (= 1.2)
+  builder (= 2.1.2)
+  crack (= 0.1.6)
+  haml (= 3.0.13)
+  hashie (= 0.1.8)
+  hpricot (= 0.8.2)
+  memcached!
+  newrelic_rpm (= 2.10.5)
+  packr (= 3.1.0)
+  pg (= 0.8.0)
+  rack (= 1.2.1)
+  rack-gist (= 1.0.5)
+  rainpress (= 1.0.0)
+  rest-client (= 1.6.0)
+  sanitize (= 1.2.0)
+  sinatra (= 1.0)
+  sinatra-bundles (= 0.3.0)
+  term_extraction (= 0.1.7)
+  texticle (= 1.0.2)
+  tilt (= 1.0.1)
+  tzinfo (= 0.3.16)
+  will_paginate (= 2.3.12)
