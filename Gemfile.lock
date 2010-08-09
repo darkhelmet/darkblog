@@ -24,7 +24,7 @@ GEM
       oyster
     pg (0.8.0)
     rack (1.2.1)
-    rack-gist (1.0.5)
+    rack-gist (1.0.6)
       hpricot (>= 0.8.2)
       rest-client (>= 1.6.0)
     rainpress (1.0)
@@ -34,7 +34,7 @@ GEM
       nokogiri (~> 1.4.1)
     sinatra (1.0)
       rack (>= 1.0)
-    sinatra-bundles (0.3.0)
+    sinatra-bundles (0.4.0)
       packr
       rack (>= 1.0)
       rainpress
@@ -64,12 +64,12 @@ DEPENDENCIES
   packr (= 3.1.0)
   pg (= 0.8.0)
   rack (= 1.2.1)
-  rack-gist (= 1.0.5)
+  rack-gist (= 1.0.6)
   rainpress (= 1.0.0)
   rest-client (= 1.6.0)
   sanitize (= 1.2.0)
   sinatra (= 1.0)
-  sinatra-bundles (= 0.3.0)
+  sinatra-bundles (= 0.4.0)
   term_extraction (= 0.1.7)
   texticle (= 1.0.2)
   tilt (= 1.0.1)
