@@ -7,7 +7,7 @@ use Rack::Head
 use Rack::ETag
 use Rack::StaticCache, :root => 'public', :compress => true if production?
 use Rack::ResponseTimeInjector, :format => '%.3f'
-use Rack::Gist, :jquery => false
+use Rack::Gist, :jquery => false, :cache => Cache
 use Rack::InlineCompress if production?
 
 use Rack::Insert, :ignore => ignore do

@@ -25,33 +25,31 @@ Bundler.require
 
 require 'blog_helper'
 
-configure do
-  Cache = ActiveSupport::Cache::CompressedMemCacheStore.new(Memcached::Rails.new)
-  Blog = OpenStruct.new(:title => ENV['BLOG_TITLE'] || 'Verbose Logging',
-                        :tagline => ENV['BLOG_TAGLINE'] || 'software development with some really amazing hair',
-                        :index => ENV['BLOG_INDEX'] || 'http://localhost:8080/',
-                        :host => ENV['BLOG_HOST'] || 'blog.darkhax.com',
-                        :email => ENV['BLOG_EMAIL'] || 'darkhelmet@darkhelmetlive.com',
-                        :username => ENV['BLOG_USERNAME'] || 'darkhelmet',
-                        :author => ENV['BLOG_AUTHOR'] || 'Daniel Huckstep',
-                        :bio => ENV['BLOG_BIO'] || 'is a software engineer (EIT) in Edmonton, Alberta, Canada',
-                        :feedburner => ENV['BLOG_FEEDBURNER'] || 'VerboseLogging',
-                        :password => ENV['BLOG_PASSWORD'] || 'password',
-                        :twitter => ENV['BLOG_TWITTER'] || 'darkhelmetlive',
-                        :twitter_password => ENV['BLOG_TWITTER_PASSWORD'] || 'secret',
-                        :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
-                        :per_page => ENV['BLOG_PER_PAGE'] || 10,
-                        :tz => TZInfo::Timezone.get('America/Edmonton'),
-                        :tz_display => ENV['BLOG_TZ_DISPLAY'] || 'MDT',
-                        :fogbugz_host => ENV['BLOG_FOGBUGZ_HOST'] || 'darkhax.fogbugz.com',
-                        :fogbugz_user => ENV['BLOG_FOGBUZ_USER'] || 'Daniel Huckstep',
-                        :fogbugz_project => ENV['BLOG_FOGBUZ_PROJECT'] || 'darkhax',
-                        :fogbugz_area => ENV['BLOG_FOGBUZ_AREA'] || 'Blog',
-                        :yahoo_api_key => ENV['BLOG_YAHOO_API_KEY'] || nil,
-                        :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/',
-                        :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4',
-                        :asset_host => ENV['BLOG_ASSET_HOST'] || 'static.verboselogging.com')
-end
+Cache = ActiveSupport::Cache::CompressedMemCacheStore.new(Memcached::Rails.new)
+Blog = OpenStruct.new(:title => ENV['BLOG_TITLE'] || 'Verbose Logging',
+                      :tagline => ENV['BLOG_TAGLINE'] || 'software development with some really amazing hair',
+                      :index => ENV['BLOG_INDEX'] || 'http://localhost:8080/',
+                      :host => ENV['BLOG_HOST'] || 'blog.darkhax.com',
+                      :email => ENV['BLOG_EMAIL'] || 'darkhelmet@darkhelmetlive.com',
+                      :username => ENV['BLOG_USERNAME'] || 'darkhelmet',
+                      :author => ENV['BLOG_AUTHOR'] || 'Daniel Huckstep',
+                      :bio => ENV['BLOG_BIO'] || 'is a software engineer (EIT) in Edmonton, Alberta, Canada',
+                      :feedburner => ENV['BLOG_FEEDBURNER'] || 'VerboseLogging',
+                      :password => ENV['BLOG_PASSWORD'] || 'password',
+                      :twitter => ENV['BLOG_TWITTER'] || 'darkhelmetlive',
+                      :twitter_password => ENV['BLOG_TWITTER_PASSWORD'] || 'secret',
+                      :disqus => ENV['BLOG_DISQUS'] || 'verboselogging',
+                      :per_page => ENV['BLOG_PER_PAGE'] || 10,
+                      :tz => TZInfo::Timezone.get('America/Edmonton'),
+                      :tz_display => ENV['BLOG_TZ_DISPLAY'] || 'MDT',
+                      :fogbugz_host => ENV['BLOG_FOGBUGZ_HOST'] || 'darkhax.fogbugz.com',
+                      :fogbugz_user => ENV['BLOG_FOGBUZ_USER'] || 'Daniel Huckstep',
+                      :fogbugz_project => ENV['BLOG_FOGBUZ_PROJECT'] || 'darkhax',
+                      :fogbugz_area => ENV['BLOG_FOGBUZ_AREA'] || 'Blog',
+                      :yahoo_api_key => ENV['BLOG_YAHOO_API_KEY'] || nil,
+                      :user_agent => ENV['BLOG_USER_AGENT'] || 'verbose logging http://blog.darkhax.com/',
+                      :google_analytics => ENV['BLOG_GOOGLE_ANALYTICS'] || 'UA-2062105-4',
+                      :asset_host => ENV['BLOG_ASSET_HOST'] || 'static.verboselogging.com')
 
 configure :production do
   not_found do
