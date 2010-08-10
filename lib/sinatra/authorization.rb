@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 module Sinatra
   module Authorization
     module Helpers
@@ -19,7 +21,7 @@ module Sinatra
       end
 
       def authorize(username, password)
-        Blog.username == username && Blog.password == password
+        Blog.auth == Digest::SHA1.hexdigest("#{username}:#{password}")
       end
 
       def require_administrative_privileges
