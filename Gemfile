@@ -24,12 +24,7 @@ gem 'tilt', '1.0.1'
 gem 'will_paginate', '2.3.12'
 gem 'pg', '0.8.0'
 gem 'newrelic_rpm', '2.10.5'
-
-if 'darkhelmet' == ENV['USER']
-  gem 'memcached', :path => '~/dev/github/fauna/memcached'
-else
-  gem 'memcached-northscale', '0.19.5.3', :require => 'memcached'
-end
+gem 'memcached-northscale', '0.19.5.3', :require => 'memcached'
 
 group :development do
   gem 'ruby-debug19'
