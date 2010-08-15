@@ -6,20 +6,7 @@ Encoding.default_internal = 'utf-8'
 
 $: << File.expand_path(File.join('.', 'lib'))
 
-begin
-  # Require the preresolved locked set of gems.
-  require File.expand_path('../.bundle/environment', __FILE__)
-rescue LoadError
-  # Fallback on doing the resolve at runtime.
-  require 'rubygems'
-  begin
-    require 'ruby-debug'
-  rescue LoadError
-  end
-  require 'bundler'
-  Bundler.setup
-end
-
+require 'bundler/setup'
 require 'sinatra'
 Bundler.require
 

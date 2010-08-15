@@ -30,3 +30,7 @@ if 'darkhelmet' == ENV['USER']
 else
   gem 'memcached-northscale', '0.19.5.3', :require => 'memcached'
 end
+
+group :development do
+  gem 'ruby-debug19'
+end
